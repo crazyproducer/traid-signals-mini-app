@@ -71,37 +71,44 @@ export default function SignalDetail() {
         </div>
       </div>
 
-      {/* Price card */}
+      {/* Price card — vertical, ordered by price level */}
       <div className="card-premium p-5 mb-4">
-        <div className="grid grid-cols-3 gap-4">
-          <div className="flex flex-col items-center">
-            <span className="text-[10px] uppercase tracking-wider text-tg-hint mb-1">Entry</span>
-            <span
-              className="text-[15px] font-mono font-semibold text-tg-text"
-              style={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatCryptoPrice(signal.entry_price)}
-            </span>
+        {[
+          isLong
+            ? [
+                { label: 'Take Profit', price: signal.take_profit, color: 'text-green', pct: `+${signal.reward_pct}%` },
+                { label: 'Entry', price: signal.entry_price, color: 'text-tg-text', pct: null },
+                { label: 'Stop Loss', price: signal.stop_loss, color: 'text-red', pct: `-${signal.risk_pct}%` },
+              ]
+            : [
+                { label: 'Stop Loss', price: signal.stop_loss, color: 'text-red', pct: `-${signal.risk_pct}%` },
+                { label: 'Entry', price: signal.entry_price, color: 'text-tg-text', pct: null },
+                { label: 'Take Profit', price: signal.take_profit, color: 'text-green', pct: `+${signal.reward_pct}%` },
+              ],
+        ][0].map((row, i, arr) => (
+          <div key={row.label}>
+            <div className="flex items-center justify-between py-3">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${row.color === 'text-green' ? 'bg-green' : row.color === 'text-red' ? 'bg-red' : 'bg-tg-text'}`} />
+                <span className="text-[12px] uppercase tracking-wider text-tg-hint font-medium">{row.label}</span>
+              </div>
+              <div className="flex items-baseline gap-2">
+                <span
+                  className={`text-[17px] font-mono font-bold ${row.color}`}
+                  style={{ fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {formatCryptoPrice(row.price)}
+                </span>
+                {row.pct && (
+                  <span className={`text-[11px] font-mono font-medium ${row.color}/70`}>
+                    {row.pct}
+                  </span>
+                )}
+              </div>
+            </div>
+            {i < arr.length - 1 && <div className="border-b border-tg-secondary/15" />}
           </div>
-          <div className="flex flex-col items-center">
-            <span className="text-[10px] uppercase tracking-wider text-red mb-1">Stop Loss</span>
-            <span
-              className="text-[15px] font-mono font-semibold text-red"
-              style={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatCryptoPrice(signal.stop_loss)}
-            </span>
-          </div>
-          <div className="flex flex-col items-center">
-            <span className="text-[10px] uppercase tracking-wider text-green mb-1">Take Profit</span>
-            <span
-              className="text-[15px] font-mono font-semibold text-green"
-              style={{ fontVariantNumeric: 'tabular-nums' }}
-            >
-              {formatCryptoPrice(signal.take_profit)}
-            </span>
-          </div>
-        </div>
+        ))}
       </div>
 
       {/* Stats row */}
