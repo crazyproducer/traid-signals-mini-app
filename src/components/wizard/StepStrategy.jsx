@@ -1,20 +1,22 @@
 import { Target } from 'lucide-react';
 import OptionCard from './OptionCard';
-import { STRATEGIES } from '../../utils/constants';
+import { STRATEGIES, MOCK_RECORD_COUNTS } from '../../utils/constants';
 
 export default function StepStrategy({ value, onChange }) {
-  const pullback = STRATEGIES[0];
-
   return (
     <div className="flex flex-col gap-4">
-      <OptionCard
-        icon={Target}
-        title={pullback.label}
-        description={pullback.description}
-        selected={value === pullback.value}
-        onClick={() => onChange(pullback.value)}
-        color="blue"
-      />
+      {STRATEGIES.map((strat) => (
+        <OptionCard
+          key={strat.value}
+          icon={Target}
+          title={strat.label}
+          description={strat.description}
+          count={MOCK_RECORD_COUNTS.strategy[strat.value]}
+          selected={value === strat.value}
+          onClick={() => onChange(strat.value)}
+          color="blue"
+        />
+      ))}
 
       {/* Coming soon note */}
       <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-tg-secondary/30">

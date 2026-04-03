@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { Crown, Calendar, CreditCard, ArrowRight } from 'lucide-react';
+import { Crown, Calendar, CreditCard, ArrowRight, User } from 'lucide-react';
 import FeatureRow from '../components/subscription/FeatureRow';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
-import { mockSubscription } from '../api/mock-data';
+import { mockSubscription, mockUser } from '../api/mock-data';
 
 export default function SubscriptionCurrent() {
   const navigate = useNavigate();
@@ -10,7 +10,7 @@ export default function SubscriptionCurrent() {
 
   if (!plan) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
+      <div className="flex flex-col items-center justify-center py-20 text-center px-5">
         <p className="text-[15px] font-semibold text-tg-text">No active subscription</p>
       </div>
     );
@@ -26,7 +26,32 @@ export default function SubscriptionCurrent() {
   return (
     <div className="px-5 pt-6 pb-8 animate-fade-in">
       {/* Header */}
-      <h1 className="text-[20px] font-bold text-tg-text mb-5">My Subscription</h1>
+      <h1 className="text-[20px] font-bold text-tg-text mb-5">Account</h1>
+
+      {/* User info card */}
+      <div className="card-premium p-5 mb-4">
+        <div className="flex items-center gap-3.5">
+          <div className="icon-gradient-blue w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0">
+            <User size={24} strokeWidth={2} className="text-white" />
+          </div>
+          <div className="flex flex-col min-w-0">
+            <span className="text-[17px] font-bold text-tg-text">
+              {mockUser.first_name}
+            </span>
+            <span className="text-[13px] text-tg-hint">
+              @{mockUser.username}
+            </span>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="bg-green/10 text-green text-[10px] font-bold rounded-full px-2 py-0.5 uppercase tracking-wider">
+                {mockSubscription.status === 'active' ? 'Active' : mockSubscription.status}
+              </span>
+              <span className="text-[12px] font-medium text-tg-accent">
+                {plan.label}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Current plan card */}
       <div className="card-premium p-5 mb-4">
@@ -39,9 +64,6 @@ export default function SubscriptionCurrent() {
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-[14px] font-mono font-semibold text-tg-accent" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {priceDisplay}
-              </span>
-              <span className="bg-green/10 text-green text-[10px] font-bold rounded-full px-2 py-0.5 uppercase tracking-wider">
-                Active
               </span>
             </div>
           </div>
@@ -56,7 +78,7 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Billing info */}
-      <div className="card-premium-sm p-4 mb-4">
+      <div className="card-premium-sm px-4 py-4 mb-4">
         <h3 className="text-[14px] font-semibold text-tg-text mb-3">Billing</h3>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
@@ -85,7 +107,7 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Usage */}
-      <div className="card-premium-sm p-4 mb-6">
+      <div className="card-premium-sm px-4 py-4 mb-6">
         <h3 className="text-[14px] font-semibold text-tg-text mb-3">Usage</h3>
         <div className="flex items-center justify-between mb-2">
           <span className="text-[13px] text-tg-hint">Signal subscriptions</span>
@@ -107,8 +129,8 @@ export default function SubscriptionCurrent() {
       {/* Actions */}
       <button
         type="button"
-        onClick={() => navigate('/subscription')}
-        className="w-full card-premium-sm p-4 pressable flex items-center justify-between mb-3"
+        onClick={() => navigate('/account/plans')}
+        className="w-full card-premium-sm px-4 py-4 pressable flex items-center justify-between mb-3"
       >
         <span className="text-[14px] font-semibold text-tg-text">Change Plan</span>
         <ArrowRight size={18} className="text-tg-hint/40" />

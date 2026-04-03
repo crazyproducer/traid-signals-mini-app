@@ -7,7 +7,7 @@ const GRADIENT_MAP = {
   neutral: 'icon-gradient-neutral',
 };
 
-export default function OptionCard({ icon: Icon, title, description, selected, onClick, color = 'blue' }) {
+export default function OptionCard({ icon: Icon, title, description, count, selected, onClick, color = 'blue' }) {
   const gradientClass = GRADIENT_MAP[color] || GRADIENT_MAP.blue;
 
   return (
@@ -28,7 +28,7 @@ export default function OptionCard({ icon: Icon, title, description, selected, o
       </div>
 
       {/* Text content */}
-      <div className="flex flex-col min-w-0">
+      <div className="flex flex-col min-w-0 flex-1">
         <span className="text-[15px] font-semibold text-tg-text leading-tight">
           {title}
         </span>
@@ -39,8 +39,15 @@ export default function OptionCard({ icon: Icon, title, description, selected, o
         )}
       </div>
 
+      {/* Record count */}
+      {count !== undefined && count !== null && (
+        <span className="text-[12px] text-tg-hint/70 font-mono tabular-nums flex-shrink-0 mr-2">
+          {count.toLocaleString()} rec
+        </span>
+      )}
+
       {/* Selection indicator */}
-      <div className="ml-auto flex-shrink-0">
+      <div className="flex-shrink-0">
         <div
           className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ${
             selected

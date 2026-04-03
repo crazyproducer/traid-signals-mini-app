@@ -1,13 +1,11 @@
 const STEP_LABELS = [
-  'Symbol',
-  'Direction',
-  'Frequency',
   'Strategy',
-  'Filters',
   'Risk',
   'Confidence',
-  'Probability',
-  'Preview',
+  'Direction',
+  'Symbols',
+  'Timeframe',
+  'Filters',
   'Review',
 ];
 

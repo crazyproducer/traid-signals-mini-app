@@ -1,4 +1,4 @@
-import { SYMBOLS } from '../../utils/constants';
+import { SYMBOLS, MOCK_RECORD_COUNTS } from '../../utils/constants';
 
 const COIN_COLORS = {
   BTC: 'from-amber-400 to-amber-600',
@@ -14,7 +14,12 @@ const COIN_COLORS = {
 };
 
 export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
-  const isMaxReached = maxSymbols !== null && symbols.length >= maxSymbols;
+  const isMaxReached = maxSymbols !== null && maxSymbols !== undefined && symbols.length >= maxSymbols;
+
+  // Calculate total records from selected symbols
+  const totalRecords = symbols.reduce((sum, sym) => {
+    return sum + (MOCK_RECORD_COUNTS.symbols[sym] || 0);
+  }, 0);
 
   return (
     <div>
@@ -22,7 +27,7 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
       <div className="mb-3 flex items-center justify-between px-1">
         <span className="text-[13px] text-tg-hint">
           <span className="font-semibold text-tg-text">{symbols.length}</span>
-          {maxSymbols !== null ? ` of ${maxSymbols}` : ''} selected
+          {maxSymbols !== null && maxSymbols !== undefined ? ` of ${maxSymbols}` : ''} selected
         </span>
         {isMaxReached && (
           <span className="text-[11px] font-medium text-yellow">Limit reached</span>
@@ -35,6 +40,7 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
           const isSelected = symbols.includes(sym.value);
           const isDisabled = !isSelected && isMaxReached;
           const gradient = COIN_COLORS[sym.base] || 'from-gray-400 to-gray-600';
+          const count = MOCK_RECORD_COUNTS.symbols[sym.value] || 0;
 
           return (
             <button
@@ -67,6 +73,9 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
                 <span className="text-[11px] text-tg-hint leading-snug">
                   {sym.label}
                 </span>
+                <span className="text-[10px] text-tg-hint/60 font-mono tabular-nums mt-0.5">
+                  {count.toLocaleString()} rec
+                </span>
               </div>
 
               {/* Check indicator */}
@@ -93,6 +102,18 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
           );
         })}
       </div>
+
+      {/* Running total */}
+      {symbols.length > 0 && (
+        <div className="mt-3 px-1 animate-fade-in">
+          <div className="card-premium-sm p-3 flex items-center justify-between">
+            <span className="text-[13px] text-tg-hint">Total records</span>
+            <span className="text-[14px] font-bold text-tg-text font-mono tabular-nums">
+              {totalRecords.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

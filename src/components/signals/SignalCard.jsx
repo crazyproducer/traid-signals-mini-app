@@ -16,6 +16,8 @@ function symbolLabel(raw) {
   return found ? found.label : raw;
 }
 
+const ACTIVE_STATUSES = ['ACTIVE', 'UPDATED', 'TRIGGERED'];
+
 export default function SignalCard({ signal, subscription, onClick }) {
   const isLong = signal.direction === 'LONG';
   const DirectionIcon = isLong ? TrendingUp : TrendingDown;
@@ -29,11 +31,14 @@ export default function SignalCard({ signal, subscription, onClick }) {
       : -signal.risk_pct
     : null;
 
+  const isActive = ACTIVE_STATUSES.includes(signal.status);
+  const hasCurrentPrice = isActive && signal.current_price != null;
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className="card-premium-sm pressable w-full text-left p-4 flex items-center gap-3.5"
+      className="card-premium-sm pressable w-full text-left px-4 py-4 flex items-center gap-3.5"
     >
       {/* Gradient icon */}
       <div
@@ -65,11 +70,17 @@ export default function SignalCard({ signal, subscription, onClick }) {
           </span>
         </div>
 
-        {/* Bottom row: win rate + time */}
+        {/* Bottom row: current price or win rate + time */}
         <div className="flex items-center gap-3 mt-1">
-          <span className="text-[11px] text-green font-medium">
-            WR {formatWinRate(signal.win_rate)}
-          </span>
+          {hasCurrentPrice ? (
+            <span className="text-[11px] text-tg-accent font-medium">
+              Now {formatCryptoPrice(signal.current_price)}
+            </span>
+          ) : (
+            <span className="text-[11px] text-green font-medium">
+              WR {formatWinRate(signal.win_rate)}
+            </span>
+          )}
           <span className="text-[11px] text-tg-hint/60">
             {formatRelativeTime(signal.created_at)}
           </span>

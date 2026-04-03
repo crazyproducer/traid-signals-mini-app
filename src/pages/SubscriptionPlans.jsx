@@ -7,8 +7,8 @@ export default function SubscriptionPlans() {
   const navigate = useNavigate();
 
   function handleSelectPlan(plan) {
-    // Mock: just navigate to current subscription page
-    navigate('/subscription/current');
+    // Mock: just navigate to account page
+    navigate('/account');
   }
 
   return (
