@@ -1,58 +1,51 @@
 import { useReducer, useMemo, useCallback } from 'react';
 
-const STEPS = [
-  'symbol',
-  'direction',
-  'frequency',
-  'strategy',
-  'filters',
-  'risk',
-  'confidence',
-  'probability',
-  'preview',
-  'review',
-];
+/*
+  Step order:
+  0 — Strategy (single select)
+  1 — Risk Level (single select)
+  2 — Confidence (single select)
+  3 — Direction (multi: LONG, SHORT, or both)
+  4 — Symbols (multi-select)
+  5 — Timeframe / Frequency (single select)
+  6 — Filters / EMA (multi-select, optional)
+  7 — Review & Launch
+*/
 
-const TOTAL_STEPS = STEPS.length;
+const TOTAL_STEPS = 8;
 
 const initialState = {
   step: 0,
-  direction: 'forward',
+  animDir: 'forward',
   data: {
-    symbols: [],
-    direction: null,
-    frequency: null,
     strategy: null,
-    ema_filter: null,
     risk_level: null,
     confidence: null,
-    min_probability: null,
+    directions: [],
+    symbols: [],
+    frequency: null,
+    ema_filters: [],
   },
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_FIELD':
-      return {
-        ...state,
-        data: { ...state.data, [action.key]: action.value },
-      };
+      return { ...state, data: { ...state.data, [action.key]: action.value } };
+    case 'TOGGLE_IN_ARRAY': {
+      const arr = state.data[action.key] || [];
+      const exists = arr.includes(action.value);
+      const next = exists ? arr.filter((v) => v !== action.value) : [...arr, action.value];
+      return { ...state, data: { ...state.data, [action.key]: next } };
+    }
     case 'NEXT_STEP':
       if (state.step >= TOTAL_STEPS - 1) return state;
-      return {
-        ...state,
-        step: state.step + 1,
-        direction: 'forward',
-      };
+      return { ...state, step: state.step + 1, animDir: 'forward' };
     case 'PREV_STEP':
       if (state.step <= 0) return state;
-      return {
-        ...state,
-        step: state.step - 1,
-        direction: 'backward',
-      };
+      return { ...state, step: state.step - 1, animDir: 'backward' };
     case 'RESET':
-      return { ...initialState, data: { ...initialState.data } };
+      return { ...initialState, data: { ...initialState.data, directions: [], symbols: [], ema_filters: [] } };
     default:
       return state;
   }
@@ -60,27 +53,15 @@ function reducer(state, action) {
 
 function canProceedForStep(step, data) {
   switch (step) {
-    case 0:
-      return data.symbols.length > 0;
-    case 1:
-      return data.direction !== null;
-    case 2:
-      return data.frequency !== null;
-    case 3:
-      return data.strategy !== null;
-    case 4:
-      return true;
-    case 5:
-      return data.risk_level !== null;
-    case 6:
-      return data.confidence !== null;
-    case 7:
-      return data.min_probability !== null;
-    case 8:
-    case 9:
-      return true;
-    default:
-      return false;
+    case 0: return data.strategy !== null;
+    case 1: return data.risk_level !== null;
+    case 2: return data.confidence !== null;
+    case 3: return data.directions.length > 0;
+    case 4: return data.symbols.length > 0;
+    case 5: return data.frequency !== null;
+    case 6: return true; // filters optional
+    case 7: return true; // review
+    default: return false;
   }
 }
 
@@ -91,17 +72,13 @@ export default function useWizard() {
     dispatch({ type: 'SET_FIELD', key, value });
   }, []);
 
-  const nextStep = useCallback(() => {
-    dispatch({ type: 'NEXT_STEP' });
+  const toggleArray = useCallback((key, value) => {
+    dispatch({ type: 'TOGGLE_IN_ARRAY', key, value });
   }, []);
 
-  const prevStep = useCallback(() => {
-    dispatch({ type: 'PREV_STEP' });
-  }, []);
-
-  const reset = useCallback(() => {
-    dispatch({ type: 'RESET' });
-  }, []);
+  const nextStep = useCallback(() => dispatch({ type: 'NEXT_STEP' }), []);
+  const prevStep = useCallback(() => dispatch({ type: 'PREV_STEP' }), []);
+  const reset = useCallback(() => dispatch({ type: 'RESET' }), []);
 
   const canProceed = useMemo(
     () => canProceedForStep(state.step, state.data),
@@ -112,14 +89,13 @@ export default function useWizard() {
     step: state.step,
     totalSteps: TOTAL_STEPS,
     data: state.data,
-    direction: state.direction,
+    animDir: state.animDir,
     setField,
+    toggleArray,
     nextStep,
     prevStep,
     canProceed,
     isLastStep: state.step === TOTAL_STEPS - 1,
-    isPreview: state.step === 8,
-    isReview: state.step === 9,
     reset,
   };
 }
