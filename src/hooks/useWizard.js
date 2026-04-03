@@ -1,18 +1,32 @@
 import { useReducer, useMemo, useCallback } from 'react';
 
-const TOTAL_STEPS = 8;
+const STEPS = [
+  'symbol',
+  'direction',
+  'frequency',
+  'strategy',
+  'filters',
+  'risk',
+  'confidence',
+  'probability',
+  'preview',
+  'review',
+];
+
+const TOTAL_STEPS = STEPS.length;
 
 const initialState = {
   step: 0,
   direction: 'forward',
   data: {
-    strategy: null,        // Step 0: 'pullback'
-    risk_level: null,      // Step 1: 1|5|10|20|30
-    confidence: null,      // Step 2: 0.5|0.6|0.7
-    directions: [],        // Step 3: ['LONG'] or ['SHORT'] or ['LONG','SHORT']
-    symbols: [],           // Step 4: ['BTCUSDT', ...]
-    frequency: null,       // Step 5: '4h'|'24h'
-    ema_filters: [],       // Step 6: [20, 50] or []
+    symbols: [],
+    direction: null,
+    frequency: null,
+    strategy: null,
+    ema_filter: null,
+    risk_level: null,
+    confidence: null,
+    min_probability: null,
   },
 };
 
@@ -23,17 +37,6 @@ function reducer(state, action) {
         ...state,
         data: { ...state.data, [action.key]: action.value },
       };
-    case 'SET_ARRAY_TOGGLE': {
-      const current = state.data[action.key] || [];
-      const exists = current.includes(action.value);
-      const updated = exists
-        ? current.filter((item) => item !== action.value)
-        : [...current, action.value];
-      return {
-        ...state,
-        data: { ...state.data, [action.key]: updated },
-      };
-    }
     case 'NEXT_STEP':
       if (state.step >= TOTAL_STEPS - 1) return state;
       return {
@@ -49,7 +52,7 @@ function reducer(state, action) {
         direction: 'backward',
       };
     case 'RESET':
-      return { ...initialState, data: { ...initialState.data, directions: [], symbols: [], ema_filters: [] } };
+      return { ...initialState, data: { ...initialState.data } };
     default:
       return state;
   }
@@ -57,21 +60,24 @@ function reducer(state, action) {
 
 function canProceedForStep(step, data) {
   switch (step) {
-    case 0: // Strategy
-      return data.strategy !== null;
-    case 1: // Risk Level
-      return data.risk_level !== null;
-    case 2: // Confidence
-      return data.confidence !== null;
-    case 3: // Direction (multi-select, at least one)
-      return data.directions.length > 0;
-    case 4: // Symbols (multi-select, at least one)
+    case 0:
       return data.symbols.length > 0;
-    case 5: // Frequency/Timeframe
+    case 1:
+      return data.direction !== null;
+    case 2:
       return data.frequency !== null;
-    case 6: // Filters (optional)
+    case 3:
+      return data.strategy !== null;
+    case 4:
       return true;
-    case 7: // Review
+    case 5:
+      return data.risk_level !== null;
+    case 6:
+      return data.confidence !== null;
+    case 7:
+      return data.min_probability !== null;
+    case 8:
+    case 9:
       return true;
     default:
       return false;
@@ -83,10 +89,6 @@ export default function useWizard() {
 
   const setField = useCallback((key, value) => {
     dispatch({ type: 'SET_FIELD', key, value });
-  }, []);
-
-  const toggleArrayItem = useCallback((key, value) => {
-    dispatch({ type: 'SET_ARRAY_TOGGLE', key, value });
   }, []);
 
   const nextStep = useCallback(() => {
@@ -112,12 +114,12 @@ export default function useWizard() {
     data: state.data,
     direction: state.direction,
     setField,
-    toggleArrayItem,
     nextStep,
     prevStep,
     canProceed,
     isLastStep: state.step === TOTAL_STEPS - 1,
-    isReview: state.step === TOTAL_STEPS - 1,
+    isPreview: state.step === 8,
+    isReview: state.step === 9,
     reset,
   };
 }

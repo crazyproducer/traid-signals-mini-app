@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import Dashboard from './pages/Dashboard';
+import MainMenu from './pages/MainMenu';
 import Terms from './pages/Terms';
 import NewSignalWizard from './pages/NewSignalWizard';
 import MySignals from './pages/MySignals';
@@ -9,13 +9,9 @@ import SignalDetail from './pages/SignalDetail';
 import SignalPerformance from './pages/SignalPerformance';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import SubscriptionCurrent from './pages/SubscriptionCurrent';
-import TabBar from './components/shared/TabBar';
 
 /* Routes where the TG back button should be hidden */
-const TOP_LEVEL_ROUTES = ['/', '/terms', '/signals', '/account', '/new-signal'];
-
-/* Routes where TabBar should be hidden */
-const HIDE_TABBAR_ROUTES = ['/terms', '/new-signal'];
+const TOP_LEVEL_ROUTES = ['/', '/terms'];
 
 function useTermsGate() {
   const location = useLocation();
@@ -70,35 +66,24 @@ function useTelegramInit() {
   }, [tg]);
 }
 
-function shouldShowTabBar(pathname) {
-  return !HIDE_TABBAR_ROUTES.includes(pathname);
-}
-
 export default function App() {
-  const location = useLocation();
-
   useTelegramInit();
   useTelegramBackButton();
   useTermsGate();
 
-  const showTabBar = shouldShowTabBar(location.pathname);
-
   return (
     <div className="min-h-screen bg-tg-bg text-tg-text">
-      <div className={showTabBar ? 'pb-20' : ''}>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/new-signal" element={<NewSignalWizard />} />
-          <Route path="/signals" element={<MySignals />} />
-          <Route path="/signals/:id" element={<SignalDetail />} />
-          <Route path="/performance" element={<SignalPerformance />} />
-          <Route path="/account" element={<SubscriptionCurrent />} />
-          <Route path="/account/plans" element={<SubscriptionPlans />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
-      {showTabBar && <TabBar />}
+      <Routes>
+        <Route path="/" element={<MainMenu />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/new-signal" element={<NewSignalWizard />} />
+        <Route path="/signals" element={<MySignals />} />
+        <Route path="/signals/:id" element={<SignalDetail />} />
+        <Route path="/performance" element={<SignalPerformance />} />
+        <Route path="/subscription" element={<SubscriptionPlans />} />
+        <Route path="/subscription/current" element={<SubscriptionCurrent />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   );
 }

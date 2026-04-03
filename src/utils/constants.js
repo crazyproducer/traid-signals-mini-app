@@ -27,7 +27,7 @@ export const DIRECTIONS = [
 ];
 
 /**
- * Signal delivery frequencies / timeframes
+ * Signal delivery frequencies
  */
 export const FREQUENCIES = [
   { value: '4h', label: 'Every 4 hours' },
@@ -46,9 +46,10 @@ export const STRATEGIES = [
 ];
 
 /**
- * EMA filter options (for multi-select — no null option needed)
+ * EMA filter options (null = no filter)
  */
 export const EMA_FILTERS = [
+  { value: null, label: 'No EMA filter' },
   { value: 20, label: 'EMA 20' },
   { value: 50, label: 'EMA 50' },
   { value: 100, label: 'EMA 100' },
@@ -67,6 +68,15 @@ export const CONFIDENCE_LEVELS = [
   { value: 0.5, label: '50%+' },
   { value: 0.6, label: '60%+' },
   { value: 0.7, label: '70%+' },
+];
+
+/**
+ * Minimum probability threshold for signal matching trades
+ */
+export const PROBABILITY_LEVELS = [
+  { value: 0.66, label: '66%' },
+  { value: 0.75, label: '75%' },
+  { value: 0.90, label: '90%' },
 ];
 
 /**
@@ -123,71 +133,16 @@ export const SUBSCRIPTION_PLANS = [
    ═══════════════════════════════════════════════ */
 
 export const WIZARD_STEPS = [
+  { key: 'symbols', title: 'Select Symbols', subtitle: 'Choose trading pairs to receive signals for' },
+  { key: 'direction', title: 'Direction', subtitle: 'Choose your trade direction' },
+  { key: 'frequency', title: 'Frequency', subtitle: 'How often should signals be generated?' },
   { key: 'strategy', title: 'Strategy', subtitle: 'Select a signal strategy' },
+  { key: 'ema_filter', title: 'EMA Filter', subtitle: 'Optional trend filter' },
   { key: 'risk_level', title: 'Risk Level', subtitle: 'Maximum risk per trade (%)' },
   { key: 'confidence', title: 'Confidence', subtitle: 'Minimum confidence threshold' },
-  { key: 'directions', title: 'Direction', subtitle: 'Choose trade direction(s)' },
-  { key: 'symbols', title: 'Symbols', subtitle: 'Choose trading pairs to receive signals for' },
-  { key: 'frequency', title: 'Timeframe', subtitle: 'How often should signals be generated?' },
-  { key: 'ema_filters', title: 'Filters', subtitle: 'Optional EMA trend filters' },
-  { key: 'review', title: 'Review & Launch', subtitle: 'Confirm your signal subscription' },
+  { key: 'probability', title: 'Probability', subtitle: 'Minimum trade probability' },
+  { key: 'review', title: 'Review', subtitle: 'Confirm your signal subscription' },
 ];
-
-/* ═══════════════════════════════════════════════
-   Mock record counts for wizard steps
-   ═══════════════════════════════════════════════ */
-
-// Total database: 125,847 records
-export const MOCK_RECORD_COUNTS = {
-  // Step 0: Strategy (from full database)
-  strategy: {
-    pullback: 125847,
-  },
-  // Step 1: Risk (after strategy selected)
-  risk: {
-    1: 8420,
-    5: 31250,
-    10: 42180,
-    20: 28940,
-    30: 15057,
-  },
-  // Step 2: Confidence (after risk)
-  confidence: {
-    0.5: 28750,
-    0.6: 18420,
-    0.7: 9830,
-  },
-  // Step 3: Direction (after confidence)
-  direction: {
-    LONG: 5890,
-    SHORT: 3940,
-  },
-  // Step 4: Symbols (after direction)
-  symbols: {
-    BTCUSDT: 1820,
-    ETHUSDT: 1540,
-    SOLUSDT: 980,
-    BNBUSDT: 870,
-    XRPUSDT: 760,
-    ADAUSDT: 650,
-    AVAXUSDT: 580,
-    DOGEUSDT: 520,
-    DOTUSDT: 440,
-    LINKUSDT: 390,
-  },
-  // Step 5: Frequency/Timeframe (after symbols)
-  frequency: {
-    '4h': 4200,
-    '24h': 2890,
-  },
-  // Step 6: Filters/EMA (after frequency)
-  ema: {
-    20: 3100,
-    50: 2800,
-    100: 2200,
-    200: 1600,
-  },
-};
 
 /* ═══════════════════════════════════════════════
    Signal status constants
