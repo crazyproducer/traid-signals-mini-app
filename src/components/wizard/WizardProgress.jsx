@@ -11,31 +11,30 @@ const STEP_LABELS = [
 
 export default function WizardProgress({ step, totalSteps }) {
   return (
-    <div className="px-1">
-      {/* Segmented bar */}
-      <div className="flex items-center gap-[2px]">
-        {Array.from({ length: totalSteps }, (_, i) => {
-          let barClass = 'h-1 flex-1 rounded-full transition-all duration-300 ';
-
-          if (i < step) {
-            barClass += 'bg-tg-button';
-          } else if (i === step) {
-            barClass += 'bg-tg-button animate-pulse';
-          } else {
-            barClass += 'bg-tg-secondary/40';
-          }
-
-          return <div key={i} className={barClass} />;
-        })}
+    <div>
+      {/* Segmented bar — taller, smoother */}
+      <div className="flex items-center gap-1">
+        {Array.from({ length: totalSteps }, (_, i) => (
+          <div
+            key={i}
+            className={`h-[3px] flex-1 rounded-full transition-all duration-400 ${
+              i < step
+                ? 'bg-tg-button'
+                : i === step
+                  ? 'bg-tg-button'
+                  : 'bg-tg-secondary/30'
+            }`}
+          />
+        ))}
       </div>
 
-      {/* Step label */}
-      <div className="mt-1.5 flex items-center justify-between">
-        <span className="text-[11px] font-medium text-tg-hint">
+      {/* Step counter — minimal */}
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-[11px] font-semibold text-tg-hint/70 tracking-wide">
           {STEP_LABELS[step] || `Step ${step + 1}`}
         </span>
-        <span className="text-[11px] text-tg-hint/60">
-          {step + 1}/{totalSteps}
+        <span className="text-[11px] font-mono text-tg-hint/40" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {step + 1} of {totalSteps}
         </span>
       </div>
     </div>

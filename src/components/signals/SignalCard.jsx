@@ -37,7 +37,7 @@ export default function SignalCard({ signal, subscription, onClick }) {
     >
       {/* Gradient icon */}
       <div
-        className={`${gradientClass} w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0`}
+        className={`${gradientClass} w-11 h-11 rounded-[14px] flex items-center justify-center flex-shrink-0`}
       >
         <DirectionIcon size={20} strokeWidth={2} className="text-white" />
       </div>

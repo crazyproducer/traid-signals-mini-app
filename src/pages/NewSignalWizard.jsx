@@ -50,7 +50,7 @@ function fmtCount(n) {
    ═══════════════════════════════════════════════ */
 function StepStrategy({ data, setField }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {STRATEGIES.map((s) => (
         <OptionCard
           key={s.value}
@@ -73,7 +73,7 @@ function StepStrategy({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepRisk({ data, setField }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {RISK_LEVELS.map((r) => (
         <OptionCard
           key={r.value}
@@ -95,7 +95,7 @@ function StepRisk({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepConfidence({ data, setField }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {CONFIDENCE_LEVELS.map((c) => (
         <OptionCard
           key={c.value}
@@ -120,7 +120,7 @@ function StepDirection({ data, toggleArray }) {
   const total = selected.reduce((sum, d) => sum + (RECORD_COUNTS.direction[d] || 0), 0);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {DIRECTIONS.map((d) => (
         <OptionCard
           key={d.value}
@@ -150,7 +150,7 @@ function StepSymbol({ data, toggleArray }) {
   const total = selected.reduce((sum, s) => sum + (RECORD_COUNTS.symbol[s] || 0), 0);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {SYMBOLS.map((sym) => (
         <OptionCard
           key={sym.value}
@@ -177,7 +177,7 @@ function StepSymbol({ data, toggleArray }) {
    ═══════════════════════════════════════════════ */
 function StepFrequency({ data, setField }) {
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {FREQUENCIES.map((f) => (
         <OptionCard
           key={f.value}
@@ -202,7 +202,7 @@ function StepFilters({ data, toggleArray }) {
   const total = selected.reduce((sum, v) => sum + (RECORD_COUNTS.ema[v] || 0), 0);
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {EMA_FILTERS.map((f) => (
         <OptionCard
           key={f.value}
@@ -280,9 +280,9 @@ function SuccessState({ onDone }) {
       <div className="icon-gradient-green w-16 h-16 rounded-full flex items-center justify-center mb-5">
         <CheckCircle2 size={32} strokeWidth={2} className="text-white" />
       </div>
-      <h2 className="text-[20px] font-bold text-tg-text mb-2">Signal Launched!</h2>
+      <h2 className="text-[20px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.02em' }}>Signal launched</h2>
       <p className="text-[14px] text-tg-hint mb-8 max-w-[260px] leading-relaxed">
-        Your signal subscription is now active. You'll receive notifications when signals are generated.
+        Your signal subscription is active. You'll receive notifications when new signals are generated.
       </p>
       <button
         type="button"
@@ -334,9 +334,11 @@ export default function NewSignalWizard() {
       </div>
 
       {/* Title + subtitle — unified for all steps */}
-      <div className="px-5 pb-3">
-        <h2 className="text-[18px] font-bold text-tg-text">{STEP_TITLES[w.step]}</h2>
-        <p className="text-[13px] text-tg-hint mt-0.5">{STEP_SUBTITLES[w.step]}</p>
+      <div className="px-5 pb-4">
+        <h2 className="text-[20px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
+          {STEP_TITLES[w.step]}
+        </h2>
+        <p className="text-[13px] text-tg-hint mt-1">{STEP_SUBTITLES[w.step]}</p>
       </div>
 
       {/* Step content — unified container */}
