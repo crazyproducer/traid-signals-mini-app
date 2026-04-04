@@ -327,35 +327,35 @@ export default function NewSignalWizard() {
   const animClass = w.animDir === 'forward' ? 'wizard-step-forward' : 'wizard-step-backward';
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-[100dvh] flex flex-col">
       {/* Progress bar */}
-      <div className="px-5 pt-4 pb-2">
+      <div className="px-6 pt-5 pb-3">
         <WizardProgress step={w.step} totalSteps={w.totalSteps} />
       </div>
 
-      {/* Title + subtitle — unified for all steps */}
-      <div className="px-5 pb-4">
-        <h2 className="text-[20px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
+      {/* Title + subtitle */}
+      <div className="px-6 pb-5">
+        <h2 className="text-[24px] font-bold text-tg-text leading-tight" style={{ letterSpacing: '-0.025em' }}>
           {STEP_TITLES[w.step]}
         </h2>
-        <p className="text-[13px] text-tg-hint mt-1">{STEP_SUBTITLES[w.step]}</p>
+        <p className="text-[14px] text-tg-hint mt-1.5 leading-relaxed">{STEP_SUBTITLES[w.step]}</p>
       </div>
 
-      {/* Step content — unified container */}
-      <div className="flex-1 px-5 pb-28 overflow-y-auto" key={w.step}>
+      {/* Step content */}
+      <div className="flex-1 px-6 pb-32 overflow-y-auto" key={w.step}>
         <div className={animClass}>
           {renderStep()}
         </div>
       </div>
 
-      {/* Bottom nav — unified for all steps */}
-      <div className="fixed bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-tg-bg via-tg-bg to-transparent pt-8">
+      {/* Bottom nav — premium bar with depth */}
+      <div className="fixed bottom-0 left-0 right-0 px-6 pb-6 pt-10 bg-gradient-to-t from-tg-bg via-tg-bg/95 to-transparent">
         <div className="flex items-center gap-3">
           {w.step > 0 && (
             <button
               type="button"
               onClick={w.prevStep}
-              className="flex-1 py-3.5 rounded-2xl text-[14px] font-semibold bg-tg-secondary/60 text-tg-text pressable"
+              className="flex-1 py-4 rounded-2xl text-[15px] font-semibold bg-tg-secondary/70 text-tg-text pressable"
             >
               Back
             </button>
@@ -364,15 +364,15 @@ export default function NewSignalWizard() {
             type="button"
             onClick={w.isLastStep ? handleLaunch : w.nextStep}
             disabled={!w.canProceed}
-            className={`flex-1 py-3.5 rounded-2xl text-[14px] font-semibold pressable shadow-sm transition-opacity duration-200 ${
+            className={`flex-1 py-4 rounded-2xl text-[15px] font-semibold pressable transition-all duration-250 ${
               w.canProceed
                 ? w.isLastStep
                   ? 'icon-gradient-green text-white'
-                  : 'bg-tg-button text-tg-button-text'
-                : 'bg-tg-button/40 text-tg-button-text/60 cursor-not-allowed'
+                  : 'bg-tg-button text-tg-button-text shadow-[0_4px_14px_-2px] shadow-tg-button/30'
+                : 'bg-tg-secondary/40 text-tg-hint cursor-not-allowed'
             }`}
           >
-            {w.isLastStep ? 'Launch Signal' : 'Continue'}
+            {w.isLastStep ? 'Launch signal' : 'Continue'}
           </button>
         </div>
       </div>

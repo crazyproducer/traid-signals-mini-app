@@ -33,56 +33,41 @@ export default function SignalCard({ signal, subscription, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="card-premium-sm pressable w-full text-left p-4 flex items-center gap-3.5"
+      className="card-premium-sm pressable w-full text-left p-4 flex items-center gap-4"
     >
-      {/* Gradient icon */}
-      <div
-        className={`${gradientClass} w-11 h-11 rounded-[14px] flex items-center justify-center flex-shrink-0`}
-      >
-        <DirectionIcon size={20} strokeWidth={2} className="text-white" />
+      {/* Direction icon — squircle */}
+      <div className={`${gradientClass} w-12 h-12 rounded-[15px] flex items-center justify-center flex-shrink-0`}>
+        <DirectionIcon size={22} strokeWidth={1.8} className="text-white" />
       </div>
 
-      {/* Main content */}
-      <div className="flex flex-col min-w-0 flex-1">
-        {/* Top row: symbol + direction badge */}
+      {/* Content */}
+      <div className="flex flex-col min-w-0 flex-1 gap-1">
+        {/* Symbol + direction */}
         <div className="flex items-center gap-2">
-          <span className="text-[15px] font-semibold text-tg-text truncate">
+          <span className="text-[16px] font-semibold text-tg-text truncate" style={{ letterSpacing: '-0.01em' }}>
             {symbolLabel(signal.symbol)}
           </span>
           <Badge variant={directionVariant}>{formatDirection(signal.direction)}</Badge>
         </div>
 
         {/* Price row */}
-        <div className="flex items-center gap-3 mt-1">
-          <span className="text-[12px] text-tg-hint">
-            Entry {formatCryptoPrice(signal.entry_price)}
+        <div className="flex items-center gap-3">
+          <span className="text-[12px] font-mono text-tg-hint" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {formatCryptoPrice(signal.entry_price)}
           </span>
-          <span className="text-[12px] text-tg-hint">
-            SL {formatCryptoPrice(signal.stop_loss)}
-          </span>
-          <span className="text-[12px] text-tg-hint">
-            TP {formatCryptoPrice(signal.take_profit)}
-          </span>
-        </div>
-
-        {/* Bottom row: win rate + time */}
-        <div className="flex items-center gap-3 mt-1">
-          <span className="text-[11px] text-green font-medium">
-            WR {formatWinRate(signal.win_rate)}
-          </span>
-          <span className="text-[11px] text-tg-hint/60">
+          <span className="text-[11px] text-tg-hint/40">
             {formatRelativeTime(signal.created_at)}
           </span>
         </div>
       </div>
 
-      {/* Right side: PnL or status */}
-      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+      {/* Right side */}
+      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
         {isResolved && pnlPct !== null ? (
           <>
             <span
-              className={`text-[15px] font-mono font-bold ${pnlColorClass(pnlPct)}`}
-              style={{ fontVariantNumeric: 'tabular-nums' }}
+              className={`text-[17px] font-mono font-bold ${pnlColorClass(pnlPct)}`}
+              style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
             >
               {formatPct(pnlPct).text}
             </span>
@@ -91,7 +76,7 @@ export default function SignalCard({ signal, subscription, onClick }) {
         ) : (
           <>
             <SignalStatusBadge status={signal.status} />
-            <ChevronRight size={16} className="text-tg-hint/40" />
+            <ChevronRight size={16} className="text-tg-hint/30" />
           </>
         )}
       </div>
