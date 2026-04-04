@@ -2,6 +2,7 @@ import Badge from '../shared/Badge';
 import { formatSignalStatus } from '../../utils/formatters';
 
 const STATUS_VARIANT_MAP = {
+  PENDING: 'pending',
   ACTIVE: 'active',
   UPDATED: 'active',
   TRIGGERED: 'triggered',

@@ -1,6 +1,7 @@
 const VARIANTS = {
   long: 'bg-green/10 text-green',
   short: 'bg-red/10 text-red',
+  pending: 'bg-violet/10 text-violet',
   active: 'bg-green/10 text-green',
   paused: 'bg-yellow/10 text-yellow',
   triggered: 'bg-blue/10 text-blue',

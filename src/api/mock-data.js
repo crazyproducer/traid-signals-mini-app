@@ -67,6 +67,71 @@ export const mockSignalSubscriptions = [
 /* ─── Signals ─── */
 
 export const mockSignals = [
+  // ── New / Pending signals (not yet activated) ──
+  {
+    id: 'SIG-2855',
+    subscription_id: 'sub_001',
+    symbol: 'BTCUSDT',
+    direction: 'LONG',
+    entry_price: 65800.00,
+    stop_loss: 64520.00,
+    take_profit: 68400.00,
+    risk_pct: 1.94,
+    reward_pct: 3.95,
+    win_rate: 0.74,
+    matching_trades: 21,
+    status: 'PENDING',
+    created_at: '2026-04-04T06:00:00Z',
+    triggered_at: null,
+    resolved_at: null,
+    result: null,
+    updates: [
+      { timestamp: '2026-04-04T06:00:00Z', field: 'created', message: 'Signal generated — awaiting activation' },
+    ],
+  },
+  {
+    id: 'SIG-2854',
+    subscription_id: 'sub_002',
+    symbol: 'SOLUSDT',
+    direction: 'LONG',
+    entry_price: 139.50,
+    stop_loss: 135.80,
+    take_profit: 148.20,
+    risk_pct: 2.65,
+    reward_pct: 6.24,
+    win_rate: 0.70,
+    matching_trades: 15,
+    status: 'PENDING',
+    created_at: '2026-04-04T06:00:00Z',
+    triggered_at: null,
+    resolved_at: null,
+    result: null,
+    updates: [
+      { timestamp: '2026-04-04T06:00:00Z', field: 'created', message: 'Signal generated — awaiting activation' },
+    ],
+  },
+  {
+    id: 'SIG-2853',
+    subscription_id: 'sub_001',
+    symbol: 'ETHUSDT',
+    direction: 'LONG',
+    entry_price: 3420.00,
+    stop_loss: 3350.00,
+    take_profit: 3580.00,
+    risk_pct: 2.05,
+    reward_pct: 4.68,
+    win_rate: 0.69,
+    matching_trades: 13,
+    status: 'PENDING',
+    created_at: '2026-04-04T05:30:00Z',
+    triggered_at: null,
+    resolved_at: null,
+    result: null,
+    updates: [
+      { timestamp: '2026-04-04T05:30:00Z', field: 'created', message: 'Signal generated — awaiting activation' },
+    ],
+  },
+  // ── Active signals ──
   // sub_001 — BTC/ETH Long
   {
     id: 'SIG-2847',

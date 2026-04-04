@@ -186,6 +186,7 @@ export function formatCryptoPrice(price) {
  * Format signal status for display
  */
 const SIGNAL_STATUS_DISPLAY = {
+  PENDING: 'New',
   ACTIVE: 'Active',
   UPDATED: 'Updated',
   TRIGGERED: 'Triggered',
@@ -205,6 +206,7 @@ export function formatSignalStatus(status) {
 export function signalStatusColorClass(status) {
   if (!status) return 'text-tg-hint';
   const upper = status.toUpperCase();
+  if (upper === 'PENDING') return 'text-violet';
   if (upper === 'ACTIVE' || upper === 'TRIGGERED') return 'text-blue';
   if (upper === 'UPDATED') return 'text-yellow';
   if (upper === 'HIT_TP') return 'text-green';

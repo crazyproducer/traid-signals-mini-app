@@ -96,6 +96,6 @@ export const SUBSCRIPTION_PLANS = [
 /* ═══════════════════════════════════════════════
    Signal status constants
    ═══════════════════════════════════════════════ */
-export const SIGNAL_STATUSES = { ACTIVE: 'ACTIVE', UPDATED: 'UPDATED', TRIGGERED: 'TRIGGERED', HIT_TP: 'HIT_TP', HIT_SL: 'HIT_SL', EXPIRED: 'EXPIRED' };
+export const SIGNAL_STATUSES = { PENDING: 'PENDING', ACTIVE: 'ACTIVE', UPDATED: 'UPDATED', TRIGGERED: 'TRIGGERED', HIT_TP: 'HIT_TP', HIT_SL: 'HIT_SL', EXPIRED: 'EXPIRED' };
 export const SIGNAL_RESULTS = { WIN: 'WIN', LOSS: 'LOSS' };
 export const SUBSCRIPTION_STATUSES = { ACTIVE: 'active', PAUSED: 'paused', CANCELLED: 'cancelled' };
