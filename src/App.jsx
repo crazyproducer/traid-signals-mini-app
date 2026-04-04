@@ -1,17 +1,20 @@
 import { useEffect, useMemo } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
+import TabBar from './components/shared/TabBar';
 import MainMenu from './pages/MainMenu';
 import Terms from './pages/Terms';
 import NewSignalWizard from './pages/NewSignalWizard';
 import MySignals from './pages/MySignals';
 import SignalDetail from './pages/SignalDetail';
-import SignalPerformance from './pages/SignalPerformance';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import SubscriptionCurrent from './pages/SubscriptionCurrent';
 
-/* Routes where the TG back button should be hidden */
-const TOP_LEVEL_ROUTES = ['/', '/terms'];
+/* Routes where TG back button is hidden */
+const TOP_LEVEL_ROUTES = ['/', '/terms', '/signals', '/account', '/new-signal'];
+
+/* Routes where TabBar is hidden */
+const HIDE_TAB_BAR = ['/terms'];
 
 function useTermsGate() {
   const location = useLocation();
@@ -31,28 +34,22 @@ function useTelegramBackButton() {
   const tg = useMemo(() => window.Telegram?.WebApp, []);
 
   useEffect(() => {
-    if (!tg) return;
+    if (!tg?.BackButton) return;
 
     const isTopLevel = TOP_LEVEL_ROUTES.includes(location.pathname);
-    const BackButton = tg.BackButton;
-
-    if (!BackButton) return;
 
     if (isTopLevel) {
-      BackButton.hide();
+      tg.BackButton.hide();
     } else {
-      BackButton.show();
+      tg.BackButton.show();
     }
 
     function handleBack() {
       navigate(-1);
     }
 
-    BackButton.onClick(handleBack);
-
-    return () => {
-      BackButton.offClick(handleBack);
-    };
+    tg.BackButton.onClick(handleBack);
+    return () => tg.BackButton.offClick(handleBack);
   }, [tg, location.pathname, navigate]);
 }
 
@@ -71,19 +68,24 @@ export default function App() {
   useTelegramBackButton();
   useTermsGate();
 
+  const location = useLocation();
+  const showTabBar = !HIDE_TAB_BAR.some((p) => location.pathname.startsWith(p));
+
   return (
-    <div className="min-h-screen bg-tg-bg text-tg-text">
-      <Routes>
-        <Route path="/" element={<MainMenu />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/new-signal" element={<NewSignalWizard />} />
-        <Route path="/signals" element={<MySignals />} />
-        <Route path="/signals/:id" element={<SignalDetail />} />
-        <Route path="/performance" element={<SignalPerformance />} />
-        <Route path="/subscription" element={<SubscriptionPlans />} />
-        <Route path="/subscription/current" element={<SubscriptionCurrent />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+    <div className="min-h-[100dvh] bg-tg-bg text-tg-text">
+      <div className={showTabBar ? 'pb-20' : ''}>
+        <Routes>
+          <Route path="/" element={<MainMenu />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/new-signal" element={<NewSignalWizard />} />
+          <Route path="/signals" element={<MySignals />} />
+          <Route path="/signals/:id" element={<SignalDetail />} />
+          <Route path="/account" element={<SubscriptionCurrent />} />
+          <Route path="/account/plans" element={<SubscriptionPlans />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+      {showTabBar && <TabBar />}
     </div>
   );
 }

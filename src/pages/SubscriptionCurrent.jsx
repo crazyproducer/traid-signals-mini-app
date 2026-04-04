@@ -115,7 +115,7 @@ export default function SubscriptionCurrent() {
       {/* Actions */}
       <button
         type="button"
-        onClick={() => navigate('/subscription')}
+        onClick={() => navigate('/account/plans')}
         className="w-full card p-4 pressable flex items-center justify-between mb-3"
       >
         <span className="text-[14px] font-semibold text-tg-text">Change Plan</span>

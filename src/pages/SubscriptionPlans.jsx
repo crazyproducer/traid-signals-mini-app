@@ -8,7 +8,7 @@ export default function SubscriptionPlans() {
 
   function handleSelectPlan(plan) {
     // Mock: just navigate to current subscription page
-    navigate('/subscription/current');
+    navigate('/account');
   }
 
   return (

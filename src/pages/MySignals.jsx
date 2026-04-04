@@ -35,7 +35,7 @@ export default function MySignals() {
         </h1>
         <button
           type="button"
-          onClick={() => navigate('/performance')}
+          onClick={() => navigate('/')}
           className="flex items-center gap-1.5 text-[13px] font-medium text-tg-accent pressable"
         >
           <BarChart3 size={14} strokeWidth={2} />
