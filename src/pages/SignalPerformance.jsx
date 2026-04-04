@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Target, TrendingUp, TrendingDown, Activity } from 'lucide-react';
 import PerformanceChart from '../components/signals/PerformanceChart';
 import StatCard from '../components/shared/StatCard';
 import { mockPerformance, mockEquityCurve } from '../api/mock-data';
@@ -17,58 +16,50 @@ export default function SignalPerformance() {
   return (
     <div className="px-5 pt-6 pb-8 animate-fade-in">
       {/* Header */}
-      <h1 className="text-[20px] font-bold text-tg-text mb-5">Performance</h1>
+      <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
+        Performance
+      </h1>
 
       {/* Hero win rate */}
-      <div className="flex flex-col items-center mb-6">
-        <span className="text-[10px] uppercase tracking-wider text-tg-hint mb-1">Overall Win Rate</span>
+      <div className="flex flex-col items-center mb-8">
+        <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
+          Overall Win Rate
+        </span>
         <span
-          className="text-[40px] font-mono font-bold text-green leading-none"
+          className="text-[48px] font-mono font-bold text-green leading-none"
           style={{ fontVariantNumeric: 'tabular-nums' }}
         >
           {formatWinRate(stats.win_rate)}
         </span>
-        <span className="text-[13px] text-tg-hint mt-1">
+        <span className="text-[13px] text-tg-hint mt-1.5">
           {stats.wins}W / {stats.losses}L of {stats.triggered} triggered
         </span>
       </div>
 
-      {/* Stats grid */}
+      {/* Stats grid 2x2 */}
       <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="card-premium-sm p-4 flex items-center gap-3">
-          <div className="icon-gradient-blue w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
-            <Activity size={16} strokeWidth={2} className="text-white" />
-          </div>
+        <div className="card p-4">
           <StatCard
             label="Triggered"
             value={stats.triggered}
             sublabel={`of ${stats.total_signals} total`}
           />
         </div>
-        <div className="card-premium-sm p-4 flex items-center gap-3">
-          <div className="icon-gradient-green w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
-            <TrendingUp size={16} strokeWidth={2} className="text-white" />
-          </div>
+        <div className="card p-4">
           <StatCard
             label="Wins"
             value={stats.wins}
             colorClass="text-green"
           />
         </div>
-        <div className="card-premium-sm p-4 flex items-center gap-3">
-          <div className="icon-gradient-red w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
-            <TrendingDown size={16} strokeWidth={2} className="text-white" />
-          </div>
+        <div className="card p-4">
           <StatCard
             label="Losses"
             value={stats.losses}
             colorClass="text-red"
           />
         </div>
-        <div className="card-premium-sm p-4 flex items-center gap-3">
-          <div className="icon-gradient-violet w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0">
-            <Target size={16} strokeWidth={2} className="text-white" />
-          </div>
+        <div className="card p-4">
           <StatCard
             label="Avg Return"
             value={`+${stats.avg_profit_pct}%`}
@@ -79,7 +70,7 @@ export default function SignalPerformance() {
       </div>
 
       {/* Chart section */}
-      <div className="card-premium p-5 mb-4">
+      <div className="card p-5 mb-4">
         {/* Period selector */}
         <div className="flex items-center justify-between mb-4">
           <span className="text-[14px] font-semibold text-tg-text">Equity Curve</span>

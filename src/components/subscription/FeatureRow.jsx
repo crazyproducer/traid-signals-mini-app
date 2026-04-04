@@ -5,7 +5,7 @@ export default function FeatureRow({ text, included }) {
     <div className="flex items-center gap-2.5 py-1.5">
       <div
         className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
-          included ? 'bg-green/10' : 'bg-tg-secondary/50'
+          included ? 'bg-green/8' : 'bg-tg-secondary/40'
         }`}
       >
         {included ? (

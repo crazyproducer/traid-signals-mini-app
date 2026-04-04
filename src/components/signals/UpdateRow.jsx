@@ -1,19 +1,19 @@
-import { Clock, ArrowUpRight, ArrowDownRight, RefreshCw, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, RefreshCw, AlertCircle } from 'lucide-react';
 
-function getUpdateIcon(field) {
+function getDotColor(field) {
   switch (field) {
     case 'created':
-      return <RefreshCw size={14} strokeWidth={2} className="text-blue" />;
+      return 'bg-blue';
     case 'entry_price':
-      return <ArrowUpRight size={14} strokeWidth={2} className="text-yellow" />;
+      return 'bg-yellow';
     case 'stop_loss':
-      return <ArrowDownRight size={14} strokeWidth={2} className="text-red" />;
+      return 'bg-red';
     case 'take_profit':
-      return <ArrowUpRight size={14} strokeWidth={2} className="text-green" />;
+      return 'bg-green';
     case 'status':
-      return <AlertCircle size={14} strokeWidth={2} className="text-blue" />;
+      return 'bg-blue';
     default:
-      return <RefreshCw size={14} strokeWidth={2} className="text-tg-hint" />;
+      return 'bg-tg-hint';
   }
 }
 
@@ -27,23 +27,21 @@ function formatTimestamp(ts) {
 
 export default function UpdateRow({ update, signal }) {
   return (
-    <div className="flex items-start gap-3 py-3 border-b border-tg-secondary/60 last:border-b-0">
-      {/* Timeline dot + icon */}
-      <div className="w-7 h-7 rounded-full bg-tg-secondary/50 flex items-center justify-center flex-shrink-0 mt-0.5">
-        {getUpdateIcon(update.field)}
+    <div className="flex items-start gap-3 py-3">
+      {/* Timeline dot + vertical line */}
+      <div className="flex flex-col items-center flex-shrink-0 pt-1.5">
+        <div className={`w-2 h-2 rounded-full ${getDotColor(update.field)}`} />
+        <div className="w-px flex-1 bg-tg-secondary/40 mt-1" />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col min-w-0 flex-1">
+      <div className="flex flex-col min-w-0 flex-1 pb-1">
         <span className="text-[13px] text-tg-text leading-snug">
           {update.message}
         </span>
-        <div className="flex items-center gap-1.5 mt-0.5">
-          <Clock size={10} className="text-tg-hint/50" />
-          <span className="text-[11px] text-tg-hint/60">
-            {formatTimestamp(update.timestamp)}
-          </span>
-        </div>
+        <span className="text-[11px] text-tg-hint/50 mt-0.5">
+          {formatTimestamp(update.timestamp)}
+        </span>
       </div>
     </div>
   );

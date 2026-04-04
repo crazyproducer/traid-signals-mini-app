@@ -5,7 +5,7 @@ export default function PnlValue({ value, type = 'usd', className = '' }) {
   const colorClass = pnlColorClass(value);
   return (
     <span
-      className={`font-mono font-semibold ${colorClass} ${className}`}
+      className={`font-mono font-bold ${colorClass} ${className}`}
       style={{ fontVariantNumeric: 'tabular-nums' }}
     >
       {formatted.text}

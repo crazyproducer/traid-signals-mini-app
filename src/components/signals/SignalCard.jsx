@@ -3,7 +3,6 @@ import SignalStatusBadge from './SignalStatusBadge';
 import Badge from '../shared/Badge';
 import {
   formatCryptoPrice,
-  formatWinRate,
   formatRelativeTime,
   formatDirection,
   formatPct,
@@ -33,16 +32,16 @@ export default function SignalCard({ signal, subscription, onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="card-premium-sm pressable w-full text-left p-4 flex items-center gap-4"
+      className="card pressable w-full text-left p-4 flex items-center gap-3.5"
     >
-      {/* Direction icon — squircle */}
-      <div className={`${gradientClass} w-12 h-12 rounded-[15px] flex items-center justify-center flex-shrink-0`}>
-        <DirectionIcon size={22} strokeWidth={1.8} className="text-white" />
+      {/* Direction icon -- squircle 44px */}
+      <div className={`${gradientClass} w-[44px] h-[44px] rounded-[13px] flex items-center justify-center flex-shrink-0`}>
+        <DirectionIcon size={20} strokeWidth={1.8} className="text-white" />
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col min-w-0 flex-1 gap-1">
-        {/* Symbol + direction */}
+      {/* Center content */}
+      <div className="flex flex-col min-w-0 flex-1 gap-0.5">
+        {/* Symbol + direction badge */}
         <div className="flex items-center gap-2">
           <span className="text-[16px] font-semibold text-tg-text truncate" style={{ letterSpacing: '-0.01em' }}>
             {symbolLabel(signal.symbol)}
@@ -50,9 +49,9 @@ export default function SignalCard({ signal, subscription, onClick }) {
           <Badge variant={directionVariant}>{formatDirection(signal.direction)}</Badge>
         </div>
 
-        {/* Price row */}
-        <div className="flex items-center gap-3">
-          <span className="text-[12px] font-mono text-tg-hint" style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {/* Entry price + time */}
+        <div className="flex items-center gap-2.5">
+          <span className="text-[13px] font-mono text-tg-hint" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
           <span className="text-[11px] text-tg-hint/40">
@@ -62,11 +61,11 @@ export default function SignalCard({ signal, subscription, onClick }) {
       </div>
 
       {/* Right side */}
-      <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
+      <div className="flex flex-col items-end gap-1 flex-shrink-0">
         {isResolved && pnlPct !== null ? (
           <>
             <span
-              className={`text-[17px] font-mono font-bold ${pnlColorClass(pnlPct)}`}
+              className={`text-[18px] font-mono font-bold ${pnlColorClass(pnlPct)}`}
               style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
             >
               {formatPct(pnlPct).text}

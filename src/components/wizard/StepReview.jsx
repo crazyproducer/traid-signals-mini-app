@@ -38,7 +38,7 @@ export default function StepReview({ data }) {
   return (
     <div>
       {/* Summary card */}
-      <div className="card-premium p-5">
+      <div className="card p-5">
         <div className="flex flex-col divide-y divide-tg-secondary/60">
           {REVIEW_ROWS.map((row) => {
             const value = data[row.key];

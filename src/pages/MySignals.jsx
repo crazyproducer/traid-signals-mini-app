@@ -29,8 +29,10 @@ export default function MySignals() {
   return (
     <div className="px-5 pt-6 pb-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-[20px] font-bold text-tg-text">My Signals</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-[28px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
+          Signals
+        </h1>
         <button
           type="button"
           onClick={() => navigate('/performance')}
@@ -41,10 +43,9 @@ export default function MySignals() {
         </button>
       </div>
 
-      {/* 3-tab switcher */}
-      <div className="flex items-center gap-1 bg-tg-secondary/40 rounded-xl p-1 mb-5">
+      {/* Underline tabs */}
+      <div className="flex items-center border-b border-tg-secondary/30 mb-5">
         {TABS.map((t) => {
-          const Icon = t.icon;
           const count = signalsByTab[t.key]?.length || 0;
           const isActive = tab === t.key;
 
@@ -53,26 +54,25 @@ export default function MySignals() {
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-[12px] font-semibold transition-all duration-200 ${
+              className={`flex-1 flex items-center justify-center gap-1.5 pb-3 text-[13px] font-semibold transition-all duration-200 relative ${
                 isActive
-                  ? 'bg-tg-section text-tg-text shadow-sm'
+                  ? 'text-tg-text'
                   : 'text-tg-hint'
               }`}
             >
-              <Icon size={13} strokeWidth={2} />
               {t.label}
               {count > 0 && (
                 <span
-                  className={`text-[9px] font-bold rounded-full px-1.5 py-0.5 ${
-                    t.key === 'new'
-                      ? 'bg-violet/10 text-violet'
-                      : t.key === 'active'
-                        ? 'bg-green/10 text-green'
-                        : 'bg-tg-secondary/80 text-tg-hint'
+                  className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 ${
+                    isActive ? 'bg-tg-button/10 text-tg-button' : 'bg-tg-secondary/60 text-tg-hint'
                   }`}
                 >
                   {count}
                 </span>
+              )}
+              {/* Active underline */}
+              {isActive && (
+                <div className="absolute bottom-0 left-2 right-2 h-[2px] bg-tg-button rounded-full" />
               )}
             </button>
           );

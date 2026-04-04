@@ -4,7 +4,7 @@ import Skeleton from '../shared/Skeleton';
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="card-premium-sm px-3 py-2">
+    <div className="card px-3 py-2">
       <p className="text-[11px] text-tg-hint">{label}</p>
       <p className="text-[14px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
         {payload[0].value >= 0 ? '+' : ''}{payload[0].value.toFixed(2)}%
@@ -32,8 +32,8 @@ export default function PerformanceChart({ data, loading }) {
         <AreaChart data={data} margin={{ top: 8, right: 4, left: 4, bottom: 0 }}>
           <defs>
             <linearGradient id="equityGradient" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#10B981" stopOpacity={0.25} />
-              <stop offset="100%" stopColor="#10B981" stopOpacity={0.02} />
+              <stop offset="0%" stopColor="#059669" stopOpacity={0.2} />
+              <stop offset="100%" stopColor="#059669" stopOpacity={0.02} />
             </linearGradient>
           </defs>
           <XAxis
@@ -59,11 +59,11 @@ export default function PerformanceChart({ data, loading }) {
           <Area
             type="monotone"
             dataKey="cumulative_pct"
-            stroke="#10B981"
+            stroke="#059669"
             strokeWidth={2}
             fill="url(#equityGradient)"
             dot={false}
-            activeDot={{ r: 4, fill: '#10B981', stroke: '#fff', strokeWidth: 2 }}
+            activeDot={{ r: 4, fill: '#059669', stroke: '#fff', strokeWidth: 2 }}
           />
         </AreaChart>
       </ResponsiveContainer>

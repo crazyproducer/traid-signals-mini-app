@@ -103,7 +103,7 @@ export default function StepPreview({ data }) {
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-3">
         {/* Win Rate */}
-        <div className="card-premium-sm p-4 flex flex-col items-center gap-2">
+        <div className="card p-4 flex flex-col items-center gap-2">
           <div className="icon-gradient-green w-9 h-9 rounded-full flex items-center justify-center">
             <TrendingUp size={18} strokeWidth={2} className="text-white" />
           </div>
@@ -119,7 +119,7 @@ export default function StepPreview({ data }) {
         </div>
 
         {/* Avg Return */}
-        <div className="card-premium-sm p-4 flex flex-col items-center gap-2">
+        <div className="card p-4 flex flex-col items-center gap-2">
           <div className="icon-gradient-blue w-9 h-9 rounded-full flex items-center justify-center">
             <Activity size={18} strokeWidth={2} className="text-white" />
           </div>
@@ -135,7 +135,7 @@ export default function StepPreview({ data }) {
         </div>
 
         {/* Risk/Reward */}
-        <div className="card-premium-sm p-4 flex flex-col items-center gap-2">
+        <div className="card p-4 flex flex-col items-center gap-2">
           <div className="icon-gradient-violet w-9 h-9 rounded-full flex items-center justify-center">
             <Target size={18} strokeWidth={2} className="text-white" />
           </div>
@@ -151,7 +151,7 @@ export default function StepPreview({ data }) {
         </div>
 
         {/* Signal Quality */}
-        <div className="card-premium-sm p-4 flex flex-col items-center gap-2">
+        <div className="card p-4 flex flex-col items-center gap-2">
           <div className="icon-gradient-yellow w-9 h-9 rounded-full flex items-center justify-center">
             <BarChart3 size={18} strokeWidth={2} className="text-white" />
           </div>

@@ -1,18 +1,4 @@
 import FeatureRow from './FeatureRow';
-import Badge from '../shared/Badge';
-
-const ALL_FEATURES = [
-  'All symbols (unlimited)',
-  'Up to 5 symbols',
-  '1 symbol',
-  '4h and 24h frequencies',
-  'Daily signals only (24h)',
-  'Full performance dashboard',
-  'Basic performance stats',
-  'Signal update notifications',
-  'Priority signal delivery',
-  'Advanced analytics',
-];
 
 export default function PlanCard({ plan, isCurrentPlan, onSelect }) {
   const isPopular = plan.value === 'basic';
@@ -21,14 +7,14 @@ export default function PlanCard({ plan, isCurrentPlan, onSelect }) {
 
   return (
     <div
-      className={`card-premium p-5 relative transition-all duration-200 ${
+      className={`card p-5 relative transition-all duration-200 ${
         isCurrentPlan ? 'ring-2 ring-tg-button' : ''
-      }`}
+      } ${isPopular ? 'border-l-[3px] border-l-tg-button' : ''}`}
     >
       {/* Popular badge */}
       {isPopular && (
         <div className="absolute -top-2.5 right-4">
-          <span className="bg-tg-button text-tg-button-text text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+          <span className="bg-tg-button text-tg-button-text text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-full">
             Popular
           </span>
         </div>

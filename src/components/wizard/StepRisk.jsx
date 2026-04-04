@@ -33,7 +33,7 @@ export default function StepRisk({ value, onChange }) {
       {/* Selected description */}
       {value !== null && (
         <div className="mt-4 px-1 animate-fade-in">
-          <div className="card-premium-sm p-3.5 flex items-start gap-3">
+          <div className="card p-3.5 flex items-start gap-3">
             <div className="icon-gradient-blue w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-[11px] font-bold text-white">{value}%</span>
             </div>

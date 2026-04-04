@@ -15,7 +15,6 @@ export default function Badge({ children, variant }) {
   return (
     <span
       className={`inline-flex items-center text-[10px] rounded-full px-2.5 py-0.5 font-bold tracking-wide uppercase flex-shrink-0 ${VARIANTS[variant] || VARIANTS.expired}`}
-      style={{ letterSpacing: '0.04em' }}
     >
       {children}
     </span>

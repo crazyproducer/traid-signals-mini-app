@@ -11,7 +11,7 @@ export default function SubscriptionCurrent() {
   if (!plan) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="text-[15px] font-semibold text-tg-text">No active subscription</p>
+        <p className="text-[16px] font-semibold text-tg-text">No active subscription</p>
       </div>
     );
   }
@@ -26,21 +26,25 @@ export default function SubscriptionCurrent() {
   return (
     <div className="px-5 pt-6 pb-8 animate-fade-in">
       {/* Header */}
-      <h1 className="text-[20px] font-bold text-tg-text mb-5">My Subscription</h1>
+      <h1 className="text-[28px] font-bold text-tg-text mb-5" style={{ letterSpacing: '-0.03em' }}>
+        My Subscription
+      </h1>
 
       {/* Current plan card */}
-      <div className="card-premium p-5 mb-4">
+      <div className="card-elevated p-5 mb-4">
         <div className="flex items-center gap-3.5 mb-4">
           <div className="icon-gradient-violet w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0">
             <Crown size={24} strokeWidth={2} className="text-white" />
           </div>
           <div>
-            <span className="text-[18px] font-bold text-tg-text">{plan.label}</span>
+            <span className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
+              {plan.label}
+            </span>
             <div className="flex items-center gap-2 mt-0.5">
               <span className="text-[14px] font-mono font-semibold text-tg-accent" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {priceDisplay}
               </span>
-              <span className="bg-green/10 text-green text-[10px] font-bold rounded-full px-2 py-0.5 uppercase tracking-wider">
+              <span className="inline-flex items-center bg-green/8 text-green text-[10px] font-bold rounded-full px-2.5 py-0.5 uppercase tracking-wide">
                 Active
               </span>
             </div>
@@ -56,11 +60,13 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Billing info */}
-      <div className="card-premium-sm p-4 mb-4">
-        <h3 className="text-[14px] font-semibold text-tg-text mb-3">Billing</h3>
+      <div className="card p-4 mb-4">
+        <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
+          Billing
+        </span>
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-tg-secondary/50 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-tg-secondary/40 flex items-center justify-center flex-shrink-0">
               <Calendar size={14} className="text-tg-hint" />
             </div>
             <div className="flex flex-col">
@@ -71,7 +77,7 @@ export default function SubscriptionCurrent() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-tg-secondary/50 flex items-center justify-center flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-tg-secondary/40 flex items-center justify-center flex-shrink-0">
               <CreditCard size={14} className="text-tg-hint" />
             </div>
             <div className="flex flex-col">
@@ -85,8 +91,10 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Usage */}
-      <div className="card-premium-sm p-4 mb-6">
-        <h3 className="text-[14px] font-semibold text-tg-text mb-3">Usage</h3>
+      <div className="card p-4 mb-6">
+        <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
+          Usage
+        </span>
         <div className="flex items-center justify-between mb-2">
           <span className="text-[13px] text-tg-hint">Signal subscriptions</span>
           <span className="text-[13px] font-mono font-medium text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -108,7 +116,7 @@ export default function SubscriptionCurrent() {
       <button
         type="button"
         onClick={() => navigate('/subscription')}
-        className="w-full card-premium-sm p-4 pressable flex items-center justify-between mb-3"
+        className="w-full card p-4 pressable flex items-center justify-between mb-3"
       >
         <span className="text-[14px] font-semibold text-tg-text">Change Plan</span>
         <ArrowRight size={18} className="text-tg-hint/40" />

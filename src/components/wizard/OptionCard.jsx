@@ -22,41 +22,41 @@ export default function OptionCard({ icon: Icon, title, description, count, sele
     <button
       type="button"
       onClick={onClick}
-      className={`pressable w-full text-left rounded-[20px] p-4 flex items-center gap-4 transition-all duration-250 ${
-        selected ? 'option-selected' : 'option-unselected'
+      className={`pressable w-full text-left rounded-[20px] p-4 flex items-center gap-3.5 transition-all duration-200 ${
+        selected ? 'card-selected' : 'card'
       }`}
     >
-      {/* Icon — squircle with colored glow */}
-      <div className={`${grad} w-12 h-12 rounded-[15px] flex items-center justify-center flex-shrink-0`}>
-        <Icon size={22} strokeWidth={1.8} className="text-white" />
+      {/* Icon — 44px squircle with gradient */}
+      <div className={`${grad} w-[44px] h-[44px] rounded-[13px] flex items-center justify-center flex-shrink-0`}>
+        <Icon size={20} strokeWidth={1.8} className="text-white" />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-baseline gap-2.5">
+        <div className="flex items-baseline gap-2">
           <span className="text-[16px] font-semibold text-tg-text leading-tight" style={{ letterSpacing: '-0.01em' }}>
             {title}
           </span>
           {count != null && (
             <span className="text-[11px] font-mono text-tg-hint/40" style={{ fontVariantNumeric: 'tabular-nums' }}>
-              {fmtCount(count)} rec
+              {fmtCount(count)}
             </span>
           )}
         </div>
         {description && (
-          <span className="text-[13px] text-tg-hint leading-snug mt-1 block">
+          <span className="text-[13px] text-tg-hint leading-snug mt-0.5 block">
             {description}
           </span>
         )}
       </div>
 
-      {/* Check indicator — large, confident */}
+      {/* Check indicator */}
       <div className="flex-shrink-0">
         <div
           className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 ${
             selected
-              ? 'bg-tg-button scale-110'
-              : 'border-2 border-tg-hint/20'
+              ? 'bg-tg-button'
+              : 'border-2 border-tg-hint/15'
           }`}
         >
           {selected && <Check size={14} strokeWidth={3} className="text-tg-button-text" />}

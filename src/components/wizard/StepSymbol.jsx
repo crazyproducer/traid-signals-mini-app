@@ -46,8 +46,8 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
                 isSelected
                   ? 'option-selected'
                   : isDisabled
-                    ? 'card-premium-sm opacity-40 cursor-not-allowed'
-                    : 'card-premium-sm border-2 border-transparent'
+                    ? 'card opacity-40 cursor-not-allowed'
+                    : 'card border-2 border-transparent'
               }`}
             >
               {/* Coin icon */}

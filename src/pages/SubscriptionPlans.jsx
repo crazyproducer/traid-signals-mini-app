@@ -14,8 +14,10 @@ export default function SubscriptionPlans() {
   return (
     <div className="px-5 pt-6 pb-8 animate-fade-in">
       {/* Header */}
-      <h1 className="text-[20px] font-bold text-tg-text mb-2">Choose Your Plan</h1>
-      <p className="text-[13px] text-tg-hint mb-6">
+      <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
+        Choose Your Plan
+      </h1>
+      <p className="text-[14px] text-tg-hint mb-6">
         Select the plan that best fits your trading needs
       </p>
 
