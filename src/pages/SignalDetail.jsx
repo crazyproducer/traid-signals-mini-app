@@ -63,7 +63,7 @@ export default function SignalDetail() {
       ];
 
   return (
-    <div className="page-padding pt-4 pb-8 animate-fade-in">
+    <div className="page-padding animate-fade-in" style={{ paddingTop: '16px', paddingBottom: '96px' }}>
       <BackButton />
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">
