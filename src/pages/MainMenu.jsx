@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
 import PerformanceChart from '../components/signals/PerformanceChart';
 import StatCard from '../components/shared/StatCard';
@@ -123,14 +122,6 @@ export default function MainMenu() {
         </>
       )}
 
-      {/* FAB — Create new signal */}
-      <button
-        type="button"
-        onClick={() => navigate('/new-signal')}
-        className="fixed bottom-24 right-5 z-40 w-14 h-14 rounded-full icon-gradient-green flex items-center justify-center pressable"
-      >
-        <Plus size={28} strokeWidth={2.5} className="text-white" />
-      </button>
     </div>
   );
 }
