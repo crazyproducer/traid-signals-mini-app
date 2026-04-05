@@ -1,9 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Plus, Radio, User } from 'lucide-react';
+import { Home, Plus, Radio, BookOpen, User } from 'lucide-react';
 
-const sideTabs = [
+const leftTabs = [
   { path: '/', label: 'Home', icon: Home },
   { path: '/signals', label: 'Signals', icon: Radio },
+];
+
+const rightTabs = [
+  { path: '/learn', label: 'Learn', icon: BookOpen },
   { path: '/account', label: 'Account', icon: User },
 ];
 
@@ -49,7 +53,7 @@ export default function TabBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50">
-      {/* Raised create button — positioned above the bar */}
+      {/* Raised create button */}
       <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-10">
         <button
           type="button"
@@ -64,15 +68,14 @@ export default function TabBar() {
       {/* Tab bar */}
       <div className="bg-tg-section/95 backdrop-blur-2xl border-t border-[color-mix(in_srgb,var(--tg-theme-text-color,#000)_6%,transparent)]">
         <div className="flex items-center pb-[env(safe-area-inset-bottom,0px)]">
-          {renderTab(sideTabs[0])}
-          {renderTab(sideTabs[1])}
+          {leftTabs.map(renderTab)}
 
-          {/* Spacer for center button */}
+          {/* Center spacer with label */}
           <div className="flex-1 flex items-center justify-center pt-2 pb-1">
             <span className="text-[10px] text-tg-hint font-medium mt-5">Create</span>
           </div>
 
-          {renderTab(sideTabs[2])}
+          {rightTabs.map(renderTab)}
         </div>
       </div>
     </nav>
