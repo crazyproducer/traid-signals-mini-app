@@ -439,6 +439,10 @@ export function getActiveSignalsCount() {
   return mockSignals.filter((s) => s.status === 'ACTIVE' || s.status === 'UPDATED' || s.status === 'TRIGGERED').length;
 }
 
+export function getNewSignalsCount() {
+  return mockSignals.filter((s) => s.status === 'PENDING').length;
+}
+
 /* ─── Helper: get recent signals (last N) ─── */
 
 export function getRecentSignals(limit = 5) {

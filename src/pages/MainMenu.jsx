@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, ArrowRight } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
 import PerformanceChart from '../components/signals/PerformanceChart';
 import StatCard from '../components/shared/StatCard';
 import {
   getActiveSignalsCount,
+  getNewSignalsCount,
   getRecentSignals,
   mockPerformance,
   mockEquityCurve,
@@ -20,47 +21,49 @@ export default function MainMenu() {
   const [period, setPeriod] = useState('90D');
 
   const activeCount = getActiveSignalsCount();
+  const newCount = getNewSignalsCount();
   const recentSignals = getRecentSignals(3);
   const stats = mockPerformance;
   const chartData = mockEquityCurve[period] || [];
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="px-5 pt-8 pb-24 animate-fade-in">
+    <div className="px-5 pt-8 pb-28 animate-fade-in">
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
         TRAID Signals
       </h1>
 
-      {/* Performance hero — win rate + stats */}
-      <div className="flex items-center gap-4 mb-5">
-        {/* Win rate — big number */}
-        <div className="flex flex-col items-center card px-5 py-4">
+      {/* Hero — Total Return as key indicator */}
+      <div className="flex items-stretch gap-3 mb-5">
+        {/* Return — hero number */}
+        <div className="flex flex-col items-center justify-center card px-5 py-4 flex-1">
           <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
-            Win rate
+            Total return
           </span>
           <span
-            className="text-[36px] font-mono font-bold text-green leading-none"
+            className={`text-[36px] font-mono font-bold leading-none ${
+              totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'
+            }`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
-            {formatWinRate(stats.win_rate)}
+            {totalReturn.text}
           </span>
           <span className="text-[11px] text-tg-hint mt-1">
-            {stats.wins}W / {stats.losses}L
+            WR {formatWinRate(stats.win_rate)}
           </span>
         </div>
 
-        {/* Stats column */}
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="card px-4 py-3">
+        {/* Stats column: New + Active + Win/Loss */}
+        <div className="flex flex-col gap-2 min-w-[110px]">
+          <div className="card px-4 py-2.5 flex-1">
+            <StatCard label="New" value={newCount} colorClass="text-violet" />
+          </div>
+          <div className="card px-4 py-2.5 flex-1">
             <StatCard label="Active" value={activeCount} colorClass="text-green" />
           </div>
-          <div className="card px-4 py-3">
-            <StatCard
-              label="Return"
-              value={totalReturn.text}
-              colorClass={totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'}
-            />
+          <div className="card px-4 py-2.5 flex-1">
+            <StatCard label="W / L" value={`${stats.wins} / ${stats.losses}`} />
           </div>
         </div>
       </div>
@@ -87,36 +90,7 @@ export default function MainMenu() {
           </div>
         </div>
         <PerformanceChart data={chartData} loading={false} />
-        <div className="flex items-center justify-center mt-3 pt-3 border-t border-tg-secondary/20">
-          <span className="text-[12px] text-tg-hint mr-2">Total return</span>
-          <span
-            className={`text-[16px] font-mono font-bold ${totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'}`}
-            style={{ fontVariantNumeric: 'tabular-nums' }}
-          >
-            {totalReturn.text}
-          </span>
-        </div>
       </div>
-
-      {/* Create new signal CTA */}
-      <button
-        type="button"
-        onClick={() => navigate('/new-signal')}
-        className="card-elevated pressable w-full text-left p-5 flex items-center gap-4 mb-6"
-      >
-        <div className="icon-gradient-green w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0">
-          <Plus size={24} strokeWidth={2} className="text-white" />
-        </div>
-        <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
-            Create new signal
-          </span>
-          <span className="text-[13px] text-tg-hint mt-0.5">
-            Configure and launch a subscription
-          </span>
-        </div>
-        <ArrowRight size={20} className="text-tg-hint/40 flex-shrink-0" />
-      </button>
 
       {/* Recent signals */}
       {recentSignals.length > 0 && (
@@ -148,6 +122,15 @@ export default function MainMenu() {
           </div>
         </>
       )}
+
+      {/* FAB — Create new signal */}
+      <button
+        type="button"
+        onClick={() => navigate('/new-signal')}
+        className="fixed bottom-24 right-5 z-40 w-14 h-14 rounded-full icon-gradient-green flex items-center justify-center pressable"
+      >
+        <Plus size={28} strokeWidth={2.5} className="text-white" />
+      </button>
     </div>
   );
 }
