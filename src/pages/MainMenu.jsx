@@ -33,31 +33,37 @@ export default function MainMenu() {
         TRAID Signals
       </h1>
 
-      {/* Metrics row — 4 equal cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '24px' }}>
-        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
-          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>Return</span>
+      {/* Metrics row — 5 equal cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: '6px', marginBottom: '24px' }}>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 2px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Return</span>
           <span
-            className={`text-[18px] font-mono font-bold leading-tight ${
+            className={`text-[17px] font-mono font-bold leading-tight ${
               totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'
             }`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {totalReturn.text}
           </span>
-          <span className="text-[9px] text-tg-hint">WR {formatWinRate(stats.win_rate)}</span>
         </div>
-        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
-          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>New</span>
-          <span className="text-[18px] font-mono font-bold text-violet leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 2px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Win rate</span>
+          <span className="text-[17px] font-mono font-bold text-green leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {formatWinRate(stats.win_rate)}
+          </span>
+          <span className="text-[8px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}W/{stats.losses}L</span>
         </div>
-        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
-          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>Active</span>
-          <span className="text-[18px] font-mono font-bold text-green leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 2px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>New</span>
+          <span className="text-[17px] font-mono font-bold text-violet leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
         </div>
-        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
-          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>W / L</span>
-          <span className="text-[18px] font-mono font-bold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 2px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Active</span>
+          <span className="text-[17px] font-mono font-bold text-green leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
+        </div>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 2px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Expired</span>
+          <span className="text-[17px] font-mono font-bold text-tg-hint leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.expired}</span>
         </div>
       </div>
 
