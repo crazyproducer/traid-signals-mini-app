@@ -27,7 +27,7 @@ export default function MainMenu() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="px-6 pt-8 pb-28 animate-fade-in">
+    <div className="px-7 pt-8 pb-28 animate-fade-in">
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
         TRAID Signals

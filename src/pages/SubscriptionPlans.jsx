@@ -13,7 +13,7 @@ export default function SubscriptionPlans() {
   }
 
   return (
-    <div className="px-5 pt-4 pb-8 animate-fade-in">
+    <div className="px-7 pt-4 pb-8 animate-fade-in">
       <BackButton />
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>

@@ -87,7 +87,7 @@ export default function Learn() {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <div className="px-5 pt-8 pb-24 animate-fade-in">
+    <div className="px-7 pt-8 pb-24 animate-fade-in">
       <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
         Learn
       </h1>

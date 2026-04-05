@@ -24,7 +24,7 @@ export default function SubscriptionCurrent() {
   }
 
   return (
-    <div className="px-5 pt-6 pb-8 animate-fade-in">
+    <div className="px-7 pt-6 pb-8 animate-fade-in">
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-5" style={{ letterSpacing: '-0.03em' }}>
         My Subscription

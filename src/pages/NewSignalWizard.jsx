@@ -289,7 +289,7 @@ function StepReview({ data }) {
    ═══════════════════════════════════════════════ */
 function SuccessState({ onDone }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in px-5">
+    <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in px-7">
       <div className="icon-gradient-green w-16 h-16 rounded-full flex items-center justify-center mb-5">
         <CheckCircle2 size={32} strokeWidth={2} className="text-white" />
       </div>
@@ -369,12 +369,12 @@ export default function NewSignalWizard() {
   return (
     <div className="min-h-[100dvh] flex flex-col">
       {/* Progress bar */}
-      <div className="px-5 pt-4 pb-2">
+      <div className="px-7 pt-4 pb-2">
         <WizardProgress step={w.step} totalSteps={w.totalSteps} />
       </div>
 
       {/* Title + subtitle */}
-      <div className="px-5 pb-4">
+      <div className="px-7 pb-4">
         <h2
           className="text-[24px] font-bold text-tg-text leading-tight"
           style={{ letterSpacing: '-0.03em' }}
@@ -388,20 +388,20 @@ export default function NewSignalWizard() {
 
       {/* Hero record count — not on Review step */}
       {!isReview && (
-        <div className="px-5">
+        <div className="px-7">
           <HeroCount count={estimatedCount} />
         </div>
       )}
 
       {/* Step content */}
-      <div className="flex-1 px-5 pb-32 overflow-y-auto hide-scrollbar" key={w.step}>
+      <div className="flex-1 px-7 pb-32 overflow-y-auto hide-scrollbar" key={w.step}>
         <div className={animClass}>
           {renderStep()}
         </div>
       </div>
 
       {/* Bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 px-5 pb-6 pt-10 bg-gradient-to-t from-tg-bg via-tg-bg/95 to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 px-7 pb-6 pt-10 bg-gradient-to-t from-tg-bg via-tg-bg/95 to-transparent">
         <div className="flex items-center gap-3">
           {w.step > 0 && (
             <button
