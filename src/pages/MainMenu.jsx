@@ -34,7 +34,7 @@ export default function MainMenu() {
       </h1>
 
       {/* Hero — Total Return + stats */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4" style={{ marginBottom: '24px' }}>
         {/* Return — hero number */}
         <div className="flex flex-col items-center justify-center card px-5 py-5 flex-[3]">
           <span className="text-[11px] uppercase font-medium text-tg-hint mb-1.5" style={{ letterSpacing: '0.06em' }}>
@@ -71,7 +71,7 @@ export default function MainMenu() {
       </div>
 
       {/* Equity curve */}
-      <div className="card p-5 mb-6">
+      <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-[13px] font-semibold text-tg-text">Equity curve</span>
           <div className="flex items-center gap-1.5">
@@ -97,7 +97,7 @@ export default function MainMenu() {
       {/* Recent signals */}
       {recentSignals.length > 0 && (
         <>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
             <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
               Recent signals
             </span>
@@ -109,7 +109,7 @@ export default function MainMenu() {
               View all
             </button>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col" style={{ gap: '16px' }}>
             {recentSignals.map((signal) => {
               const sub = mockSignalSubscriptions.find((s) => s.id === signal.subscription_id);
               return (

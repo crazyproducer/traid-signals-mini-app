@@ -63,8 +63,8 @@ export function NewSignalCard({ signal, onClick }) {
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      {/* Row 2: metrics — left aligned */}
-      <div className="flex items-center gap-4 pl-[52px]">
+      {/* Row 2: metrics — left aligned, indented under text */}
+      <div className="flex items-center gap-4" style={{ paddingLeft: '52px' }}>
         <div>
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
