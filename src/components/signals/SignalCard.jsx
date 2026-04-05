@@ -61,9 +61,9 @@ export default function SignalCard({ signal, subscription, onClick }) {
       </div>
 
       {/* Right side */}
-      <div className="flex flex-col items-end gap-1 flex-shrink-0">
+      <div className="flex items-center gap-1.5 flex-shrink-0">
         {isResolved && pnlPct !== null ? (
-          <>
+          <div className="flex flex-col items-end gap-1">
             <span
               className={`text-[18px] font-mono font-bold ${pnlColorClass(pnlPct)}`}
               style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
@@ -71,11 +71,11 @@ export default function SignalCard({ signal, subscription, onClick }) {
               {formatPct(pnlPct).text}
             </span>
             <SignalStatusBadge status={signal.status} />
-          </>
+          </div>
         ) : (
           <>
             <SignalStatusBadge status={signal.status} />
-            <ChevronRight size={16} className="text-tg-hint/30" />
+            <ChevronRight size={14} className="text-tg-hint/30" />
           </>
         )}
       </div>

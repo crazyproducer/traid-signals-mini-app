@@ -55,17 +55,17 @@ export default function MainMenu() {
 
         {/* Stats column: New + Active + Win/Loss */}
         <div className="flex flex-col gap-2 w-[100px]">
-          <div className="card px-3 py-2.5">
+          <div className="card px-3 py-2.5 text-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>New</span>
-            <span className="text-[18px] font-mono font-bold text-violet" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
+            <span className="text-[18px] font-mono font-bold text-violet block" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
           </div>
-          <div className="card px-3 py-2.5">
+          <div className="card px-3 py-2.5 text-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>Active</span>
-            <span className="text-[18px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
+            <span className="text-[18px] font-mono font-bold text-green block" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
           </div>
-          <div className="card px-3 py-2.5">
+          <div className="card px-3 py-2.5 text-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>W / L</span>
-            <span className="text-[16px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
+            <span className="text-[16px] font-mono font-bold text-tg-text block" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
           </div>
         </div>
       </div>

@@ -28,7 +28,7 @@ export default function TabBar() {
         key={tab.path}
         type="button"
         onClick={() => navigate(tab.path)}
-        className="flex-1 flex items-center justify-center pt-2 pb-1 relative"
+        className="flex-1 flex items-center justify-center pt-3 pb-1 relative"
       >
         {active && (
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full bg-tg-button" />
@@ -71,7 +71,7 @@ export default function TabBar() {
           {leftTabs.map(renderTab)}
 
           {/* Center spacer with label */}
-          <div className="flex-1 flex items-center justify-center pt-2 pb-1">
+          <div className="flex-1 flex items-center justify-center pt-3 pb-1">
             <span className="text-[10px] text-tg-hint font-medium mt-5">Create</span>
           </div>
 
