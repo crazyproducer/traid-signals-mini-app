@@ -57,7 +57,7 @@ export default function Terms() {
         <button
           type="button"
           onClick={handleAccept}
-          className="w-full bg-tg-button text-tg-button-text text-[15px] font-semibold rounded-2xl py-4 pressable shadow-sm"
+          className="w-full bg-tg-button text-tg-button-text text-[15px] font-semibold rounded-[5px] py-4 pressable shadow-sm"
         >
           I Accept
         </button>

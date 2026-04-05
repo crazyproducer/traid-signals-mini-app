@@ -42,7 +42,7 @@ export default function StepSymbol({ symbols, onToggle, maxSymbols }) {
               type="button"
               disabled={isDisabled}
               onClick={() => onToggle(sym.value)}
-              className={`pressable relative flex items-center gap-2.5 p-3 rounded-2xl text-left transition-all duration-200 ${
+              className={`pressable relative flex items-center gap-2.5 p-3 rounded-[5px] text-left transition-all duration-200 ${
                 isSelected
                   ? 'option-selected'
                   : isDisabled

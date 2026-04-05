@@ -22,12 +22,12 @@ export default function OptionCard({ icon: Icon, title, description, count, sele
     <button
       type="button"
       onClick={onClick}
-      className={`pressable w-full text-left rounded-[20px] p-4 flex items-center gap-3.5 transition-all duration-200 ${
+      className={`pressable w-full text-left rounded-[7px] p-4 flex items-center gap-3.5 transition-all duration-200 ${
         selected ? 'card-selected' : 'card'
       }`}
     >
       {/* Icon — 44px squircle with gradient */}
-      <div className={`${grad} w-[44px] h-[44px] rounded-[13px] flex items-center justify-center flex-shrink-0`}>
+      <div className={`${grad} w-[44px] h-[44px] rounded-[4px] flex items-center justify-center flex-shrink-0`}>
         <Icon size={20} strokeWidth={1.8} className="text-white" />
       </div>
 

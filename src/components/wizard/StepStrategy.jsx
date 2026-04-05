@@ -17,7 +17,7 @@ export default function StepStrategy({ value, onChange }) {
       />
 
       {/* Coming soon note */}
-      <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-tg-secondary/30">
+      <div className="flex items-center gap-2 px-3 py-2.5 rounded-[4px] bg-tg-secondary/30">
         <div className="w-1.5 h-1.5 rounded-full bg-tg-hint/40" />
         <span className="text-[12px] text-tg-hint">
           More strategies coming soon

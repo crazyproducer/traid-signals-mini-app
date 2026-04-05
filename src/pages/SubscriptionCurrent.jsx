@@ -33,7 +33,7 @@ export default function SubscriptionCurrent() {
       {/* Current plan card */}
       <div className="card-elevated p-5 mb-4">
         <div className="flex items-center gap-3.5 mb-4">
-          <div className="icon-gradient-violet w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0">
+          <div className="icon-gradient-violet w-12 h-12 rounded-[5px] flex items-center justify-center flex-shrink-0">
             <Crown size={24} strokeWidth={2} className="text-white" />
           </div>
           <div>

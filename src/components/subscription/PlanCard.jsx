@@ -45,7 +45,7 @@ export default function PlanCard({ plan, isCurrentPlan, onSelect }) {
         type="button"
         onClick={() => !isCurrentPlan && onSelect?.(plan)}
         disabled={isCurrentPlan}
-        className={`w-full py-3 rounded-2xl text-[14px] font-semibold transition-all duration-200 ${
+        className={`w-full py-3 rounded-[5px] text-[14px] font-semibold transition-all duration-200 ${
           isCurrentPlan
             ? 'bg-tg-secondary/60 text-tg-hint cursor-default'
             : 'bg-tg-button text-tg-button-text pressable shadow-sm'

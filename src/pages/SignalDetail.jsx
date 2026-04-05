@@ -36,7 +36,7 @@ export default function SignalDetail() {
         <button
           type="button"
           onClick={() => navigate('/signals')}
-          className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-2xl px-6 py-3 pressable"
+          className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-[5px] px-6 py-3 pressable"
         >
           Back to Signals
         </button>
@@ -68,7 +68,7 @@ export default function SignalDetail() {
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">
         <div
-          className={`${gradientClass} w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0`}
+          className={`${gradientClass} w-14 h-14 rounded-[5px] flex items-center justify-center flex-shrink-0`}
         >
           <DirectionIcon size={28} strokeWidth={2} className="text-white" />
         </div>
@@ -166,7 +166,7 @@ export default function SignalDetail() {
           <button
             type="button"
             onClick={() => setShowConfirm(true)}
-            className="w-full py-3 rounded-2xl text-[14px] font-semibold text-tg-destructive bg-tg-destructive/8 pressable"
+            className="w-full py-3 rounded-[5px] text-[14px] font-semibold text-tg-destructive bg-tg-destructive/8 pressable"
           >
             <span className="flex items-center justify-center gap-2">
               <Trash2 size={16} strokeWidth={2} />
@@ -188,7 +188,7 @@ export default function SignalDetail() {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 py-3 rounded-2xl text-[14px] font-semibold bg-tg-secondary/60 text-tg-text pressable"
+                className="flex-1 py-3 rounded-[5px] text-[14px] font-semibold bg-tg-secondary/60 text-tg-text pressable"
               >
                 Cancel
               </button>
@@ -198,7 +198,7 @@ export default function SignalDetail() {
                   setShowConfirm(false);
                   navigate('/signals');
                 }}
-                className="flex-1 py-3 rounded-2xl text-[14px] font-semibold bg-tg-destructive text-white pressable"
+                className="flex-1 py-3 rounded-[5px] text-[14px] font-semibold bg-tg-destructive text-white pressable"
               >
                 Delete
               </button>

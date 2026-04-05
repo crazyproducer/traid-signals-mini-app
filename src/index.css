@@ -57,14 +57,14 @@ body {
 
 .card {
   background-color: var(--tg-theme-section-bg-color, #fff);
-  border-radius: 20px;
+  border-radius: 7px;
   border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
   box-shadow: 0 1px 3px color-mix(in srgb, var(--tg-theme-text-color, #000) 3%, transparent);
 }
 
 .card-selected {
   background-color: color-mix(in srgb, var(--tg-theme-button-color, #2481cc) 6%, var(--tg-theme-section-bg-color, #fff));
-  border-radius: 20px;
+  border-radius: 7px;
   border: 1px solid color-mix(in srgb, var(--tg-theme-button-color, #2481cc) 15%, transparent);
   box-shadow: 0 1px 3px color-mix(in srgb, var(--tg-theme-text-color, #000) 3%, transparent);
   position: relative;
@@ -74,8 +74,8 @@ body {
   content: '';
   position: absolute;
   left: 0;
-  top: 10px;
-  bottom: 10px;
+  top: 8px;
+  bottom: 8px;
   width: 4px;
   border-radius: 0 4px 4px 0;
   background-color: var(--tg-theme-button-color, #2481cc);
@@ -83,7 +83,7 @@ body {
 
 .card-elevated {
   background-color: var(--tg-theme-section-bg-color, #fff);
-  border-radius: 20px;
+  border-radius: 7px;
   border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
   box-shadow:
     0 1px 3px color-mix(in srgb, var(--tg-theme-text-color, #000) 4%, transparent),

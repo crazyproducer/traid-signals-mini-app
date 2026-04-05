@@ -80,7 +80,7 @@ export default function MainMenu() {
                 key={p}
                 type="button"
                 onClick={() => setPeriod(p)}
-                className={`min-w-[44px] min-h-[36px] flex items-center justify-center rounded-xl text-[12px] font-semibold transition-all duration-200 ${
+                className={`min-w-[44px] min-h-[36px] flex items-center justify-center rounded-[4px] text-[12px] font-semibold transition-all duration-200 ${
                   period === p
                     ? 'bg-tg-text/8 text-tg-text'
                     : 'text-tg-hint'

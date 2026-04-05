@@ -40,7 +40,7 @@ export function NewSignalCard({ signal, onClick }) {
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
       {/* Row 1: icon + symbol + strategy + timestamps */}
       <div className="flex items-center gap-3 mb-3">
-        <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
+        <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">
@@ -111,7 +111,7 @@ export function ActiveSignalCard({ signal, onClick }) {
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
       <div className="flex items-center gap-3 mb-3">
-        <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
+        <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">
@@ -176,7 +176,7 @@ export function HistorySignalCard({ signal, onClick }) {
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
       <div className="flex items-center gap-3 mb-3">
-        <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
+        <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">
@@ -234,7 +234,7 @@ export function ExpiredSignalCard({ signal, onClick }) {
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4 opacity-70">
       <div className="flex items-center gap-3">
-        <div className="icon-gradient-neutral w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0">
+        <div className="icon-gradient-neutral w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0">
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
         <div className="flex-1 min-w-0">

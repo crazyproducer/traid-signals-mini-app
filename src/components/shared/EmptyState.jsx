@@ -11,7 +11,7 @@ export default function EmptyState({ icon: Icon, title, subtitle, action }) {
       {action && (
         <button
           onClick={action.onClick}
-          className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-2xl px-6 py-3 pressable shadow-sm"
+          className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-[5px] px-6 py-3 pressable shadow-sm"
         >
           {action.label}
         </button>
