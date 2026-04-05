@@ -18,10 +18,11 @@ function sym(raw) {
 function fmtDt(iso) {
   const d = new Date(iso);
   const yy = String(d.getFullYear()).slice(2);
+  const mon = d.toLocaleString('en-US', { month: 'short' }).toLowerCase();
   const dd = String(d.getDate()).padStart(2, '0');
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');
-  return `${yy}.${dd} ${hh}:${mm}`;
+  return `${yy}-${mon}-${dd} ${hh}:${mm}`;
 }
 
 /* ═══════════════════════════════════════════════
