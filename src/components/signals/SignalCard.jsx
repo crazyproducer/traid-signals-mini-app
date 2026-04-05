@@ -73,21 +73,21 @@ export function NewSignalCard({ signal, onClick }) {
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>R:R</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Risk/Reward</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             1:{rrr}
           </span>
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>WR</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Win Rate</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatWinRate(signal.win_rate)}
           </span>
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Conf</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Confidence</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
           </span>
