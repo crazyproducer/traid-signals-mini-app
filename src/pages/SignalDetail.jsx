@@ -14,6 +14,7 @@ import {
 } from '../utils/formatters';
 import { SYMBOLS } from '../utils/constants';
 import { mockSignals } from '../api/mock-data';
+import BackButton from '../components/shared/BackButton';
 
 function symbolLabel(raw) {
   const found = SYMBOLS.find((s) => s.value === raw);
@@ -62,7 +63,8 @@ export default function SignalDetail() {
       ];
 
   return (
-    <div className="px-5 pt-6 pb-8 animate-fade-in">
+    <div className="px-5 pt-4 pb-8 animate-fade-in">
+      <BackButton />
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">
         <div

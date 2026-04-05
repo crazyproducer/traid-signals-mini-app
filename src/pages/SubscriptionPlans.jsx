@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import PlanCard from '../components/subscription/PlanCard';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
+import BackButton from '../components/shared/BackButton';
 
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
@@ -12,7 +13,8 @@ export default function SubscriptionPlans() {
   }
 
   return (
-    <div className="px-5 pt-6 pb-8 animate-fade-in">
+    <div className="px-5 pt-4 pb-8 animate-fade-in">
+      <BackButton />
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
         Choose Your Plan
