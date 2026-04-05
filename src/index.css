@@ -246,6 +246,7 @@ body {
 .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .recharts-tooltip-cursor { stroke-dasharray: 3 3; }
+.recharts-wrapper, .recharts-surface { outline: none !important; }
 
 /* ═══════════════════════════════════════════════
    REDUCED MOTION

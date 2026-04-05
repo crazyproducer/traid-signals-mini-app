@@ -27,7 +27,7 @@ export default function PerformanceChart({ data, loading }) {
   }
 
   return (
-    <div className="w-full chart-reveal" style={{ height: 200 }}>
+    <div className="w-full chart-reveal outline-none" style={{ height: 200 }} tabIndex={-1}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 8, right: 4, left: 4, bottom: 0 }}>
           <defs>
