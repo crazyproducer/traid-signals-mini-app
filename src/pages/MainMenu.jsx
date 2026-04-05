@@ -33,40 +33,31 @@ export default function MainMenu() {
         TRAID Signals
       </h1>
 
-      {/* Hero — Total Return + stats */}
-      <div className="flex gap-4" style={{ marginBottom: '24px' }}>
-        {/* Return — hero number */}
-        <div className="flex flex-col items-center justify-center card px-5 py-5 flex-[3]">
-          <span className="text-[11px] uppercase font-medium text-tg-hint mb-1.5" style={{ letterSpacing: '0.06em' }}>
-            Total return
-          </span>
+      {/* Metrics row — 4 equal cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '24px' }}>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>Return</span>
           <span
-            className={`text-[36px] font-mono font-bold leading-none ${
+            className={`text-[18px] font-mono font-bold leading-tight ${
               totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'
             }`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {totalReturn.text}
           </span>
-          <span className="text-[11px] text-tg-hint mt-1.5">
-            WR {formatWinRate(stats.win_rate)}
-          </span>
+          <span className="text-[9px] text-tg-hint">WR {formatWinRate(stats.win_rate)}</span>
         </div>
-
-        {/* Stats column — 25% width */}
-        <div className="flex flex-col gap-2 flex-1">
-          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>New</span>
-            <span className="text-[18px] font-mono font-bold text-violet block" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
-          </div>
-          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>Active</span>
-            <span className="text-[18px] font-mono font-bold text-green block" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
-          </div>
-          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
-            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>W / L</span>
-            <span className="text-[16px] font-mono font-bold text-tg-text block" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
-          </div>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>New</span>
+          <span className="text-[18px] font-mono font-bold text-violet leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
+        </div>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>Active</span>
+          <span className="text-[18px] font-mono font-bold text-green leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
+        </div>
+        <div className="card flex flex-col items-center justify-center text-center" style={{ padding: '12px 4px' }}>
+          <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.05em' }}>W / L</span>
+          <span className="text-[18px] font-mono font-bold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
         </div>
       </div>
 
