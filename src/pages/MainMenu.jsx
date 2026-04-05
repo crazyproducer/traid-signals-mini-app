@@ -27,11 +27,16 @@ export default function MainMenu() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '32px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
-        TRAID Signals
-      </h1>
+    <div className="animate-fade-in">
+      {/* Fixed header */}
+      <div className="fixed top-0 left-0 right-0 z-40 bg-tg-bg/95 backdrop-blur-xl page-padding" style={{ paddingTop: '12px', paddingBottom: '10px' }}>
+        <h1 className="text-[22px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
+          TRAID Signals
+        </h1>
+      </div>
+
+      {/* Content with top offset for fixed header */}
+      <div className="page-padding" style={{ paddingTop: '52px', paddingBottom: '96px' }}>
 
       {/* Metrics row — 4 equal cards, top-aligned */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '24px' }}>
@@ -118,6 +123,7 @@ export default function MainMenu() {
         </>
       )}
 
+    </div>
     </div>
   );
 }
