@@ -15,6 +15,15 @@ function sym(raw) {
   return SYMBOLS.find((s) => s.value === raw)?.label || raw;
 }
 
+function fmtDt(iso) {
+  const d = new Date(iso);
+  const yy = String(d.getFullYear()).slice(2);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const hh = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${yy}.${dd} ${hh}:${mm}`;
+}
+
 /* ═══════════════════════════════════════════════
    NEW card — PENDING / ACTIVE / UPDATED
    Shows: symbol, direction, strategy, entry, risk, reward, win rate, confidence
@@ -41,11 +50,11 @@ export function NewSignalCard({ signal, onClick }) {
             <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            <span>{new Date(signal.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} {new Date(signal.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+            <span>{fmtDt(signal.created_at)}</span>
             {isUpdated && signal.updates?.length > 1 && (
               <>
                 <span>·</span>
-                <span>upd {new Date(signal.updates[signal.updates.length - 1].timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+                <span>upd {fmtDt(signal.updates[signal.updates.length - 1].timestamp)}</span>
               </>
             )}
           </div>
@@ -98,11 +107,6 @@ export function ActiveSignalCard({ signal, onClick }) {
     ? ((currentPrice - signal.entry_price) / signal.entry_price) * 100
     : ((signal.entry_price - currentPrice) / signal.entry_price) * 100;
 
-  const fmtDt = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
       <div className="flex items-center gap-3 mb-3">
@@ -119,7 +123,7 @@ export function ActiveSignalCard({ signal, onClick }) {
           <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
             <span>{fmtDt(signal.created_at)}</span>
             {signal.triggered_at && (
-              <><span>·</span><span>trig {new Date(signal.triggered_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+              <><span>·</span><span>trig {fmtDt(signal.triggered_at)}</span></>
             )}
           </div>
         </div>
@@ -168,11 +172,6 @@ export function HistorySignalCard({ signal, onClick }) {
     ? Math.floor((new Date(signal.resolved_at) - new Date(signal.triggered_at)) / 1000)
     : null;
 
-  const fmtDt = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
       <div className="flex items-center gap-3 mb-3">
@@ -189,7 +188,7 @@ export function HistorySignalCard({ signal, onClick }) {
           <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
             <span>{fmtDt(signal.created_at)}</span>
             {signal.resolved_at && (
-              <><span>·</span><span>closed {new Date(signal.resolved_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+              <><span>·</span><span>closed {fmtDt(signal.resolved_at)}</span></>
             )}
           </div>
         </div>
@@ -231,11 +230,6 @@ export function ExpiredSignalCard({ signal, onClick }) {
   const isLong = signal.direction === 'LONG';
   const Icon = isLong ? TrendingUp : TrendingDown;
 
-  const fmtDt = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-  };
-
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4 opacity-70">
       <div className="flex items-center gap-3">
@@ -252,7 +246,7 @@ export function ExpiredSignalCard({ signal, onClick }) {
           <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
             <span>{fmtDt(signal.created_at)}</span>
             {signal.resolved_at && (
-              <><span>·</span><span>exp {new Date(signal.resolved_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+              <><span>·</span><span>exp {fmtDt(signal.resolved_at)}</span></>
             )}
           </div>
         </div>
