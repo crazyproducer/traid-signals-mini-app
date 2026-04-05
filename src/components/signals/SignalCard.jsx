@@ -63,29 +63,29 @@ export function NewSignalCard({ signal, onClick }) {
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      {/* Row 2: entry + RRR + WR + confidence */}
-      <div className="grid grid-cols-4 gap-1.5 text-center">
+      {/* Row 2: metrics — left aligned */}
+      <div className="flex items-center gap-4 pl-[52px]">
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>R:R</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>R:R</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             1:{rrr}
           </span>
         </div>
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>WR</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>WR</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatWinRate(signal.win_rate)}
           </span>
         </div>
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Conf</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Conf</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
           </span>
         </div>

@@ -27,16 +27,16 @@ export default function MainMenu() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="px-5 pt-8 pb-28 animate-fade-in">
+    <div className="px-6 pt-8 pb-28 animate-fade-in">
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
         TRAID Signals
       </h1>
 
-      {/* Hero — Total Return as key indicator */}
-      <div className="flex gap-3 mb-5">
+      {/* Hero — Total Return + stats */}
+      <div className="flex gap-4 mb-6">
         {/* Return — hero number */}
-        <div className="flex flex-col items-center justify-center card px-5 py-5 flex-1">
+        <div className="flex flex-col items-center justify-center card px-5 py-5 flex-[3]">
           <span className="text-[11px] uppercase font-medium text-tg-hint mb-1.5" style={{ letterSpacing: '0.06em' }}>
             Total return
           </span>
@@ -53,17 +53,17 @@ export default function MainMenu() {
           </span>
         </div>
 
-        {/* Stats column: New + Active + Win/Loss */}
-        <div className="flex flex-col gap-2 w-[100px]">
-          <div className="card px-3 py-2.5 text-center">
+        {/* Stats column — 25% width */}
+        <div className="flex flex-col gap-2 flex-1">
+          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>New</span>
             <span className="text-[18px] font-mono font-bold text-violet block" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
           </div>
-          <div className="card px-3 py-2.5 text-center">
+          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>Active</span>
             <span className="text-[18px] font-mono font-bold text-green block" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
           </div>
-          <div className="card px-3 py-2.5 text-center">
+          <div className="card px-3 py-2.5 text-center flex-1 flex flex-col justify-center">
             <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>W / L</span>
             <span className="text-[16px] font-mono font-bold text-tg-text block" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
           </div>
@@ -71,18 +71,18 @@ export default function MainMenu() {
       </div>
 
       {/* Equity curve */}
-      <div className="card p-4 mb-6">
-        <div className="flex items-center justify-between mb-3">
+      <div className="card p-5 mb-6">
+        <div className="flex items-center justify-between mb-4">
           <span className="text-[13px] font-semibold text-tg-text">Equity curve</span>
-          <div className="flex items-center gap-0.5 bg-tg-secondary/40 rounded-lg p-0.5">
+          <div className="flex items-center gap-1.5">
             {PERIODS.map((p) => (
               <button
                 key={p}
                 type="button"
                 onClick={() => setPeriod(p)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-semibold transition-all duration-200 ${
+                className={`min-w-[44px] min-h-[36px] flex items-center justify-center rounded-xl text-[12px] font-semibold transition-all duration-200 ${
                   period === p
-                    ? 'bg-tg-section text-tg-text shadow-sm'
+                    ? 'bg-tg-text/8 text-tg-text'
                     : 'text-tg-hint'
                 }`}
               >
@@ -97,7 +97,7 @@ export default function MainMenu() {
       {/* Recent signals */}
       {recentSignals.length > 0 && (
         <>
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-4">
             <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
               Recent signals
             </span>
@@ -109,7 +109,7 @@ export default function MainMenu() {
               View all
             </button>
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-4">
             {recentSignals.map((signal) => {
               const sub = mockSignalSubscriptions.find((s) => s.id === signal.subscription_id);
               return (
