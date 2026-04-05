@@ -23,6 +23,8 @@ export function NewSignalCard({ signal, onClick }) {
   const isLong = signal.direction === 'LONG';
   const Icon = isLong ? TrendingUp : TrendingDown;
   const grad = isLong ? 'icon-gradient-green' : 'icon-gradient-red';
+  const rrr = signal.risk_pct > 0 ? (signal.reward_pct / signal.risk_pct).toFixed(1) : '--';
+  const isUpdated = signal.status === 'UPDATED' || signal.status === 'ACTIVE';
 
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
@@ -43,8 +45,8 @@ export function NewSignalCard({ signal, onClick }) {
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      {/* Row 2: entry + stats grid */}
-      <div className="grid grid-cols-4 gap-2 text-center">
+      {/* Row 2: entry + RRR + WR + confidence */}
+      <div className="grid grid-cols-4 gap-2 text-center mb-2.5">
         <div>
           <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -52,15 +54,9 @@ export function NewSignalCard({ signal, onClick }) {
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Risk</span>
-          <span className="text-[13px] font-mono font-semibold text-red" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {signal.risk_pct}%
-          </span>
-        </div>
-        <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Reward</span>
-          <span className="text-[13px] font-mono font-semibold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {signal.reward_pct}%
+          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>R:R</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            1:{rrr}
           </span>
         </div>
         <div>
@@ -69,6 +65,23 @@ export function NewSignalCard({ signal, onClick }) {
             {formatWinRate(signal.win_rate)}
           </span>
         </div>
+        <div>
+          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Conf</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
+          </span>
+        </div>
+      </div>
+
+      {/* Row 3: created + updated */}
+      <div className="flex items-center gap-3 text-[11px] text-tg-hint/50">
+        <span>Created {formatRelativeTime(signal.created_at)}</span>
+        {isUpdated && signal.updates?.length > 1 && (
+          <>
+            <span>·</span>
+            <span>Updated {formatRelativeTime(signal.updates[signal.updates.length - 1].timestamp)}</span>
+          </>
+        )}
       </div>
     </button>
   );
