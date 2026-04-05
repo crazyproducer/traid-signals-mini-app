@@ -43,7 +43,7 @@ export default function TabBar() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 max-w-[430px] mx-auto">
       {/* Raised create button */}
       <div className="absolute left-1/2 -translate-x-1/2 -top-7 z-10">
         <button

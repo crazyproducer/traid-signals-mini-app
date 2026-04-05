@@ -57,9 +57,9 @@ body {
 
 .card {
   background-color: var(--tg-theme-section-bg-color, #fff);
-  border-radius: 20px;
-  border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--tg-theme-text-color, #000) 3%, transparent);
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 8%, transparent);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--tg-theme-text-color, #000) 4%, transparent);
 }
 
 .card-selected {
@@ -83,11 +83,11 @@ body {
 
 .card-elevated {
   background-color: var(--tg-theme-section-bg-color, #fff);
-  border-radius: 20px;
-  border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
+  border-radius: 16px;
+  border: 1px solid color-mix(in srgb, var(--tg-theme-text-color, #000) 8%, transparent);
   box-shadow:
-    0 1px 3px color-mix(in srgb, var(--tg-theme-text-color, #000) 4%, transparent),
-    0 6px 24px color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
+    0 1px 4px color-mix(in srgb, var(--tg-theme-text-color, #000) 5%, transparent),
+    0 8px 24px color-mix(in srgb, var(--tg-theme-text-color, #000) 6%, transparent);
 }
 
 /* ═══════════════════════════════════════════════
