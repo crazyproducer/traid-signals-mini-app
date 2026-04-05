@@ -28,7 +28,7 @@ export function NewSignalCard({ signal, onClick }) {
 
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
-      {/* Row 1: icon + symbol + direction + chevron */}
+      {/* Row 1: icon + symbol + strategy + timestamps */}
       <div className="flex items-center gap-3 mb-3">
         <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
@@ -38,15 +38,23 @@ export function NewSignalCard({ signal, onClick }) {
             <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
               {sym(signal.symbol)}
             </span>
-            <Badge variant={isLong ? 'long' : 'short'}>{formatDirection(signal.direction)}</Badge>
+            <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <span className="text-[12px] text-tg-hint">Pull Back</span>
+          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50">
+            <span>{formatRelativeTime(signal.created_at)}</span>
+            {isUpdated && signal.updates?.length > 1 && (
+              <>
+                <span>·</span>
+                <span>upd {formatRelativeTime(signal.updates[signal.updates.length - 1].timestamp)}</span>
+              </>
+            )}
+          </div>
         </div>
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
       {/* Row 2: entry + RRR + WR + confidence */}
-      <div className="grid grid-cols-4 gap-2 text-center mb-2.5">
+      <div className="grid grid-cols-4 gap-2 text-center">
         <div>
           <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -71,17 +79,6 @@ export function NewSignalCard({ signal, onClick }) {
             {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
           </span>
         </div>
-      </div>
-
-      {/* Row 3: created + updated */}
-      <div className="flex items-center gap-3 text-[11px] text-tg-hint/50">
-        <span>Created {formatRelativeTime(signal.created_at)}</span>
-        {isUpdated && signal.updates?.length > 1 && (
-          <>
-            <span>·</span>
-            <span>Updated {formatRelativeTime(signal.updates[signal.updates.length - 1].timestamp)}</span>
-          </>
-        )}
       </div>
     </button>
   );
