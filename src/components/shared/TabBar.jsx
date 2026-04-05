@@ -24,7 +24,7 @@ export default function TabBar() {
         key={tab.path}
         type="button"
         onClick={() => navigate(tab.path)}
-        className="flex-1 flex items-center justify-center py-2 relative"
+        className="flex-1 flex items-center justify-center pt-2 pb-1 relative"
       >
         {active && (
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full bg-tg-button" />
@@ -48,30 +48,32 @@ export default function TabBar() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-tg-section/90 backdrop-blur-2xl border-t border-[color-mix(in_srgb,var(--tg-theme-text-color,#000)_6%,transparent)]">
-      <div className="flex items-end pb-[env(safe-area-inset-bottom,0px)]">
-        {/* Home */}
-        {renderTab(sideTabs[0])}
+    <nav className="fixed bottom-0 left-0 right-0 z-50">
+      {/* Raised create button — positioned above the bar */}
+      <div className="absolute left-1/2 -translate-x-1/2 -top-6 z-10">
+        <button
+          type="button"
+          onClick={() => navigate('/new-signal')}
+          className="w-[56px] h-[56px] rounded-full icon-gradient-green flex items-center justify-center pressable"
+          style={{ boxShadow: '0 4px 20px -2px rgba(5, 150, 105, 0.5)' }}
+        >
+          <Plus size={28} strokeWidth={2.5} className="text-white" />
+        </button>
+      </div>
 
-        {/* Signals */}
-        {renderTab(sideTabs[1])}
+      {/* Tab bar */}
+      <div className="bg-tg-section/95 backdrop-blur-2xl border-t border-[color-mix(in_srgb,var(--tg-theme-text-color,#000)_6%,transparent)]">
+        <div className="flex items-center pb-[env(safe-area-inset-bottom,0px)]">
+          {renderTab(sideTabs[0])}
+          {renderTab(sideTabs[1])}
 
-        {/* Center: Create button — raised */}
-        <div className="flex-1 flex items-center justify-center relative">
-          <button
-            type="button"
-            onClick={() => navigate('/new-signal')}
-            className="absolute -top-5 w-[52px] h-[52px] rounded-full icon-gradient-green flex items-center justify-center pressable shadow-lg"
-          >
-            <Plus size={26} strokeWidth={2.5} className="text-white" />
-          </button>
-          <div className="flex flex-col items-center gap-0.5 py-2 mt-3">
-            <span className="text-[10px] text-tg-hint font-medium">Create</span>
+          {/* Spacer for center button */}
+          <div className="flex-1 flex items-center justify-center pt-2 pb-1">
+            <span className="text-[10px] text-tg-hint font-medium mt-5">Create</span>
           </div>
-        </div>
 
-        {/* Account */}
-        {renderTab(sideTabs[2])}
+          {renderTab(sideTabs[2])}
+        </div>
       </div>
     </nav>
   );

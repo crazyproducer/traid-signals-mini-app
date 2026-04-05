@@ -34,10 +34,10 @@ export default function MainMenu() {
       </h1>
 
       {/* Hero — Total Return as key indicator */}
-      <div className="flex items-stretch gap-3 mb-5">
+      <div className="flex gap-3 mb-5">
         {/* Return — hero number */}
-        <div className="flex flex-col items-center justify-center card px-5 py-4 flex-1">
-          <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
+        <div className="flex flex-col items-center justify-center card px-5 py-5 flex-1">
+          <span className="text-[11px] uppercase font-medium text-tg-hint mb-1.5" style={{ letterSpacing: '0.06em' }}>
             Total return
           </span>
           <span
@@ -48,21 +48,24 @@ export default function MainMenu() {
           >
             {totalReturn.text}
           </span>
-          <span className="text-[11px] text-tg-hint mt-1">
+          <span className="text-[11px] text-tg-hint mt-1.5">
             WR {formatWinRate(stats.win_rate)}
           </span>
         </div>
 
         {/* Stats column: New + Active + Win/Loss */}
-        <div className="flex flex-col gap-2 min-w-[110px]">
-          <div className="card px-4 py-2.5 flex-1">
-            <StatCard label="New" value={newCount} colorClass="text-violet" />
+        <div className="flex flex-col gap-2 w-[100px]">
+          <div className="card px-3 py-2.5">
+            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>New</span>
+            <span className="text-[18px] font-mono font-bold text-violet" style={{ fontVariantNumeric: 'tabular-nums' }}>{newCount}</span>
           </div>
-          <div className="card px-4 py-2.5 flex-1">
-            <StatCard label="Active" value={activeCount} colorClass="text-green" />
+          <div className="card px-3 py-2.5">
+            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>Active</span>
+            <span className="text-[18px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>{activeCount}</span>
           </div>
-          <div className="card px-4 py-2.5 flex-1">
-            <StatCard label="W / L" value={`${stats.wins} / ${stats.losses}`} />
+          <div className="card px-3 py-2.5">
+            <span className="text-[10px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.05em' }}>W / L</span>
+            <span className="text-[16px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{stats.wins}/{stats.losses}</span>
           </div>
         </div>
       </div>
