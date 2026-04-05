@@ -1,14 +1,20 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Radio, History, BarChart3 } from 'lucide-react';
-import SignalCard from '../components/signals/SignalCard';
+import { Sparkles, Radio, History, Clock } from 'lucide-react';
+import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
-import { mockSignals, mockSignalSubscriptions } from '../api/mock-data';
+import { mockSignals } from '../api/mock-data';
+
+const NEW_STATUSES = ['PENDING', 'ACTIVE', 'UPDATED'];
+const ACTIVE_STATUSES = ['TRIGGERED'];
+const HISTORY_STATUSES = ['HIT_TP', 'HIT_SL'];
+const EXPIRED_STATUSES = ['EXPIRED'];
 
 const TABS = [
-  { key: 'new', label: 'New', icon: Sparkles, statuses: ['PENDING'] },
-  { key: 'active', label: 'Active', icon: Radio, statuses: ['ACTIVE', 'UPDATED', 'TRIGGERED'] },
-  { key: 'history', label: 'History', icon: History, statuses: ['HIT_TP', 'HIT_SL', 'EXPIRED'] },
+  { key: 'new', label: 'New', statuses: NEW_STATUSES },
+  { key: 'active', label: 'Active', statuses: ACTIVE_STATUSES },
+  { key: 'history', label: 'History', statuses: HISTORY_STATUSES },
+  { key: 'expired', label: 'Expired', statuses: EXPIRED_STATUSES },
 ];
 
 export default function MySignals() {
@@ -24,26 +30,33 @@ export default function MySignals() {
   }, []);
 
   const displayed = signalsByTab[tab] || [];
-  const currentTab = TABS.find((t) => t.key === tab);
+
+  function renderCard(signal) {
+    const go = () => navigate(`/signals/${signal.id}`);
+    switch (tab) {
+      case 'new': return <NewSignalCard key={signal.id} signal={signal} onClick={go} />;
+      case 'active': return <ActiveSignalCard key={signal.id} signal={signal} onClick={go} />;
+      case 'history': return <HistorySignalCard key={signal.id} signal={signal} onClick={go} />;
+      case 'expired': return <ExpiredSignalCard key={signal.id} signal={signal} onClick={go} />;
+      default: return null;
+    }
+  }
+
+  const emptyConfig = {
+    new: { icon: Sparkles, title: 'No new signals', subtitle: 'New signals will appear here when generated' },
+    active: { icon: Radio, title: 'No active trades', subtitle: 'Signals become active when entry price is hit' },
+    history: { icon: History, title: 'No history yet', subtitle: 'Completed trades will appear here' },
+    expired: { icon: Clock, title: 'No expired signals', subtitle: 'Signals that expire without triggering appear here' },
+  };
 
   return (
-    <div className="px-5 pt-6 pb-8">
+    <div className="px-5 pt-6 pb-24">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-[28px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
-          Signals
-        </h1>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="flex items-center gap-1.5 text-[13px] font-medium text-tg-accent pressable"
-        >
-          <BarChart3 size={14} strokeWidth={2} />
-          Performance
-        </button>
-      </div>
+      <h1 className="text-[28px] font-bold text-tg-text mb-5" style={{ letterSpacing: '-0.03em' }}>
+        Signals
+      </h1>
 
-      {/* Underline tabs */}
+      {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30 mb-5">
         {TABS.map((t) => {
           const count = signalsByTab[t.key]?.length || 0;
@@ -54,66 +67,38 @@ export default function MySignals() {
               key={t.key}
               type="button"
               onClick={() => setTab(t.key)}
-              className={`flex-1 flex items-center justify-center gap-1.5 pb-3 text-[13px] font-semibold transition-all duration-200 relative ${
-                isActive
-                  ? 'text-tg-text'
-                  : 'text-tg-hint'
+              className={`flex-1 flex items-center justify-center gap-1 pb-3 text-[12px] font-semibold transition-all duration-200 relative ${
+                isActive ? 'text-tg-text' : 'text-tg-hint'
               }`}
             >
               {t.label}
               {count > 0 && (
                 <span
-                  className={`text-[10px] font-bold rounded-full px-1.5 py-0.5 ${
+                  className={`text-[9px] font-bold rounded-full px-1.5 py-0.5 ${
                     isActive ? 'bg-tg-button/10 text-tg-button' : 'bg-tg-secondary/60 text-tg-hint'
                   }`}
                 >
                   {count}
                 </span>
               )}
-              {/* Active underline */}
               {isActive && (
-                <div className="absolute bottom-0 left-2 right-2 h-[2px] bg-tg-button rounded-full" />
+                <div className="absolute bottom-0 left-3 right-3 h-[2px] bg-tg-button rounded-full" />
               )}
             </button>
           );
         })}
       </div>
 
-      {/* Signal list */}
+      {/* List */}
       {displayed.length > 0 ? (
         <div className="flex flex-col gap-3 animate-fade-in-children">
-          {displayed.map((signal) => {
-            const subscription = mockSignalSubscriptions.find(
-              (sub) => sub.id === signal.subscription_id,
-            );
-            return (
-              <SignalCard
-                key={signal.id}
-                signal={signal}
-                subscription={subscription}
-                onClick={() => navigate(`/signals/${signal.id}`)}
-              />
-            );
-          })}
+          {displayed.map(renderCard)}
         </div>
       ) : (
         <EmptyState
-          icon={currentTab?.icon || Radio}
-          title={
-            tab === 'new' ? 'No New Signals'
-              : tab === 'active' ? 'No Active Signals'
-                : 'No History Yet'
-          }
-          subtitle={
-            tab === 'new' ? 'New signals will appear here when generated'
-              : tab === 'active' ? 'Create a signal subscription to get started'
-                : 'Resolved signals will appear here'
-          }
-          action={
-            tab === 'active'
-              ? { label: 'New Signal', onClick: () => navigate('/new-signal') }
-              : undefined
-          }
+          icon={emptyConfig[tab]?.icon || Sparkles}
+          title={emptyConfig[tab]?.title}
+          subtitle={emptyConfig[tab]?.subtitle}
         />
       )}
     </div>

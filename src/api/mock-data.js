@@ -189,6 +189,7 @@ export const mockSignals = [
     win_rate: 0.75,
     matching_trades: 22,
     status: 'TRIGGERED',
+    current_price: 67450.00,
     created_at: '2026-04-02T20:00:00Z',
     triggered_at: '2026-04-02T22:15:00Z',
     resolved_at: null,
