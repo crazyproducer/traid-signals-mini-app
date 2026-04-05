@@ -71,7 +71,7 @@ export default function MainMenu() {
       </div>
 
       {/* Equity curve */}
-      <div className="card" style={{ padding: '20px', marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px' }}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-[13px] font-semibold text-tg-text">Equity curve</span>
           <div className="flex items-center gap-1.5">
