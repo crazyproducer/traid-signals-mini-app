@@ -40,12 +40,12 @@ export function NewSignalCard({ signal, onClick }) {
             </span>
             <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50">
-            <span>{formatRelativeTime(signal.created_at)}</span>
+          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span>{new Date(signal.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })} {new Date(signal.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
             {isUpdated && signal.updates?.length > 1 && (
               <>
                 <span>·</span>
-                <span>upd {formatRelativeTime(signal.updates[signal.updates.length - 1].timestamp)}</span>
+                <span>upd {new Date(signal.updates[signal.updates.length - 1].timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
               </>
             )}
           </div>
@@ -54,28 +54,28 @@ export function NewSignalCard({ signal, onClick }) {
       </div>
 
       {/* Row 2: entry + RRR + WR + confidence */}
-      <div className="grid grid-cols-4 gap-2 text-center">
+      <div className="grid grid-cols-4 gap-1.5 text-center">
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>R:R</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>R:R</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             1:{rrr}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>WR</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>WR</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatWinRate(signal.win_rate)}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Conf</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Conf</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
           </span>
         </div>
