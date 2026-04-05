@@ -243,6 +243,12 @@ body {
 /* ═══════════════════════════════════════════════
    UTILITY
    ═══════════════════════════════════════════════ */
+/* Page padding — explicit px values for WebView compat */
+.page-padding {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .recharts-tooltip-cursor { stroke-dasharray: 3 3; }

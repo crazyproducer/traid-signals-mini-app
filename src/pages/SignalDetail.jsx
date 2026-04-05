@@ -63,7 +63,7 @@ export default function SignalDetail() {
       ];
 
   return (
-    <div className="px-7 pt-4 pb-8 animate-fade-in">
+    <div className="page-padding pt-4 pb-8 animate-fade-in">
       <BackButton />
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">

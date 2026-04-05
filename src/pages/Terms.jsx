@@ -30,7 +30,7 @@ export default function Terms() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Content */}
-      <div className="flex-1 px-7 pt-8 pb-28 animate-fade-in">
+      <div className="flex-1 page-padding pt-8 pb-28 animate-fade-in">
         {/* Header */}
         <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
           Terms & Conditions
