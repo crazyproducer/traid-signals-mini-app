@@ -73,7 +73,7 @@ export default function App() {
   const showTabBar = !HIDE_TAB_BAR.some((p) => location.pathname.startsWith(p));
 
   return (
-    <div className="min-h-[100dvh] bg-tg-bg text-tg-text max-w-[430px] mx-auto relative">
+    <div className="min-h-[100dvh] bg-tg-bg text-tg-text">
       <div className={showTabBar ? 'pb-20' : ''}>
         <Routes>
           <Route path="/" element={<MainMenu />} />
