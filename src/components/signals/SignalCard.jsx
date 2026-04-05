@@ -134,23 +134,25 @@ export function ActiveSignalCard({ signal, onClick }) {
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      <div className="grid grid-cols-3 text-center" style={{ gap: '6px', marginTop: '12px' }}>
+      <div className="flex items-center" style={{ marginTop: '12px', gap: '12px' }}>
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Current</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Current</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(currentPrice)}
           </span>
         </div>
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>P&L</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>P&L</span>
           <span
-            className={`text-[14px] font-mono font-bold block leading-tight ${pnlColorClass(unrealizedPct)}`}
+            className={`text-[14px] font-mono font-bold leading-tight ${pnlColorClass(unrealizedPct)}`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {formatPct(unrealizedPct).text}
@@ -204,20 +206,22 @@ export function HistorySignalCard({ signal, onClick }) {
         </span>
       </div>
 
-      <div className="grid grid-cols-3 text-center" style={{ gap: '6px', marginTop: '12px' }}>
+      <div className="flex items-center" style={{ marginTop: '12px', gap: '12px' }}>
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Result</span>
-          <span className="block leading-tight"><Badge variant={isWin ? 'win' : 'loss'}>{isWin ? 'Win' : 'Loss'}</Badge></span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Result</span>
+          <Badge variant={isWin ? 'win' : 'loss'}>{isWin ? 'Win' : 'Loss'}</Badge>
         </div>
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Duration</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Duration</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {duration ? formatDuration(duration) : '--'}
           </span>
         </div>
