@@ -37,9 +37,9 @@ export function NewSignalCard({ signal, onClick }) {
   const isUpdated = signal.status === 'UPDATED' || signal.status === 'ACTIVE';
 
   return (
-    <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
+    <button type="button" onClick={onClick} className="card pressable w-full text-left" style={{ padding: '16px' }}>
       {/* Row 1: icon + symbol + strategy + timestamps */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3" style={{ marginBottom: '12px' }}>
         <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
@@ -64,7 +64,7 @@ export function NewSignalCard({ signal, onClick }) {
       </div>
 
       {/* Row 2: metrics — left aligned, indented under text */}
-      <div className="flex items-center gap-4" style={{ paddingLeft: '52px' }}>
+      <div className="flex items-center gap-4" style={{ paddingLeft: '52px', marginTop: '12px' }}>
         <div>
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -109,8 +109,8 @@ export function ActiveSignalCard({ signal, onClick }) {
     : ((signal.entry_price - currentPrice) / signal.entry_price) * 100;
 
   return (
-    <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
-      <div className="flex items-center gap-3 mb-3">
+    <button type="button" onClick={onClick} className="card pressable w-full text-left" style={{ padding: '16px' }}>
+      <div className="flex items-center gap-3" style={{ marginBottom: '12px' }}>
         <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
@@ -131,7 +131,7 @@ export function ActiveSignalCard({ signal, onClick }) {
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      <div className="grid grid-cols-3 gap-1.5 text-center">
+      <div className="grid grid-cols-3 text-center" style={{ gap: '6px', marginTop: '12px' }}>
         <div>
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -174,8 +174,8 @@ export function HistorySignalCard({ signal, onClick }) {
     : null;
 
   return (
-    <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
-      <div className="flex items-center gap-3 mb-3">
+    <button type="button" onClick={onClick} className="card pressable w-full text-left" style={{ padding: '16px' }}>
+      <div className="flex items-center gap-3" style={{ marginBottom: '12px' }}>
         <div className={`${grad} w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
@@ -201,7 +201,7 @@ export function HistorySignalCard({ signal, onClick }) {
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-1.5 text-center">
+      <div className="grid grid-cols-3 text-center" style={{ gap: '6px', marginTop: '12px' }}>
         <div>
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -232,7 +232,7 @@ export function ExpiredSignalCard({ signal, onClick }) {
   const Icon = isLong ? TrendingUp : TrendingDown;
 
   return (
-    <button type="button" onClick={onClick} className="card pressable w-full text-left p-4 opacity-70">
+    <button type="button" onClick={onClick} className="card pressable w-full text-left opacity-70" style={{ padding: '16px' }}>
       <div className="flex items-center gap-3">
         <div className="icon-gradient-neutral w-10 h-10 rounded-[4px] flex items-center justify-center flex-shrink-0">
           <Icon size={18} strokeWidth={1.8} className="text-white" />
