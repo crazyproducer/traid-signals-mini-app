@@ -98,9 +98,13 @@ export function ActiveSignalCard({ signal, onClick }) {
     ? ((currentPrice - signal.entry_price) / signal.entry_price) * 100
     : ((signal.entry_price - currentPrice) / signal.entry_price) * 100;
 
+  const fmtDt = (iso) => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
-      {/* Row 1: icon + symbol + direction */}
       <div className="flex items-center gap-3 mb-3">
         <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
@@ -110,31 +114,35 @@ export function ActiveSignalCard({ signal, onClick }) {
             <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
               {sym(signal.symbol)}
             </span>
-            <Badge variant={isLong ? 'long' : 'short'}>{formatDirection(signal.direction)}</Badge>
+            <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <span className="text-[12px] text-tg-hint">Pull Back</span>
+          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span>{fmtDt(signal.created_at)}</span>
+            {signal.triggered_at && (
+              <><span>·</span><span>trig {new Date(signal.triggered_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+            )}
+          </div>
         </div>
         <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
-      {/* Row 2: entry + current + PnL */}
-      <div className="grid grid-cols-3 gap-2 text-center">
+      <div className="grid grid-cols-3 gap-1.5 text-center">
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Current</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Current</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(currentPrice)}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>P&L</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>P&L</span>
           <span
-            className={`text-[14px] font-mono font-bold ${pnlColorClass(unrealizedPct)}`}
+            className={`text-[14px] font-mono font-bold block leading-tight ${pnlColorClass(unrealizedPct)}`}
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {formatPct(unrealizedPct).text}
@@ -160,9 +168,13 @@ export function HistorySignalCard({ signal, onClick }) {
     ? Math.floor((new Date(signal.resolved_at) - new Date(signal.triggered_at)) / 1000)
     : null;
 
+  const fmtDt = (iso) => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4">
-      {/* Row 1: icon + symbol + result */}
       <div className="flex items-center gap-3 mb-3">
         <div className={`${grad} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
@@ -172,11 +184,15 @@ export function HistorySignalCard({ signal, onClick }) {
             <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
               {sym(signal.symbol)}
             </span>
-            <Badge variant={isLong ? 'long' : 'short'}>{formatDirection(signal.direction)}</Badge>
+            <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <span className="text-[12px] text-tg-hint">Pull Back</span>
+          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span>{fmtDt(signal.created_at)}</span>
+            {signal.resolved_at && (
+              <><span>·</span><span>closed {new Date(signal.resolved_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+            )}
+          </div>
         </div>
-        {/* PnL hero */}
         <span
           className={`text-[20px] font-mono font-bold flex-shrink-0 ${pnlColorClass(pnlPct)}`}
           style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
@@ -185,21 +201,20 @@ export function HistorySignalCard({ signal, onClick }) {
         </span>
       </div>
 
-      {/* Row 2: entry + result + duration */}
-      <div className="grid grid-cols-3 gap-2 text-center">
+      <div className="grid grid-cols-3 gap-1.5 text-center">
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Entry</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Entry</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
           </span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Result</span>
-          <Badge variant={isWin ? 'win' : 'loss'}>{isWin ? 'Win' : 'Loss'}</Badge>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Result</span>
+          <span className="block leading-tight"><Badge variant={isWin ? 'win' : 'loss'}>{isWin ? 'Win' : 'Loss'}</Badge></span>
         </div>
         <div>
-          <span className="text-[10px] text-tg-hint block uppercase" style={{ letterSpacing: '0.04em' }}>Duration</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none" style={{ letterSpacing: '0.04em' }}>Duration</span>
+          <span className="text-[13px] font-mono font-semibold text-tg-text block leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {duration ? formatDuration(duration) : '--'}
           </span>
         </div>
@@ -216,6 +231,11 @@ export function ExpiredSignalCard({ signal, onClick }) {
   const isLong = signal.direction === 'LONG';
   const Icon = isLong ? TrendingUp : TrendingDown;
 
+  const fmtDt = (iso) => {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) + ' ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  };
+
   return (
     <button type="button" onClick={onClick} className="card pressable w-full text-left p-4 opacity-70">
       <div className="flex items-center gap-3">
@@ -227,13 +247,18 @@ export function ExpiredSignalCard({ signal, onClick }) {
             <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
               {sym(signal.symbol)}
             </span>
-            <Badge variant="expired">Expired</Badge>
+            <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <span className="text-[12px] text-tg-hint">
-            Entry {formatCryptoPrice(signal.entry_price)} not reached
-          </span>
+          <div className="flex items-center gap-2 text-[11px] text-tg-hint/50 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span>{fmtDt(signal.created_at)}</span>
+            {signal.resolved_at && (
+              <><span>·</span><span>exp {new Date(signal.resolved_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></>
+            )}
+          </div>
         </div>
-        <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
+        <span className="text-[12px] text-tg-hint/40 flex-shrink-0">
+          Entry {formatCryptoPrice(signal.entry_price)}
+        </span>
       </div>
     </button>
   );
