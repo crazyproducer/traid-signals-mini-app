@@ -28,12 +28,12 @@ export default function TabBar() {
         key={tab.path}
         type="button"
         onClick={() => navigate(tab.path)}
-        className="flex-1 flex items-center justify-center pt-3 pb-1 relative"
+        className="flex-1 flex items-center justify-center pt-4 pb-2 relative"
       >
         {active && (
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full bg-tg-button" />
+          <div className="absolute top-1 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full bg-tg-button" />
         )}
-        <div className="flex flex-col items-center gap-0.5">
+        <div className="flex flex-col items-center gap-1">
           <Icon
             size={22}
             strokeWidth={active ? 2.2 : 1.6}
@@ -71,8 +71,8 @@ export default function TabBar() {
           {leftTabs.map(renderTab)}
 
           {/* Center spacer with label */}
-          <div className="flex-1 flex items-center justify-center pt-3 pb-1">
-            <span className="text-[10px] text-tg-hint font-medium mt-5">Create</span>
+          <div className="flex-1 flex items-center justify-center pt-4 pb-2">
+            <span className="text-[10px] text-tg-hint font-medium mt-6">Create</span>
           </div>
 
           {rightTabs.map(renderTab)}
