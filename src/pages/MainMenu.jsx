@@ -29,7 +29,7 @@ export default function MainMenu() {
   return (
     <div className="animate-fade-in">
       {/* Fixed header */}
-      <div className="fixed top-0 left-0 right-0 z-40 bg-tg-bg/95 backdrop-blur-xl page-padding" style={{ paddingTop: '12px', paddingBottom: '10px' }}>
+      <div className="bg-tg-bg/95 backdrop-blur-xl page-padding" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, paddingTop: '12px', paddingBottom: '10px' }}>
         <h1 className="text-[22px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
           TRAID Signals
         </h1>
