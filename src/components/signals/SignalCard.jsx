@@ -64,7 +64,7 @@ export function NewSignalCard({ signal, onClick }) {
       </div>
 
       {/* Row 2: metrics with dividers */}
-      <div className="flex items-center" style={{ paddingLeft: '52px', marginTop: '12px', gap: '12px' }}>
+      <div className="flex items-center" style={{ marginTop: '12px', gap: '12px' }}>
         <div>
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
