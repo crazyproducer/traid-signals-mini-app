@@ -412,7 +412,7 @@ export default function NewSignalWizard() {
       </div>
 
       {/* Bottom nav */}
-      <div className="page-padding" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, paddingBottom: '24px', paddingTop: '16px', background: 'linear-gradient(to top, var(--tg-theme-bg-color, #fff) 60%, transparent)' }}>
+      <div className="page-padding" style={{ position: 'fixed', bottom: '70px', left: 0, right: 0, paddingBottom: '16px', paddingTop: '16px', background: 'linear-gradient(to top, var(--tg-theme-bg-color, #fff) 60%, transparent)' }}>
         <div className="flex items-center gap-3">
           {w.step > 0 && (
             <button
