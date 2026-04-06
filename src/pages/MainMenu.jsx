@@ -76,61 +76,59 @@ export default function MainMenu() {
             </button>
           </div>
 
-          {/* Top templates */}
-          <div style={{ marginBottom: '24px' }}>
-            <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
-              <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
-                Top templates
-              </span>
+          {/* Top templates — same horizontal scroll as full state */}
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+            <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
+              Top templates
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/templates')}
+              className="text-[13px] font-medium text-tg-accent pressable"
+            >
+              View all
+            </button>
+          </div>
+          <div className="hide-scrollbar" style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '24px', paddingBottom: '4px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px' }}>
+            {mockTemplates.slice(0, 5).map((tpl) => (
               <button
+                key={tpl.id}
                 type="button"
-                onClick={() => navigate('/templates')}
-                className="text-[13px] font-medium text-tg-accent pressable"
+                onClick={() => navigate(`/templates/${tpl.id}`)}
+                className="card pressable text-left flex-shrink-0"
+                style={{ padding: '12px', minWidth: '150px', flex: '1 0 auto' }}
               >
-                View all
+                <span className="text-[13px] font-semibold text-tg-text block" style={{ marginBottom: '4px' }}>{tpl.name}</span>
+                <div className="flex items-center" style={{ gap: '6px' }}>
+                  <span className={`text-[13px] font-mono font-bold ${pnlColorClass(tpl.pnl_pct)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    {formatPct(tpl.pnl_pct).text}
+                  </span>
+                  <span className="text-[10px] text-tg-hint">
+                    WR {formatWinRate(tpl.win_rate)}
+                  </span>
+                </div>
               </button>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {mockTemplates.slice(0, 3).map((tpl) => (
-                <button
-                  key={tpl.id}
-                  type="button"
-                  onClick={() => navigate(`/templates/${tpl.id}`)}
-                  className="card pressable w-full text-left flex items-center"
-                  style={{ padding: '14px' }}
-                >
-                  <div style={{ flex: 1 }}>
-                    <span className="text-[14px] font-semibold text-tg-text block">{tpl.name}</span>
-                    <span className="text-[11px] text-tg-hint block" style={{ marginTop: '2px' }}>{tpl.description}</span>
-                  </div>
-                  <div className="flex flex-col items-end flex-shrink-0" style={{ marginLeft: '12px' }}>
-                    <span className={`text-[15px] font-mono font-bold ${pnlColorClass(tpl.pnl_pct)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {formatPct(tpl.pnl_pct).text}
-                    </span>
-                    <span className="text-[10px] text-tg-hint">WR {formatWinRate(tpl.win_rate)}</span>
-                  </div>
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
 
-          {/* Subscription hook */}
+          {/* Subscription CTA */}
           <button
             type="button"
             onClick={() => navigate('/account/plans')}
             className="card pressable w-full text-left"
-            style={{ padding: '16px' }}
+            style={{ padding: '16px', background: 'linear-gradient(135deg, rgba(139,92,246,0.06) 0%, rgba(37,99,235,0.06) 100%)' }}
           >
-            <div className="flex items-center" style={{ gap: '12px' }}>
-              <div className="icon-gradient-violet flex items-center justify-center flex-shrink-0" style={{ width: '40px', height: '40px', borderRadius: '4px' }}>
-                <Trophy size={18} strokeWidth={1.8} className="text-white" />
+            <div className="flex items-center" style={{ gap: '14px' }}>
+              <div className="icon-gradient-violet flex items-center justify-center flex-shrink-0" style={{ width: '44px', height: '44px', borderRadius: '6px' }}>
+                <Trophy size={20} strokeWidth={1.8} className="text-white" />
               </div>
               <div style={{ flex: 1 }}>
-                <span className="text-[14px] font-semibold text-tg-text block">Unlock more symbols</span>
-                <span className="text-[12px] text-tg-hint block" style={{ marginTop: '2px' }}>
-                  Upgrade to track up to 5 symbols from $5/mo
+                <span className="text-[15px] font-bold text-tg-text block">Subscribe now</span>
+                <span className="text-[12px] text-tg-hint block" style={{ marginTop: '2px', lineHeight: '1.4' }}>
+                  Get 2 months free with annual subscription
                 </span>
               </div>
+              <ArrowRight size={18} className="text-tg-hint/40 flex-shrink-0" />
             </div>
           </button>
         </div>
