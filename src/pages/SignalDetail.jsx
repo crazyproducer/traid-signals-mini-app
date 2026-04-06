@@ -54,7 +54,7 @@ export default function SignalDetail() {
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader title="Signal detail" showBack />
       {/* Hero */}
-      <div className="flex items-center gap-3.5 mb-6">
+      <div className="flex items-center gap-3.5" style={{ marginTop: '16px', marginBottom: '16px' }}>
         <div
           className={`${gradientClass} w-14 h-14 rounded-[5px] flex items-center justify-center flex-shrink-0`}
         >
