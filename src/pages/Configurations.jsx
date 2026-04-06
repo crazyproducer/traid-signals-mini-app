@@ -29,14 +29,10 @@ function ConfigCard({ config, onEdit, onToggle, onDelete }) {
   return (
     <div className="card" style={{ padding: '16px' }}>
       {/* Header: strategy + status + direction */}
-      <div className="flex items-center" style={{ marginBottom: '12px', gap: '6px', flexWrap: 'wrap' }}>
-        <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
+      <div className="flex items-center" style={{ marginBottom: '12px', gap: '6px' }}>
+        <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em', flex: 1 }}>
           {stratLabel}
         </span>
-        <span style={{ flex: 1 }} />
-        {dirs.map((d) => (
-          <Badge key={d} variant={d === 'LONG' ? 'long' : 'short'}>{d}</Badge>
-        ))}
         <Badge variant={isPaused ? 'paused' : 'active'}>
           {isPaused ? 'Paused' : 'Active'}
         </Badge>
@@ -44,9 +40,9 @@ function ConfigCard({ config, onEdit, onToggle, onDelete }) {
 
       {/* Config details */}
       <div className="flex items-center" style={{ gap: '10px', marginBottom: '12px', flexWrap: 'wrap' }}>
-        <span className="text-[11px] text-tg-hint">
-          <span className="text-tg-text font-medium">{fmtSymbols(config.symbols)}</span>
-        </span>
+        <span className="text-[11px] text-tg-text font-medium">{dirLabel}</span>
+        <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
+        <span className="text-[11px] text-tg-text font-medium">{fmtSymbols(config.symbols)}</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
         <span className="text-[11px] text-tg-hint">{config.frequency === '4h' ? '4h' : '24h'}</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
