@@ -129,9 +129,12 @@ export default function SignalChart({ signal }) {
             dot={false}
             connectNulls={false}
             strokeDasharray={isExpired ? '5 4' : '0'}
+            animationDuration={600}
+            animationBegin={0}
+            animationEasing="ease-out"
           />
 
-          {/* TP path: entry → TP */}
+          {/* TP path: entry → TP (starts after price line) */}
           {!isExpired && (
             <Line
               type="linear"
@@ -142,10 +145,13 @@ export default function SignalChart({ signal }) {
               strokeOpacity={tpOpacity}
               dot={false}
               connectNulls={false}
+              animationDuration={400}
+              animationBegin={600}
+              animationEasing="ease-out"
             />
           )}
 
-          {/* SL path: entry → SL */}
+          {/* SL path: entry → SL (starts with TP) */}
           {!isExpired && (
             <Line
               type="linear"
@@ -156,6 +162,9 @@ export default function SignalChart({ signal }) {
               strokeOpacity={slOpacity}
               dot={false}
               connectNulls={false}
+              animationDuration={400}
+              animationBegin={600}
+              animationEasing="ease-out"
             />
           )}
 
