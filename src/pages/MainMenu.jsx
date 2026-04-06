@@ -27,16 +27,13 @@ export default function MainMenu() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="animate-fade-in">
-      {/* Fixed header */}
-      <div className="bg-tg-bg/95 backdrop-blur-xl page-padding" style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40, paddingTop: '12px', paddingBottom: '10px' }}>
+    <div className="page-padding animate-fade-in" style={{ paddingTop: '12px', paddingBottom: '96px' }}>
+      {/* Header */}
+      <div style={{ position: 'sticky', top: 0, zIndex: 40, paddingTop: '4px', paddingBottom: '10px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: 'var(--tg-theme-bg-color, #fff)' }}>
         <h1 className="text-[22px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
           TRAID Signals
         </h1>
       </div>
-
-      {/* Content with top offset for fixed header */}
-      <div className="page-padding" style={{ paddingTop: '52px', paddingBottom: '96px' }}>
 
       {/* Metrics row — 4 equal cards, top-aligned */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '24px' }}>
@@ -123,7 +120,6 @@ export default function MainMenu() {
         </>
       )}
 
-    </div>
     </div>
   );
 }
