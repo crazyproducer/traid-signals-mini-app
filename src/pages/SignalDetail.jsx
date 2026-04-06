@@ -74,38 +74,34 @@ export default function SignalDetail() {
         </div>
       </div>
 
-      {/* Stats row */}
-      <div className="card" style={{ padding: '12px 16px', marginBottom: '12px' }}>
-        <div className="grid grid-cols-3 gap-3">
-          <div className="flex flex-col items-center text-center">
-            <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
-              Win Rate
-            </span>
-            <span className="text-[18px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
+      {/* Stats column (30%) + Chart (70%) — side by side */}
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+        {/* Stats column */}
+        <div className="card" style={{ width: '30%', padding: '12px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '12px' }}>
+          <div>
+            <span className="text-[9px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.04em' }}>Win Rate</span>
+            <span className="text-[16px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
               {formatWinRate(signal.win_rate)}
             </span>
           </div>
-          <div className="flex flex-col items-center text-center">
-            <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
-              Trades
-            </span>
-            <span className="text-[18px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <div>
+            <span className="text-[9px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.04em' }}>Trades</span>
+            <span className="text-[16px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
               {signal.matching_trades}
             </span>
           </div>
-          <div className="flex flex-col items-center text-center">
-            <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
-              R:R
-            </span>
-            <span className="text-[18px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <div>
+            <span className="text-[9px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.04em' }}>R:R</span>
+            <span className="text-[16px] font-mono font-bold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
               {formatRiskReward(signal.risk_pct, signal.reward_pct)}
             </span>
           </div>
         </div>
+        {/* Chart */}
+        <div style={{ width: '70%' }}>
+          <SignalChart signal={signal} />
+        </div>
       </div>
-
-      {/* Signal chart — schematic price visualization */}
-      <SignalChart signal={signal} />
 
       {/* Update history */}
       {(signal.updates || []).length > 0 && (
