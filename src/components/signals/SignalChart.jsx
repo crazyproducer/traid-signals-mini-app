@@ -18,8 +18,9 @@ export default function SignalChart({ signal }) {
   const yStart = isLong ? yEntry - CHART_H * 0.15 : yEntry + CHART_H * 0.15;
 
   // X positions: 3 key points on timeline
+  const chartW = 400 - PAD_L - PAD_R - 8;
   const x0 = PAD_L;             // point 0 — start
-  const x1 = PAD_L + 120;      // point 1 — entry
+  const x1 = PAD_L + chartW * 0.65; // point 1 — entry at 65%
   const x2 = 400 - PAD_R - 8;  // point 2 — TP/SL endpoints
   const xLabel = 400 - PAD_R + 8; // labels right of chart
 
