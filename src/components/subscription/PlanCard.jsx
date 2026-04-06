@@ -58,14 +58,15 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
               <span className="text-[22px] font-bold font-mono text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{price}</span>
               <span className="text-[11px] text-tg-hint">{period}</span>
             </div>
-            {annual ? (
-              <span className="text-[10px] text-green font-semibold" style={{ marginTop: '2px' }}>
-                ${plan.price_yearly}/yr · save {savePct}%
-              </span>
-            ) : (
-              <span className="text-[10px] text-tg-hint/50" style={{ marginTop: '2px' }}>
-                ${plan.price_monthly * 12}/yr
-              </span>
+            {annual && (
+              <>
+                <span className="text-[10px] text-tg-hint" style={{ marginTop: '2px' }}>
+                  ${plan.price_yearly}/yr
+                </span>
+                <span className="text-[10px] text-green font-semibold">
+                  Save {savePct}%
+                </span>
+              </>
             )}
           </>
         ) : (
