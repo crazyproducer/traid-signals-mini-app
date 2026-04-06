@@ -5,13 +5,18 @@ import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
 import PageHeader from '../components/shared/PageHeader';
 
+const PLAN_ORDER = ['free', 'basic', 'premium'];
+
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
   const [annual, setAnnual] = useState(false);
+  const [selected, setSelected] = useState(mockSubscription.plan);
 
-  function handleSelectPlan(plan) {
-    navigate('/account');
-  }
+  const currentIdx = PLAN_ORDER.indexOf(mockSubscription.plan);
+  const selectedIdx = PLAN_ORDER.indexOf(selected);
+  const changed = selected !== mockSubscription.plan;
+  const isUpgrade = selectedIdx > currentIdx;
+  const actionLabel = isUpgrade ? 'Upgrade' : 'Downgrade';
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
@@ -47,11 +52,25 @@ export default function SubscriptionPlans() {
             key={plan.value}
             plan={plan}
             isCurrentPlan={plan.value === mockSubscription.plan}
-            onSelect={handleSelectPlan}
+            isSelected={plan.value === selected}
+            onSelect={(p) => setSelected(p.value)}
             annual={annual}
           />
         ))}
       </div>
+
+      {/* Upgrade/Downgrade button — only when changed */}
+      {changed && (
+        <div style={{ marginTop: '16px' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/account')}
+            className={`btn w-full pressable ${isUpgrade ? 'icon-gradient-green text-white' : 'bg-tg-secondary/60 text-tg-text'}`}
+          >
+            {actionLabel} to {SUBSCRIPTION_PLANS.find((p) => p.value === selected)?.label}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
