@@ -78,6 +78,9 @@ export default function SignalChart({ signal }) {
   const isExpired = status === 'EXPIRED';
   const showCurrent = isPending || isTriggered;
 
+  // Start Y: Long starts above entry (price descends to entry), Short starts below (price ascends)
+  const yStart = isLong ? yEntry - CHART_H * 0.15 : yEntry + CHART_H * 0.15;
+
   const green = '#059669';
   const red = '#dc2626';
   const hint = 'var(--tg-theme-hint-color, #999)';
@@ -130,8 +133,8 @@ export default function SignalChart({ signal }) {
 
         {isPending && (
           <>
-            {/* Solid: start → current */}
-            <line x1={xStart} y1={yCurrent} x2={xCurrent} y2={yCurrent} stroke={text} strokeWidth="2" />
+            {/* Solid: start (above/below entry) → current, descending for Long, ascending for Short */}
+            <line x1={xStart} y1={yStart} x2={xCurrent} y2={yCurrent} stroke={text} strokeWidth="2" />
             {/* Current dot */}
             <circle cx={xCurrent} cy={yCurrent} r="4" fill={text} />
             <circle cx={xCurrent} cy={yCurrent} r="7" fill={text} opacity="0.15" className="live-dot" />
@@ -148,8 +151,8 @@ export default function SignalChart({ signal }) {
 
         {isTriggered && (
           <>
-            {/* Solid: start → entry */}
-            <line x1={xStart} y1={yEntry + 15} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
+            {/* Solid: start (descending/ascending) → entry */}
+            <line x1={xStart} y1={yStart} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
             {/* Entry marker */}
             <circle cx={xEntry} cy={yEntry} r="3.5" fill={text} />
             {/* Solid: entry → current */}
@@ -166,8 +169,8 @@ export default function SignalChart({ signal }) {
 
         {isHitTP && (
           <>
-            {/* Solid: start → entry */}
-            <line x1={xStart} y1={yEntry + 15} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
+            {/* Solid: start (descending/ascending) → entry */}
+            <line x1={xStart} y1={yStart} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
             <circle cx={xEntry} cy={yEntry} r="3" fill={text} />
             {/* Solid: entry → TP */}
             <line x1={xEntry} y1={yEntry} x2={xResult} y2={yTP} stroke={green} strokeWidth="2.5" />
@@ -179,8 +182,8 @@ export default function SignalChart({ signal }) {
 
         {isHitSL && (
           <>
-            {/* Solid: start → entry */}
-            <line x1={xStart} y1={yEntry - 15} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
+            {/* Solid: start (descending/ascending) → entry */}
+            <line x1={xStart} y1={yStart} x2={xEntry} y2={yEntry} stroke={text} strokeWidth="2" />
             <circle cx={xEntry} cy={yEntry} r="3" fill={text} />
             {/* Solid: entry → SL */}
             <line x1={xEntry} y1={yEntry} x2={xResult} y2={ySL} stroke={red} strokeWidth="2.5" />
@@ -192,8 +195,8 @@ export default function SignalChart({ signal }) {
 
         {isExpired && (
           <>
-            {/* Muted horizontal line */}
-            <line x1={xStart} y1={yEntry} x2={xResult} y2={yEntry} stroke={hint} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.3" />
+            {/* Muted descending/ascending line that never reached entry */}
+            <line x1={xStart} y1={yStart} x2={xResult} y2={yEntry} stroke={hint} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.3" />
             <circle cx={xResult} cy={yEntry} r="4" fill="none" stroke={hint} strokeWidth="1.5" opacity="0.3" />
             <text x={xResult - 40} y={yEntry - 12} fill={hint} fontSize="9" fontFamily="DM Sans, sans-serif" opacity="0.4" textAnchor="middle">
               expired
