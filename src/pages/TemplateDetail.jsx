@@ -45,7 +45,7 @@ export default function TemplateDetail() {
         rightElement={
           <button
             type="button"
-            onClick={() => navigate('/new-signal')}
+            onClick={() => navigate('/new-signal', { state: { template: tpl } })}
             className="icon-gradient-green text-white text-[12px] font-semibold pressable flex items-center"
             style={{ padding: '6px 14px', borderRadius: '6px', gap: '5px' }}
           >

@@ -1,5 +1,5 @@
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   CheckCircle2, BarChart3, Gauge, Target,
   TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket, Pencil,
@@ -363,8 +363,25 @@ function HeroCount({ count }) {
    ═══════════════════════════════════════════════ */
 export default function NewSignalWizard() {
   const navigate = useNavigate();
+  const location = useLocation();
   const w = useWizard();
   const [launched, setLaunched] = useState(false);
+
+  // Load template data if passed via navigation state
+  useEffect(() => {
+    if (location.state?.template) {
+      const t = location.state.template;
+      w.loadTemplate({
+        strategy: t.strategies?.[0] || 'pullback',
+        risk_level: t.risk_level,
+        confidence: t.confidence,
+        directions: t.directions || [],
+        symbols: t.symbols || [],
+        frequency: t.frequency,
+        ema_filters: t.ema_filters || [],
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLaunch = useCallback(() => setLaunched(true), []);
 

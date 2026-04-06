@@ -112,7 +112,7 @@ export default function Templates() {
             key={tpl.id}
             template={tpl}
             onView={() => navigate(`/templates/${tpl.id}`)}
-            onUse={() => navigate('/new-signal')}
+            onUse={() => navigate('/new-signal', { state: { template: tpl } })}
           />
         ))}
       </div>
