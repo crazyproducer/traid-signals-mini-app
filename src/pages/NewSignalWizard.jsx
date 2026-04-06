@@ -74,7 +74,7 @@ function fmtCount(n) {
    ═══════════════════════════════════════════════ */
 function StepStrategy({ data, setField }) {
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {STRATEGIES.map((s) => (
         <OptionCard
           key={s.value}
@@ -99,7 +99,7 @@ function StepStrategy({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepRisk({ data, setField }) {
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {RISK_LEVELS.map((r) => (
         <OptionCard
           key={r.value}
@@ -121,7 +121,7 @@ function StepRisk({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepConfidence({ data, setField }) {
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {CONFIDENCE_LEVELS.map((c) => (
         <OptionCard
           key={c.value}
@@ -146,7 +146,7 @@ function StepDirection({ data, toggleArray }) {
   const total = selected.reduce((s, d) => s + (RECORD_COUNTS.direction[d] || 0), 0);
 
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {selected.length > 0 && (
         <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {total.toLocaleString()} records selected
@@ -178,7 +178,7 @@ function StepSymbol({ data, toggleArray, onPaywall }) {
   const atLimit = limit && selected.length >= limit;
 
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {selected.length > 0 && (
         <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {selected.length}{limit ? `/${limit}` : ''} selected · {total.toLocaleString()} records
@@ -209,7 +209,7 @@ function StepSymbol({ data, toggleArray, onPaywall }) {
    ═══════════════════════════════════════════════ */
 function StepFrequency({ data, setField }) {
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {FREQUENCIES.map((f) => (
         <OptionCard
           key={f.value}
@@ -234,7 +234,7 @@ function StepFilters({ data, toggleArray }) {
   const total = selected.reduce((s, f) => s + (RECORD_COUNTS.ema[f] || 0), 0);
 
   return (
-    <div className="space-y-3">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {selected.length > 0 && (
         <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {selected.length} filter{selected.length > 1 ? 's' : ''} · {total.toLocaleString()} records

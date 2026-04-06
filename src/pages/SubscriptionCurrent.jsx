@@ -27,6 +27,7 @@ export default function SubscriptionCurrent() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader title="Account" showBack />
+      <div style={{ height: '16px' }} />
 
       {/* Current plan card */}
       <div className="card-elevated" style={{ padding: '20px', marginBottom: '16px' }}>
