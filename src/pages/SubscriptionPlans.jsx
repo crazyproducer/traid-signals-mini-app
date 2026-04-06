@@ -9,7 +9,7 @@ const PLAN_ORDER = ['free', 'basic', 'premium'];
 
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
-  const [annual, setAnnual] = useState(false);
+  const [annual, setAnnual] = useState(true);
   const [selected, setSelected] = useState(mockSubscription.plan);
 
   const currentIdx = PLAN_ORDER.indexOf(mockSubscription.plan);

@@ -4,8 +4,9 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
   const isPopular = plan.value === 'basic';
   const isFree = plan.price_monthly === 0;
 
-  const price = isFree ? '$0' : annual ? `$${plan.price_yearly}` : `$${plan.price_monthly}`;
-  const period = isFree ? '' : annual ? '/yr' : '/mo';
+  const price = isFree ? '$0' : annual ? `$${Math.round(plan.price_yearly / 12)}` : `$${plan.price_monthly}`;
+  const period = '/mo';
+  const savePct = !isFree && annual ? Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100) : 0;
 
   return (
     <button
@@ -55,11 +56,15 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
           <>
             <div className="flex items-baseline" style={{ gap: '2px' }}>
               <span className="text-[22px] font-bold font-mono text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{price}</span>
+              <span className="text-[11px] text-tg-hint">{period}</span>
             </div>
-            <span className="text-[11px] text-tg-hint">{period}</span>
-            {annual && (
+            {annual ? (
               <span className="text-[10px] text-green font-semibold" style={{ marginTop: '2px' }}>
-                Save {Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100)}%
+                ${plan.price_yearly}/yr · save {savePct}%
+              </span>
+            ) : (
+              <span className="text-[10px] text-tg-hint/50" style={{ marginTop: '2px' }}>
+                ${plan.price_monthly * 12}/yr
               </span>
             )}
           </>
