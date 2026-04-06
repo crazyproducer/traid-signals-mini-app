@@ -10,6 +10,8 @@ import {
   formatWinRate,
   formatRiskReward,
   formatSignalId,
+  formatPct,
+  pnlColorClass,
 } from '../utils/formatters';
 import { SYMBOLS } from '../utils/constants';
 import { mockSignals } from '../api/mock-data';
@@ -48,6 +50,23 @@ export default function SignalDetail() {
   const DirectionIcon = isLong ? TrendingUp : TrendingDown;
   const gradientClass = isLong ? 'icon-gradient-green' : 'icon-gradient-red';
 
+  const isTriggered = signal.status === 'TRIGGERED';
+  const isHitTP = signal.status === 'HIT_TP';
+  const isHitSL = signal.status === 'HIT_SL';
+  const isResolved = isHitTP || isHitSL;
+
+  // PnL calculation
+  let pnlPct = null;
+  let pnlLabel = null;
+  if (isTriggered && signal.current_price) {
+    pnlPct = isLong
+      ? ((signal.current_price - signal.entry_price) / signal.entry_price) * 100
+      : ((signal.entry_price - signal.current_price) / signal.entry_price) * 100;
+    pnlLabel = 'Unrealized';
+  } else if (isResolved) {
+    pnlPct = isHitTP ? signal.reward_pct : -signal.risk_pct;
+    pnlLabel = 'Realized';
+  }
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
@@ -59,18 +78,30 @@ export default function SignalDetail() {
         >
           <DirectionIcon size={28} strokeWidth={2} className="text-white" />
         </div>
-        <div className="flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0">
           <div className="flex items-center gap-2">
             <span className="text-[20px] font-bold text-tg-text">
               {symbolLabel(signal.symbol)}
             </span>
             <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
-          <div className="flex items-center gap-2 mt-0.5">
+          <div className="flex items-center gap-2" style={{ marginTop: '2px' }}>
             <span className="text-[12px] font-mono text-tg-hint">{formatSignalId(signal.id)}</span>
             <SignalStatusBadge status={signal.status} />
           </div>
         </div>
+        {/* PnL — right side */}
+        {pnlPct !== null && (
+          <div className="flex flex-col items-end flex-shrink-0">
+            <span
+              className={`text-[22px] font-mono font-bold leading-none ${pnlColorClass(pnlPct)}`}
+              style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
+            >
+              {formatPct(pnlPct).text}
+            </span>
+            <span className="text-[10px] text-tg-hint" style={{ marginTop: '2px' }}>{pnlLabel}</span>
+          </div>
+        )}
       </div>
 
       {/* Stats row — 3 cards horizontal */}
