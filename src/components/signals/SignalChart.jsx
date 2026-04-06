@@ -105,15 +105,17 @@ export default function SignalChart({ signal }) {
   return (
     <div className="card" style={{ padding: '0', overflow: 'hidden', height: '100%' }}>
       <ResponsiveContainer width="100%" height="100%" minHeight={160}>
-        <LineChart data={data} margin={{ top: 16, right: 12, bottom: 8, left: 12 }}>
+        <LineChart data={data} margin={{ top: 16, right: 8, bottom: 8, left: 8 }}>
           <XAxis dataKey="x" hide />
           <YAxis
             domain={[minY - padding, maxY + padding]}
             orientation="right"
             axisLine={false}
             tickLine={false}
-            tick={false}
-            width={0}
+            ticks={[sl, entry, tp]}
+            tick={{ fontSize: 10, fontFamily: 'DM Mono, monospace', fontWeight: 600, fill: 'var(--tg-theme-hint-color, #999)' }}
+            tickFormatter={(v) => formatCryptoPrice(v)}
+            width={75}
           />
 
           {/* Reference lines for price levels */}
@@ -122,21 +124,21 @@ export default function SignalChart({ signal }) {
             stroke={tpStroke}
             strokeWidth={0.5}
             strokeOpacity={isExpired ? 0.15 : 0.3}
-            label={{ value: `TP  ${formatCryptoPrice(tp)}`, position: 'right', fill: tpStroke, fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.8 }}
+            label={{ value: 'TP', position: 'insideTopLeft', fill: tpStroke, fontSize: 9, fontFamily: 'DM Sans', fontWeight: 700, opacity: isExpired ? 0.3 : 0.6 }}
           />
           <ReferenceLine
             y={entry}
             stroke="var(--tg-theme-hint-color, #999)"
             strokeWidth={0.5}
             strokeOpacity={isExpired ? 0.15 : 0.2}
-            label={{ value: `Entry  ${formatCryptoPrice(entry)}`, position: 'right', fill: 'var(--tg-theme-text-color, #1a1a1a)', fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.7 }}
+            label={{ value: 'ENTRY', position: 'insideTopLeft', fill: 'var(--tg-theme-hint-color, #999)', fontSize: 9, fontFamily: 'DM Sans', fontWeight: 700, opacity: isExpired ? 0.3 : 0.5 }}
           />
           <ReferenceLine
             y={sl}
             stroke={slStroke}
             strokeWidth={0.5}
             strokeOpacity={isExpired ? 0.15 : 0.3}
-            label={{ value: `SL  ${formatCryptoPrice(sl)}`, position: 'right', fill: slStroke, fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.8 }}
+            label={{ value: 'SL', position: 'insideBottomLeft', fill: slStroke, fontSize: 9, fontFamily: 'DM Sans', fontWeight: 700, opacity: isExpired ? 0.3 : 0.6 }}
           />
 
           {/* Main price line: start → entry */}
