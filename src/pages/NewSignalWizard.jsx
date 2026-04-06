@@ -141,9 +141,15 @@ function StepConfidence({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepDirection({ data, toggleArray }) {
   const selected = data.directions || [];
+  const total = selected.reduce((s, d) => s + (RECORD_COUNTS.direction[d] || 0), 0);
 
   return (
     <div className="space-y-3">
+      {selected.length > 0 && (
+        <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {total.toLocaleString()} records selected
+        </p>
+      )}
       {DIRECTIONS.map((d) => (
         <OptionCard
           key={d.value}
@@ -165,9 +171,15 @@ function StepDirection({ data, toggleArray }) {
    ═══════════════════════════════════════════════ */
 function StepSymbol({ data, toggleArray }) {
   const selected = data.symbols || [];
+  const total = selected.reduce((s, sym) => s + (RECORD_COUNTS.symbol[sym] || 0), 0);
 
   return (
     <div className="space-y-3">
+      {selected.length > 0 && (
+        <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {selected.length} selected · {total.toLocaleString()} records
+        </p>
+      )}
       {SYMBOLS.map((sym) => (
         <OptionCard
           key={sym.value}
@@ -211,9 +223,15 @@ function StepFrequency({ data, setField }) {
    ═══════════════════════════════════════════════ */
 function StepFilters({ data, toggleArray }) {
   const selected = data.ema_filters || [];
+  const total = selected.reduce((s, f) => s + (RECORD_COUNTS.ema[f] || 0), 0);
 
   return (
     <div className="space-y-3">
+      {selected.length > 0 && (
+        <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {selected.length} filter{selected.length > 1 ? 's' : ''} · {total.toLocaleString()} records
+        </p>
+      )}
       {EMA_FILTERS.map((f) => (
         <OptionCard
           key={f.value}
@@ -386,22 +404,15 @@ export default function NewSignalWizard() {
         </p>
       </div>
 
-      {/* Hero record count — not on Review step */}
-      {!isReview && (
-        <div className="page-padding">
-          <HeroCount count={estimatedCount} />
-        </div>
-      )}
-
       {/* Step content */}
-      <div className="flex-1 page-padding pb-32 overflow-y-auto hide-scrollbar" key={w.step}>
+      <div className="flex-1 page-padding overflow-y-auto hide-scrollbar" style={{ paddingBottom: '120px' }} key={w.step}>
         <div className={animClass}>
           {renderStep()}
         </div>
       </div>
 
       {/* Bottom nav */}
-      <div className="fixed bottom-0 left-0 right-0 page-padding pb-6 pt-10 bg-gradient-to-t from-tg-bg via-tg-bg/95 to-transparent">
+      <div className="page-padding" style={{ position: 'fixed', bottom: 0, left: 0, right: 0, paddingBottom: '24px', paddingTop: '16px', background: 'linear-gradient(to top, var(--tg-theme-bg-color, #fff) 60%, transparent)' }}>
         <div className="flex items-center gap-3">
           {w.step > 0 && (
             <button
