@@ -8,6 +8,7 @@ import NewSignalWizard from './pages/NewSignalWizard';
 import MySignals from './pages/MySignals';
 import SignalDetail from './pages/SignalDetail';
 import SubscriptionPlans from './pages/SubscriptionPlans';
+import Configurations from './pages/Configurations';
 import SubscriptionCurrent from './pages/SubscriptionCurrent';
 import Learn from './pages/Learn';
 
@@ -81,6 +82,7 @@ export default function App() {
           <Route path="/new-signal" element={<NewSignalWizard />} />
           <Route path="/signals" element={<MySignals />} />
           <Route path="/signals/:id" element={<SignalDetail />} />
+          <Route path="/configurations" element={<Configurations />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/account" element={<SubscriptionCurrent />} />
           <Route path="/account/plans" element={<SubscriptionPlans />} />

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Sparkles, Radio, History, Clock } from 'lucide-react';
+import { Sparkles, Radio, History, Clock, Settings } from 'lucide-react';
 import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
 import { mockSignals } from '../api/mock-data';
@@ -54,7 +54,15 @@ export default function MySignals() {
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader title="Signals" showBack />
+      <PageHeader
+        title="Signals"
+        showBack
+        rightElement={
+          <button type="button" onClick={() => navigate('/configurations')} className="pressable text-tg-hint">
+            <Settings size={20} strokeWidth={1.8} />
+          </button>
+        }
+      />
 
       {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30" style={{ marginBottom: '20px', paddingTop: '4px' }}>
