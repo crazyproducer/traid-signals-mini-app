@@ -23,7 +23,7 @@ const STEP_TITLES = [
   'Confidence',
   'Direction',
   'Symbols',
-  'Timeframe',
+  'Frequency',
   'Filters',
   'Review',
 ];
@@ -34,7 +34,7 @@ const STEP_SUBTITLES = [
   'Set statistical significance threshold',
   'Choose trade direction',
   'Select trading pairs',
-  'Signal update frequency',
+  'How often you receive signals and updates',
   'Optional EMA trend filters',
   'Review your signal configuration',
 ];

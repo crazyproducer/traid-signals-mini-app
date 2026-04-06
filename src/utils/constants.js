@@ -43,8 +43,8 @@ export const SYMBOLS = [
 ];
 
 export const FREQUENCIES = [
-  { value: '4h', label: 'Every 4 hours', description: 'More signals, faster updates' },
-  { value: '24h', label: 'Every 24 hours', description: 'Fewer signals, daily analysis' },
+  { value: '4h', label: 'Several times per day', description: 'More signals, faster updates' },
+  { value: '24h', label: 'Once a day or less', description: 'Fewer signals, daily analysis' },
 ];
 
 export const EMA_FILTERS = [

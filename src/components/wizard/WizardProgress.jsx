@@ -4,7 +4,7 @@ const STEP_LABELS = [
   'Confidence',
   'Direction',
   'Symbols',
-  'Timeframe',
+  'Frequency',
   'Filters',
   'Review',
 ];
