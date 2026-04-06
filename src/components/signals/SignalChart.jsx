@@ -16,8 +16,8 @@ export default function SignalChart({ signal }) {
   const sl = signal.stop_loss;
   const current = signal.current_price || entry;
 
-  // Start price: Long comes from above entry, Short from below
-  const startPrice = isLong ? entry + (entry - sl) * 0.3 : entry - (sl - entry) * 0.3;
+  // Start price: midpoint between TP and Entry
+  const startPrice = (tp + entry) / 2;
 
   // Build data points: x=0 start, x=1 midpoint, x=2 entry, x=3 mid-fork, x=4 endpoints
   let data;
