@@ -436,22 +436,9 @@ export default function NewSignalWizard() {
 
   return (
     <div className="min-h-[100dvh] flex flex-col">
-      {/* Progress bar */}
-      <div className="page-padding pt-4 pb-2">
-        <WizardProgress step={w.step} totalSteps={w.totalSteps} />
-      </div>
-
-      {/* Title + subtitle */}
-      <div className="page-padding pb-4">
-        <h2
-          className="text-[24px] font-bold text-tg-text leading-tight"
-          style={{ letterSpacing: '-0.03em' }}
-        >
-          {STEP_TITLES[w.step]}
-        </h2>
-        <p className="text-[14px] text-tg-hint mt-1 leading-relaxed">
-          {STEP_SUBTITLES[w.step]}
-        </p>
+      {/* Progress bar + step info */}
+      <div className="page-padding" style={{ paddingTop: '16px', paddingBottom: '12px' }}>
+        <WizardProgress step={w.step} totalSteps={w.totalSteps} subtitle={STEP_SUBTITLES[w.step]} />
       </div>
 
       {/* Step content */}

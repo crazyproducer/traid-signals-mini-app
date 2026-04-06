@@ -9,34 +9,35 @@ const STEP_LABELS = [
   'Review',
 ];
 
-export default function WizardProgress({ step, totalSteps }) {
+export default function WizardProgress({ step, totalSteps, subtitle }) {
   const pct = ((step + 1) / totalSteps) * 100;
 
   return (
     <div>
-      {/* Continuous progress bar — thin, precise */}
-      <div className="h-[2px] rounded-full bg-tg-secondary/30 overflow-hidden">
+      {/* Progress bar */}
+      <div style={{ height: '2px', borderRadius: '1px', backgroundColor: 'rgba(128,128,128,0.12)', overflow: 'hidden' }}>
         <div
-          className="h-full rounded-full bg-tg-button transition-all duration-500"
-          style={{ width: `${pct}%`, transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+          className="bg-tg-button"
+          style={{ height: '100%', borderRadius: '1px', width: `${pct}%`, transition: 'width 500ms cubic-bezier(0.34, 1.56, 0.64, 1)' }}
         />
       </div>
 
       {/* Step name + counter */}
-      <div className="mt-2.5 flex items-center justify-between">
-        <span
-          className="text-[12px] font-semibold text-tg-hint/50 uppercase"
-          style={{ letterSpacing: '0.08em' }}
-        >
+      <div className="flex items-baseline justify-between" style={{ marginTop: '10px' }}>
+        <span className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
           {STEP_LABELS[step]}
         </span>
-        <span
-          className="text-[12px] font-mono text-tg-hint/35"
-          style={{ fontVariantNumeric: 'tabular-nums' }}
-        >
+        <span className="text-[11px] font-mono text-tg-hint/35" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {step + 1} of {totalSteps}
         </span>
       </div>
+
+      {/* Subtitle */}
+      {subtitle && (
+        <p className="text-[13px] text-tg-hint" style={{ marginTop: '2px' }}>
+          {subtitle}
+        </p>
+      )}
     </div>
   );
 }
