@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, BarChart3, Trophy } from 'lucide-react';
+import { Plus, BarChart3, Trophy, ArrowRight } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
 import PerformanceChart from '../components/signals/PerformanceChart';
 import {
@@ -56,29 +56,82 @@ export default function MainMenu() {
       <div style={{ height: '12px' }} />
 
       {isEmpty ? (
-        /* ═══ Empty state — no signals at all ═══ */
-        <div className="flex flex-col items-center justify-center text-center" style={{ paddingTop: '60px', paddingBottom: '40px' }}>
-          <div style={{ width: '100%', height: '180px', position: 'relative', marginBottom: '32px', opacity: 0.15 }}>
-            <svg width="100%" height="100%" viewBox="0 0 400 180" preserveAspectRatio="none" fill="none">
-              <path d="M0 160 Q50 140 80 145 T160 120 T240 100 T320 70 T400 40" stroke="var(--tg-theme-hint-color, #999)" strokeWidth="2" fill="none" />
-              <path d="M0 160 Q50 140 80 145 T160 120 T240 100 T320 70 T400 40 L400 180 L0 180 Z" fill="var(--tg-theme-hint-color, #999)" opacity="0.1" />
-              <line x1="0" y1="180" x2="400" y2="180" stroke="var(--tg-theme-hint-color, #999)" strokeWidth="0.5" />
-              <line x1="0" y1="0" x2="0" y2="180" stroke="var(--tg-theme-hint-color, #999)" strokeWidth="0.5" />
-            </svg>
+        /* ═══ Empty state — no signals, with hooks ═══ */
+        <div>
+          {/* Hero CTA */}
+          <div className="flex flex-col items-center text-center" style={{ paddingTop: '32px', paddingBottom: '24px' }}>
+            <BarChart3 size={28} className="text-tg-hint/30" style={{ marginBottom: '12px' }} />
+            <p className="text-[16px] font-semibold text-tg-text" style={{ marginBottom: '6px' }}>Start receiving trading signals</p>
+            <p className="text-[13px] text-tg-hint" style={{ marginBottom: '16px', maxWidth: '280px', lineHeight: '1.5' }}>
+              Create your first configuration or use a proven template from top performers
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate('/new-signal')}
+              className="btn icon-gradient-green text-white pressable flex items-center justify-center"
+              style={{ gap: '8px', width: '100%' }}
+            >
+              <Plus size={18} strokeWidth={2.5} />
+              Create signal
+            </button>
           </div>
-          <BarChart3 size={32} className="text-tg-hint/30" style={{ marginBottom: '16px' }} />
-          <p className="text-[16px] font-semibold text-tg-text" style={{ marginBottom: '8px' }}>No signals yet</p>
-          <p className="text-[13px] text-tg-hint" style={{ marginBottom: '24px', maxWidth: '260px', lineHeight: '1.5' }}>
-            Create your first signal subscription to start receiving trading signals and tracking performance
-          </p>
+
+          {/* Top templates */}
+          <div style={{ marginBottom: '24px' }}>
+            <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+              <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
+                Top templates
+              </span>
+              <button
+                type="button"
+                onClick={() => navigate('/templates')}
+                className="text-[13px] font-medium text-tg-accent pressable"
+              >
+                View all
+              </button>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              {mockTemplates.slice(0, 3).map((tpl) => (
+                <button
+                  key={tpl.id}
+                  type="button"
+                  onClick={() => navigate(`/templates/${tpl.id}`)}
+                  className="card pressable w-full text-left flex items-center"
+                  style={{ padding: '14px' }}
+                >
+                  <div style={{ flex: 1 }}>
+                    <span className="text-[14px] font-semibold text-tg-text block">{tpl.name}</span>
+                    <span className="text-[11px] text-tg-hint block" style={{ marginTop: '2px' }}>{tpl.description}</span>
+                  </div>
+                  <div className="flex flex-col items-end flex-shrink-0" style={{ marginLeft: '12px' }}>
+                    <span className={`text-[15px] font-mono font-bold ${pnlColorClass(tpl.pnl_pct)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      {formatPct(tpl.pnl_pct).text}
+                    </span>
+                    <span className="text-[10px] text-tg-hint">WR {formatWinRate(tpl.win_rate)}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Subscription hook */}
           <button
             type="button"
-            onClick={() => navigate('/new-signal')}
-            className="icon-gradient-green text-white text-[14px] font-semibold pressable flex items-center"
-            style={{ padding: '12px 24px', borderRadius: '7px', gap: '8px' }}
+            onClick={() => navigate('/account/plans')}
+            className="card pressable w-full text-left"
+            style={{ padding: '16px' }}
           >
-            <Plus size={18} strokeWidth={2.5} />
-            Create signal
+            <div className="flex items-center" style={{ gap: '12px' }}>
+              <div className="icon-gradient-violet flex items-center justify-center flex-shrink-0" style={{ width: '40px', height: '40px', borderRadius: '4px' }}>
+                <Trophy size={18} strokeWidth={1.8} className="text-white" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <span className="text-[14px] font-semibold text-tg-text block">Unlock more symbols</span>
+                <span className="text-[12px] text-tg-hint block" style={{ marginTop: '2px' }}>
+                  Upgrade to track up to 5 symbols from $5/mo
+                </span>
+              </div>
+            </div>
           </button>
         </div>
       ) : (
