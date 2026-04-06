@@ -62,7 +62,7 @@ export default function SignalChart({ signal }) {
 
   return (
     <div className="card" style={{ padding: '0', overflow: 'hidden', height: '100%' }}>
-      <svg viewBox={`0 0 400 ${H}`} style={{ width: '100%', height: '100%', display: 'block' }}>
+      <svg viewBox={`0 0 400 ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
 
         {/* Background zones: green between entry and TP, red between entry and SL */}
         {/* Green zone (profit) */}
