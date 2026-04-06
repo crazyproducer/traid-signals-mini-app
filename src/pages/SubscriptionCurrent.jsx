@@ -3,6 +3,7 @@ import { Crown, Calendar, CreditCard, ArrowRight } from 'lucide-react';
 import FeatureRow from '../components/subscription/FeatureRow';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
+import PageHeader from '../components/shared/PageHeader';
 
 export default function SubscriptionCurrent() {
   const navigate = useNavigate();
@@ -24,11 +25,8 @@ export default function SubscriptionCurrent() {
   }
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '24px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <h1 className="text-[28px] font-bold text-tg-text mb-5" style={{ letterSpacing: '-0.03em' }}>
-        My Subscription
-      </h1>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader title="Account" showBack />
 
       {/* Current plan card */}
       <div className="card-elevated p-5 mb-4">

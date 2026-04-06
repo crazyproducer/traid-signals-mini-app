@@ -3,6 +3,7 @@ import PerformanceChart from '../components/signals/PerformanceChart';
 import StatCard from '../components/shared/StatCard';
 import { mockPerformance, mockEquityCurve } from '../api/mock-data';
 import { formatWinRate, formatPct } from '../utils/formatters';
+import PageHeader from '../components/shared/PageHeader';
 
 const PERIODS = ['30D', '90D', 'ALL'];
 
@@ -14,11 +15,8 @@ export default function SignalPerformance() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '24px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <h1 className="text-[28px] font-bold text-tg-text mb-6" style={{ letterSpacing: '-0.03em' }}>
-        Performance
-      </h1>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader title="Performance" showBack />
 
       {/* Hero win rate */}
       <div className="flex flex-col items-center mb-8">

@@ -12,6 +12,7 @@ import {
   mockSignalSubscriptions,
 } from '../api/mock-data';
 import { formatWinRate, formatPct } from '../utils/formatters';
+import PageHeader from '../components/shared/PageHeader';
 
 const PERIODS = ['30D', '90D', 'ALL'];
 
@@ -28,12 +29,7 @@ export default function MainMenu() {
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 40, paddingTop: '10px', paddingBottom: '10px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: 'var(--tg-theme-bg-color, #fff)', borderBottom: '1px solid rgba(128,128,128,0.12)' }}>
-        <h1 className="text-[22px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
-          TRAID Signals
-        </h1>
-      </div>
+      <PageHeader title="TRAID Signals" />
 
       <div style={{ height: '12px' }} />
 

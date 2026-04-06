@@ -4,6 +4,7 @@ import { Sparkles, Radio, History, Clock } from 'lucide-react';
 import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
 import { mockSignals } from '../api/mock-data';
+import PageHeader from '../components/shared/PageHeader';
 
 const NEW_STATUSES = ['PENDING', 'ACTIVE', 'UPDATED'];
 const ACTIVE_STATUSES = ['TRIGGERED'];
@@ -50,11 +51,8 @@ export default function MySignals() {
   };
 
   return (
-    <div className="page-padding" style={{ paddingTop: '24px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <h1 className="text-[28px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em', marginBottom: '20px' }}>
-        Signals
-      </h1>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader title="Signals" showBack />
 
       {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30" style={{ marginBottom: '20px', paddingTop: '4px' }}>
