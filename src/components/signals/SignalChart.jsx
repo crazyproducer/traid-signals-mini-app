@@ -23,13 +23,15 @@ const PAD_T = 24;    // top padding
 const PAD_B = 24;    // bottom padding
 const CHART_H = H - PAD_T - PAD_B;
 
-// Y positions (fixed, evenly spaced)
+// Y positions
 const Y_TOP = PAD_T;
-const Y_MID = PAD_T + CHART_H / 2;
 const Y_BOT = PAD_T + CHART_H;
 
 export default function SignalChart({ signal }) {
   const isLong = signal.direction === 'LONG';
+
+  // Entry line offset: Long = 70% from top (more room above for TP), Short = 30% from top
+  const Y_MID = PAD_T + CHART_H * (isLong ? 0.7 : 0.3);
   const status = signal.status;
 
   // For Long: top=TP, mid=Entry, bot=SL
