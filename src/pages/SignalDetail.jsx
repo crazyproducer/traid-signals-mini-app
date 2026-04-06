@@ -74,11 +74,8 @@ export default function SignalDetail() {
         </div>
       </div>
 
-      {/* Signal chart — schematic price visualization */}
-      <SignalChart signal={signal} />
-
       {/* Stats row */}
-      <div className="card p-4 mb-4">
+      <div className="card" style={{ padding: '12px 16px', marginBottom: '12px' }}>
         <div className="grid grid-cols-3 gap-3">
           <div className="flex flex-col items-center text-center">
             <span className="text-[11px] uppercase font-medium text-tg-hint mb-1" style={{ letterSpacing: '0.06em' }}>
@@ -106,6 +103,9 @@ export default function SignalDetail() {
           </div>
         </div>
       </div>
+
+      {/* Signal chart — schematic price visualization */}
+      <SignalChart signal={signal} />
 
       {/* Update history */}
       {(signal.updates || []).length > 0 && (
