@@ -258,13 +258,20 @@ function StepFilters({ data, toggleArray }) {
    ═══════════════════════════════════════════════ */
 function StepReview({ data, goToStep }) {
   const dirLabels = (data.directions || []).join(' & ') || '--';
-  const symLabels = SYMBOLS.filter((s) => (data.symbols || []).includes(s.value)).map((s) => s.base).join(', ') || '--';
   const stratLabel = STRATEGIES.find((s) => s.value === data.strategy)?.label || '--';
   const freqLabel = FREQUENCIES.find((f) => f.value === data.frequency)?.label || '--';
   const confLabel = CONFIDENCE_LEVELS.find((c) => c.value === data.confidence)?.label || '--';
-  const emaLabels = (data.ema_filters || []).length > 0
-    ? data.ema_filters.map((v) => `EMA ${v}`).join(', ')
-    : 'None';
+
+  const MAX_SHOW = 3;
+  const selectedSyms = SYMBOLS.filter((s) => (data.symbols || []).includes(s.value)).map((s) => s.base);
+  const symLabels = selectedSyms.length === 0 ? '--'
+    : selectedSyms.length <= MAX_SHOW ? selectedSyms.join(', ')
+    : selectedSyms.slice(0, MAX_SHOW).join(', ') + ` +${selectedSyms.length - MAX_SHOW} more`;
+
+  const selectedEma = data.ema_filters || [];
+  const emaLabels = selectedEma.length === 0 ? 'None'
+    : selectedEma.length <= MAX_SHOW ? selectedEma.map((v) => `EMA ${v}`).join(', ')
+    : selectedEma.slice(0, MAX_SHOW).map((v) => `EMA ${v}`).join(', ') + ` +${selectedEma.length - MAX_SHOW} more`;
 
   const items = [
     { label: 'Strategy', value: stratLabel, step: 0 },
