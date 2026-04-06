@@ -48,9 +48,10 @@ export default function SignalChart({ signal }) {
       { x: 2, price: null, tp_solid: null, sl_solid: null, tp_path: tp, sl_path: sl },
     ];
   } else if (isHitTP || isHitSL) {
+    // Solid on winning branch, dashed from entry to losing branch
     data = [
       { x: 0, price: startPrice, tp_solid: null, sl_solid: null, tp_path: null, sl_path: null },
-      { x: 1, price: entry, tp_solid: entry, sl_solid: entry, tp_path: null, sl_path: null },
+      { x: 1, price: entry, tp_solid: entry, sl_solid: entry, tp_path: isHitTP ? null : entry, sl_path: isHitSL ? null : entry },
       { x: 2, price: null, tp_solid: isHitTP ? tp : null, sl_solid: isHitSL ? sl : null, tp_path: isHitTP ? null : tp, sl_path: isHitSL ? null : sl },
     ];
   } else {
