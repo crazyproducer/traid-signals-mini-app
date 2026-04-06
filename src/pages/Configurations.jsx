@@ -123,7 +123,21 @@ export default function Configurations() {
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader title="Configurations" showBack />
+      <PageHeader
+        title="Configs"
+        showBack
+        rightElement={
+          <button
+            type="button"
+            onClick={() => navigate('/new-signal')}
+            className="pressable flex items-center text-[12px] font-semibold text-tg-accent"
+            style={{ gap: '4px' }}
+          >
+            <Plus size={16} strokeWidth={2} />
+            Create
+          </button>
+        }
+      />
 
       {configs.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
@@ -136,17 +150,6 @@ export default function Configurations() {
               onDelete={() => {}}
             />
           ))}
-
-          {/* Create new button */}
-          <button
-            type="button"
-            onClick={() => navigate('/new-signal')}
-            className="card pressable flex items-center justify-center text-[14px] font-semibold text-tg-accent"
-            style={{ padding: '14px', gap: '8px' }}
-          >
-            <Plus size={18} strokeWidth={2} />
-            Create new configuration
-          </button>
         </div>
       ) : (
         <div style={{ marginTop: '12px' }}>
