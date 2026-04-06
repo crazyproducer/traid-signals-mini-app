@@ -249,6 +249,39 @@ body {
   padding-right: 20px;
 }
 
+/* Signal detail: stats + chart layout */
+.signal-stats-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.signal-stats-chart .stats-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+.signal-stats-chart .stats-row .stat-item {
+  flex: 1;
+}
+.signal-stats-chart .chart-container {
+  width: 100%;
+}
+
+@media (orientation: landscape), (min-width: 600px) {
+  .signal-stats-chart {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .signal-stats-chart .stats-row {
+    flex-direction: column;
+    width: 30%;
+    gap: 6px;
+  }
+  .signal-stats-chart .chart-container {
+    flex: 1;
+  }
+}
+
 .hide-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .recharts-tooltip-cursor { stroke-dasharray: 3 3; }
