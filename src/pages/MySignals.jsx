@@ -63,6 +63,7 @@ export default function MySignals() {
           </button>
         }
       />
+      <div style={{ height: '12px' }} />
 
       {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30" style={{ marginBottom: '20px', paddingTop: '4px' }}>
