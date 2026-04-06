@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  CheckCircle2, BarChart3, Gauge, Target,
+  CheckCircle2, BarChart3, Gauge, Target, Trophy,
   TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket, Pencil, Lock,
 } from 'lucide-react';
 import useWizard from '../hooks/useWizard';
@@ -337,25 +337,58 @@ function StepReview({ data, goToStep }) {
 /* ═══════════════════════════════════════════════
    Success State
    ═══════════════════════════════════════════════ */
-function SuccessState({ onDone }) {
+function SuccessState({ onDone, onUpgrade }) {
+  const isFree = mockSubscription.plan === 'free';
+
   return (
     <div className="flex flex-col items-center justify-center text-center page-padding" style={{ minHeight: '100dvh' }}>
-      <div className="icon-gradient-green w-16 h-16 rounded-full flex items-center justify-center mb-5">
-        <CheckCircle2 size={32} strokeWidth={2} className="text-white" />
+      {/* Animated check */}
+      <div style={{ position: 'relative', marginBottom: '28px' }}>
+        <div style={{ width: '80px', height: '80px', borderRadius: '40px', background: 'linear-gradient(135deg, #34d399 0%, #059669 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 32px -4px rgba(5, 150, 105, 0.35)' }}>
+          <CheckCircle2 size={40} strokeWidth={1.8} className="text-white" />
+        </div>
+        {/* Subtle ring pulse */}
+        <div className="live-dot" style={{ position: 'absolute', inset: '-6px', borderRadius: '46px', border: '2px solid rgba(5, 150, 105, 0.2)' }} />
       </div>
-      <h2 className="text-[20px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.02em' }}>
+
+      <h2 className="text-[24px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em', marginBottom: '8px' }}>
         Signal launched
       </h2>
-      <p className="text-[14px] text-tg-hint mb-8 max-w-[260px] leading-relaxed">
-        Your signal subscription is active. You will receive notifications when new signals are generated.
+      <p className="text-[14px] text-tg-hint" style={{ marginBottom: '32px', maxWidth: '280px', lineHeight: '1.6' }}>
+        Your signal subscription is now active. You will receive notifications when new signals are generated.
       </p>
+
+      {/* Primary CTA */}
       <button
         type="button"
         onClick={onDone}
-        className="btn bg-tg-button text-tg-button-text pressable"
+        className="btn pressable w-full"
+        style={{ backgroundColor: 'var(--tg-theme-button-color, #2481cc)', color: 'var(--tg-theme-button-text-color, #fff)', marginBottom: '12px' }}
       >
-        View My Signals
+        View my signals
       </button>
+
+      {/* Upsell for free users */}
+      {isFree && (
+        <button
+          type="button"
+          onClick={onUpgrade}
+          className="card pressable w-full text-left"
+          style={{ padding: '16px', marginTop: '8px', background: 'linear-gradient(135deg, rgba(139,92,246,0.05) 0%, rgba(37,99,235,0.05) 100%)' }}
+        >
+          <div className="flex items-center" style={{ gap: '12px' }}>
+            <div className="icon-gradient-violet flex items-center justify-center flex-shrink-0" style={{ width: '40px', height: '40px', borderRadius: '6px' }}>
+              <Trophy size={18} strokeWidth={1.8} className="text-white" />
+            </div>
+            <div style={{ flex: 1 }}>
+              <span className="text-[14px] font-semibold text-tg-text block">Want more signals?</span>
+              <span className="text-[12px] text-tg-hint block" style={{ marginTop: '2px', lineHeight: '1.4' }}>
+                Subscribe to track more symbols and create multiple configurations
+              </span>
+            </div>
+          </div>
+        </button>
+      )}
     </div>
   );
 }
@@ -413,7 +446,7 @@ export default function NewSignalWizard() {
   );
 
   if (launched) {
-    return <SuccessState onDone={() => navigate('/signals')} />;
+    return <SuccessState onDone={() => navigate('/signals')} onUpgrade={() => navigate('/account/plans')} />;
   }
 
   /* Map step index to component */
