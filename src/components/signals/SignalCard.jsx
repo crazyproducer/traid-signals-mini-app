@@ -198,12 +198,7 @@ export function HistorySignalCard({ signal, onClick }) {
             )}
           </div>
         </div>
-        <span
-          className={`text-[20px] font-mono font-bold flex-shrink-0 ${pnlColorClass(pnlPct)}`}
-          style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}
-        >
-          {formatPct(pnlPct).text}
-        </span>
+        <ChevronRight size={16} className="text-tg-hint/30 flex-shrink-0" />
       </div>
 
       <div className="flex items-center" style={{ marginTop: '12px', gap: '12px' }}>
@@ -211,6 +206,13 @@ export function HistorySignalCard({ signal, onClick }) {
           <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Entry</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {formatCryptoPrice(signal.entry_price)}
+          </span>
+        </div>
+        <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
+        <div>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>P&L</span>
+          <span className={`text-[14px] font-mono font-bold leading-tight ${pnlColorClass(pnlPct)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {formatPct(pnlPct).text}
           </span>
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
