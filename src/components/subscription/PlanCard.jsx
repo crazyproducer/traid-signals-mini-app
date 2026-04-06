@@ -7,9 +7,10 @@ export default function PlanCard({ plan, isCurrentPlan, onSelect }) {
 
   return (
     <div
-      className={`card p-5 relative transition-all duration-200 ${
+      className={`card relative transition-all duration-200 ${
         isCurrentPlan ? 'ring-2 ring-tg-button' : ''
       } ${isPopular ? 'border-l-[3px] border-l-tg-button' : ''}`}
+      style={{ padding: '20px' }}
     >
       {/* Popular badge */}
       {isPopular && (
