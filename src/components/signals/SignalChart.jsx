@@ -7,7 +7,7 @@ const PAD_T = 24;
 const PAD_B = 24;
 const CHART_H = H - PAD_T - PAD_B;
 
-export default function SignalChart({ signal, embedded }) {
+export default function SignalChart({ signal }) {
   const isLong = signal.direction === 'LONG';
   const status = signal.status;
 
@@ -61,7 +61,7 @@ export default function SignalChart({ signal, embedded }) {
   const muted = isExpired ? 0.2 : 1;
 
   return (
-    <div className={embedded ? '' : 'card'} style={embedded ? {} : { padding: '0', overflow: 'hidden', marginBottom: '16px' }}>
+    <div className="card" style={{ padding: '0', overflow: 'hidden', marginBottom: '16px' }}>
       <svg viewBox={`0 0 400 ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
 
         {/* Background zones: green between entry and TP, red between entry and SL */}
