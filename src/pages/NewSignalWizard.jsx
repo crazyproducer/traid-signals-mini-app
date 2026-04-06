@@ -352,7 +352,7 @@ function SuccessState({ onDone }) {
       <button
         type="button"
         onClick={onDone}
-        className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-[5px] px-8 py-3.5 pressable"
+        className="btn bg-tg-button text-tg-button-text pressable"
       >
         View My Signals
       </button>
@@ -468,7 +468,7 @@ export default function NewSignalWizard() {
             <button
               type="button"
               onClick={w.prevStep}
-              className="flex-1 py-3.5 rounded-[5px] text-[15px] font-semibold bg-tg-secondary/60 text-tg-text pressable"
+              className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable"
             >
               Back
             </button>
@@ -477,7 +477,7 @@ export default function NewSignalWizard() {
             type="button"
             onClick={w.isLastStep ? handleLaunch : w.nextStep}
             disabled={!w.canProceed}
-            className={`flex-1 py-3.5 rounded-[5px] text-[15px] font-semibold pressable transition-all duration-200 ${
+            className={`btn flex-1 pressable transition-all duration-200 ${
               w.canProceed
                 ? w.isLastStep
                   ? 'icon-gradient-green text-white'

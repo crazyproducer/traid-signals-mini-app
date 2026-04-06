@@ -249,6 +249,15 @@ body {
   padding-right: 20px;
 }
 
+/* Unified button height */
+.btn {
+  padding: 16px 24px;
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* Signal detail: stats + chart layout */
 .signal-stats-chart {
   display: flex;

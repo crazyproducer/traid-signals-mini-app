@@ -132,7 +132,7 @@ export default function SubscriptionCurrent() {
 
       <button
         type="button"
-        className="w-full py-3 text-center text-[13px] text-tg-destructive/70 pressable"
+        className="btn w-full text-tg-destructive/70 pressable" style={{ backgroundColor: 'transparent' }}
       >
         Cancel Subscription
       </button>

@@ -38,7 +38,7 @@ export default function SignalDetail() {
         <button
           type="button"
           onClick={() => navigate('/signals')}
-          className="bg-tg-button text-tg-button-text text-[14px] font-semibold rounded-[5px] px-6 py-3 pressable"
+          className="btn bg-tg-button text-tg-button-text pressable"
         >
           Back to Signals
         </button>
@@ -151,7 +151,7 @@ export default function SignalDetail() {
           <button
             type="button"
             onClick={() => setShowConfirm(true)}
-            className="w-full py-3 rounded-[5px] text-[14px] font-semibold text-tg-destructive bg-tg-destructive/8 pressable"
+            className="btn w-full text-tg-destructive bg-tg-destructive/8 pressable"
           >
             <span className="flex items-center justify-center gap-2">
               <Trash2 size={16} strokeWidth={2} />
@@ -173,7 +173,7 @@ export default function SignalDetail() {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="flex-1 py-3 rounded-[5px] text-[14px] font-semibold bg-tg-secondary/60 text-tg-text pressable"
+                className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable"
               >
                 Cancel
               </button>
@@ -183,7 +183,7 @@ export default function SignalDetail() {
                   setShowConfirm(false);
                   navigate('/signals');
                 }}
-                className="flex-1 py-3 rounded-[5px] text-[14px] font-semibold bg-tg-destructive text-white pressable"
+                className="btn flex-1 bg-tg-destructive text-white pressable"
               >
                 Delete
               </button>
