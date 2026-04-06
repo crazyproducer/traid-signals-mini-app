@@ -16,6 +16,7 @@ export default function SubscriptionPlans() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader />
+      <h2 className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em', marginTop: '12px', marginBottom: '8px' }}>Choose your plan</h2>
       <BackButton />
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
