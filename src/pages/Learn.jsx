@@ -61,12 +61,13 @@ function TopicCard({ topic, isOpen, onToggle }) {
       <button
         type="button"
         onClick={onToggle}
-        className="pressable w-full text-left p-4 flex items-center gap-3.5"
+        className="pressable w-full text-left flex items-center"
+        style={{ padding: '16px', gap: '14px' }}
       >
-        <div className={`${topic.color} w-10 h-10 rounded-[12px] flex items-center justify-center flex-shrink-0`}>
+        <div className={`${topic.color} flex items-center justify-center flex-shrink-0`} style={{ width: '40px', height: '40px', borderRadius: '4px' }}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
         </div>
-        <span className="flex-1 text-[15px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
+        <span className="text-[15px] font-semibold text-tg-text" style={{ flex: 1, letterSpacing: '-0.01em' }}>
           {topic.title}
         </span>
         <div className="flex-shrink-0 text-tg-hint/40">
@@ -74,8 +75,8 @@ function TopicCard({ topic, isOpen, onToggle }) {
         </div>
       </button>
       {isOpen && (
-        <div className="px-4 pb-4 pt-0 animate-slide-down">
-          <p className="text-[14px] text-tg-hint leading-relaxed pl-[54px]">
+        <div className="animate-slide-down" style={{ padding: '0 16px 16px 16px' }}>
+          <p className="text-[13px] text-tg-hint leading-relaxed" style={{ paddingLeft: '54px' }}>
             {topic.body}
           </p>
         </div>

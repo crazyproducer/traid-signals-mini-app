@@ -29,7 +29,7 @@ export default function SubscriptionCurrent() {
       <PageHeader title="Account" showBack />
 
       {/* Current plan card */}
-      <div className="card-elevated p-5 mb-4">
+      <div className="card-elevated" style={{ padding: '20px', marginBottom: '16px' }}>
         <div className="flex items-center gap-3.5 mb-4">
           <div className="icon-gradient-violet w-12 h-12 rounded-[5px] flex items-center justify-center flex-shrink-0">
             <Crown size={24} strokeWidth={2} className="text-white" />
@@ -58,7 +58,7 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Billing info */}
-      <div className="card p-4 mb-4">
+      <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
         <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
           Billing
         </span>
@@ -89,7 +89,7 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Usage */}
-      <div className="card p-4 mb-6">
+      <div className="card" style={{ padding: '16px', marginBottom: '24px' }}>
         <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
           Usage
         </span>
@@ -114,7 +114,7 @@ export default function SubscriptionCurrent() {
       <button
         type="button"
         onClick={() => navigate('/account/plans')}
-        className="w-full card p-4 pressable flex items-center justify-between mb-3"
+        className="w-full card pressable flex items-center justify-between" style={{ padding: '16px', marginBottom: '12px' }}
       >
         <span className="text-[14px] font-semibold text-tg-text">Change Plan</span>
         <ArrowRight size={18} className="text-tg-hint/40" />
@@ -123,7 +123,7 @@ export default function SubscriptionCurrent() {
       <button
         type="button"
         onClick={() => navigate('/learn')}
-        className="w-full card p-4 pressable flex items-center justify-between mb-3"
+        className="w-full card pressable flex items-center justify-between" style={{ padding: '16px', marginBottom: '12px' }}
       >
         <span className="text-[14px] font-semibold text-tg-text">Learn</span>
         <ArrowRight size={18} className="text-tg-hint/40" />
