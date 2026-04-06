@@ -177,6 +177,15 @@ function StepSymbol({ data, toggleArray, onPaywall }) {
   const limit = mockSubscription.symbols_limit;
   const atLimit = limit && selected.length >= limit;
 
+  function handleClick(sym) {
+    const isSelected = selected.includes(sym);
+    if (!isSelected && atLimit) {
+      onPaywall();
+      return;
+    }
+    toggleArray('symbols', sym);
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {selected.length > 0 && (
@@ -186,17 +195,16 @@ function StepSymbol({ data, toggleArray, onPaywall }) {
       )}
       {SYMBOLS.map((sym) => {
         const isSelected = selected.includes(sym.value);
-        const locked = atLimit && !isSelected;
         return (
         <OptionCard
           key={sym.value}
-          icon={locked ? Lock : Coins}
+          icon={Coins}
           title={sym.label}
-          description={locked ? 'Upgrade to add more symbols' : sym.name}
+          description={sym.name}
           count={RECORD_COUNTS.symbol[sym.value]}
           selected={isSelected}
-          onClick={locked ? onPaywall : () => toggleArray('symbols', sym.value)}
-          color={locked ? 'neutral' : 'blue'}
+          onClick={() => handleClick(sym.value)}
+          color="blue"
         />
         );
       })}
