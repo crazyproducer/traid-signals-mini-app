@@ -23,37 +23,19 @@ export default function SignalChart({ signal }) {
   let data;
 
   if (isPending) {
-    // Price descends/ascends to current (mid), then dashed fork from entry
-    const mid = (startPrice + entry) / 2;
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
       { x: 1, price: current, tp_path: null, sl_path: null },
-      { x: 2, price: null, tp_path: entry, sl_path: entry },
-      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 2, price: entry, tp_path: entry, sl_path: entry },
+      { x: 3, price: entry, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
       { x: 4, price: null, tp_path: tp, sl_path: sl },
     ];
-  } else if (isTriggered) {
+  } else if (isTriggered || isHitTP || isHitSL) {
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
       { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
       { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
-      { x: 4, price: null, tp_path: tp, sl_path: sl },
-    ];
-  } else if (isHitTP) {
-    data = [
-      { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
-      { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
-      { x: 4, price: null, tp_path: tp, sl_path: sl },
-    ];
-  } else if (isHitSL) {
-    data = [
-      { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
-      { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 3, price: entry, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
       { x: 4, price: null, tp_path: tp, sl_path: sl },
     ];
   } else {
