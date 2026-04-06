@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, BarChart3 } from 'lucide-react';
+import { Plus, BarChart3, Trophy } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
 import PerformanceChart from '../components/signals/PerformanceChart';
 import {
@@ -10,8 +10,9 @@ import {
   mockPerformance,
   mockEquityCurve,
   mockSignalSubscriptions,
+  mockTemplates,
 } from '../api/mock-data';
-import { formatWinRate, formatPct } from '../utils/formatters';
+import { formatWinRate, formatPct, pnlColorClass } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 
 const PERIODS = ['30D', '90D', 'ALL'];
@@ -152,6 +153,41 @@ export default function MainMenu() {
                 <PerformanceChart data={chartData} loading={false} />
               </>
             )}
+          </div>
+
+          {/* Top templates */}
+          <div className="flex items-center justify-between" style={{ marginBottom: '12px' }}>
+            <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
+              Top templates
+            </span>
+            <button
+              type="button"
+              onClick={() => navigate('/templates')}
+              className="text-[13px] font-medium text-tg-accent pressable"
+            >
+              View all
+            </button>
+          </div>
+          <div className="hide-scrollbar" style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '24px', paddingBottom: '4px' }}>
+            {mockTemplates.slice(0, 3).map((tpl) => (
+              <button
+                key={tpl.id}
+                type="button"
+                onClick={() => navigate('/templates')}
+                className="card pressable text-left flex-shrink-0"
+                style={{ padding: '12px', width: '160px' }}
+              >
+                <span className="text-[13px] font-semibold text-tg-text block" style={{ marginBottom: '4px' }}>{tpl.name}</span>
+                <div className="flex items-center" style={{ gap: '6px' }}>
+                  <span className={`text-[13px] font-mono font-bold ${pnlColorClass(tpl.pnl_pct)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    {formatPct(tpl.pnl_pct).text}
+                  </span>
+                  <span className="text-[10px] text-tg-hint">
+                    WR {formatWinRate(tpl.win_rate)}
+                  </span>
+                </div>
+              </button>
+            ))}
           </div>
 
           {/* Recent signals */}

@@ -9,11 +9,12 @@ import MySignals from './pages/MySignals';
 import SignalDetail from './pages/SignalDetail';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import Configurations from './pages/Configurations';
+import Templates from './pages/Templates';
 import SubscriptionCurrent from './pages/SubscriptionCurrent';
 import Learn from './pages/Learn';
 
 /* Routes where TG back button is hidden */
-const TOP_LEVEL_ROUTES = ['/', '/terms', '/signals', '/learn', '/account', '/new-signal'];
+const TOP_LEVEL_ROUTES = ['/', '/terms', '/signals', '/templates', '/learn', '/account', '/new-signal'];
 
 /* Routes where TabBar is hidden */
 const HIDE_TAB_BAR = ['/terms'];
@@ -83,6 +84,7 @@ export default function App() {
           <Route path="/signals" element={<MySignals />} />
           <Route path="/signals/:id" element={<SignalDetail />} />
           <Route path="/configurations" element={<Configurations />} />
+          <Route path="/templates" element={<Templates />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/account" element={<SubscriptionCurrent />} />
           <Route path="/account/plans" element={<SubscriptionPlans />} />

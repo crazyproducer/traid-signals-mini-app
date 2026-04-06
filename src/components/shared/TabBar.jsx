@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Plus, Radio, BookOpen, User } from 'lucide-react';
+import { Home, Plus, Radio, Trophy, User } from 'lucide-react';
 
 const leftTabs = [
   { path: '/', label: 'Home', icon: Home },
@@ -7,7 +7,7 @@ const leftTabs = [
 ];
 
 const rightTabs = [
-  { path: '/learn', label: 'Learn', icon: BookOpen },
+  { path: '/templates', label: 'Templates', icon: Trophy },
   { path: '/account', label: 'Account', icon: User },
 ];
 

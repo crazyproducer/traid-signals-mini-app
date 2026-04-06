@@ -122,6 +122,15 @@ export default function SubscriptionCurrent() {
 
       <button
         type="button"
+        onClick={() => navigate('/learn')}
+        className="w-full card p-4 pressable flex items-center justify-between mb-3"
+      >
+        <span className="text-[14px] font-semibold text-tg-text">Learn</span>
+        <ArrowRight size={18} className="text-tg-hint/40" />
+      </button>
+
+      <button
+        type="button"
         className="w-full py-3 text-center text-[13px] text-tg-destructive/70 pressable"
       >
         Cancel Subscription
