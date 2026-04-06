@@ -2,7 +2,7 @@ import { formatCryptoPrice } from '../../utils/formatters';
 
 const H = 180;
 const PAD_L = 16;
-const PAD_R = 80;
+const PAD_R = 120;
 const PAD_T = 24;
 const PAD_B = 24;
 const CHART_H = H - PAD_T - PAD_B;
@@ -21,8 +21,8 @@ export default function SignalChart({ signal }) {
   const chartW = 400 - PAD_L - PAD_R - 8;
   const x0 = PAD_L;             // point 0 — start
   const x1 = PAD_L + chartW * 0.35; // point 1 — entry at 35%
-  const x2 = 400 - PAD_R - 8;  // point 2 — TP/SL endpoints
-  const xLabel = 400 - PAD_R + 8; // labels right of chart
+  const x2 = 480 - PAD_R - 8;  // point 2 — TP/SL endpoints
+  const xLabel = 480 - PAD_R + 8; // labels right of chart
 
   const isPending = status === 'PENDING' || status === 'ACTIVE' || status === 'UPDATED';
   const isTriggered = status === 'TRIGGERED';
@@ -62,7 +62,7 @@ export default function SignalChart({ signal }) {
 
   return (
     <div className="card" style={{ padding: '0', overflow: 'hidden', height: '100%' }}>
-      <svg viewBox={`0 0 400 ${H}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%', display: 'block' }}>
+      <svg viewBox={`0 0 480 ${H}`} style={{ width: '100%', height: '100%', display: 'block' }}>
 
         {/* Background zones: green between entry and TP, red between entry and SL */}
         {/* Green zone (profit) */}
