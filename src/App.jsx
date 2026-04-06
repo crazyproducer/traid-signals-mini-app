@@ -10,6 +10,7 @@ import SignalDetail from './pages/SignalDetail';
 import SubscriptionPlans from './pages/SubscriptionPlans';
 import Configurations from './pages/Configurations';
 import Templates from './pages/Templates';
+import TemplateDetail from './pages/TemplateDetail';
 import SubscriptionCurrent from './pages/SubscriptionCurrent';
 import Learn from './pages/Learn';
 
@@ -85,6 +86,7 @@ export default function App() {
           <Route path="/signals/:id" element={<SignalDetail />} />
           <Route path="/configurations" element={<Configurations />} />
           <Route path="/templates" element={<Templates />} />
+          <Route path="/templates/:id" element={<TemplateDetail />} />
           <Route path="/learn" element={<Learn />} />
           <Route path="/account" element={<SubscriptionCurrent />} />
           <Route path="/account/plans" element={<SubscriptionPlans />} />

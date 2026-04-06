@@ -12,12 +12,12 @@ function fmtSymbols(syms) {
   return labels.slice(0, 3).join(', ') + ` +${labels.length - 3}`;
 }
 
-function TemplateCard({ template, onUse }) {
+function TemplateCard({ template, onUse, onView }) {
   const pnl = formatPct(template.pnl_pct);
   const dirs = template.directions || [];
 
   return (
-    <div className="card" style={{ padding: '16px' }}>
+    <div className="card pressable" style={{ padding: '16px', cursor: 'pointer' }} onClick={onView}>
       {/* Header: name + badges */}
       <div style={{ marginBottom: '10px' }}>
         <div className="flex items-center" style={{ gap: '6px', marginBottom: '4px' }}>
@@ -76,16 +76,18 @@ function TemplateCard({ template, onUse }) {
         </div>
       </div>
 
-      {/* Use button */}
-      <button
-        type="button"
-        onClick={onUse}
-        className="pressable w-full flex items-center justify-center text-[13px] font-semibold text-tg-accent"
-        style={{ padding: '10px', borderRadius: '6px', gap: '6px', backgroundColor: 'rgba(37,99,235,0.06)' }}
-      >
-        Use this template
-        <ArrowRight size={14} />
-      </button>
+      {/* Buttons */}
+      <div className="flex items-center" style={{ gap: '8px' }}>
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onUse(); }}
+          className="pressable flex-1 flex items-center justify-center text-[13px] font-semibold text-tg-accent"
+          style={{ padding: '10px', borderRadius: '6px', gap: '6px', backgroundColor: 'rgba(37,99,235,0.06)' }}
+        >
+          Use template
+          <ArrowRight size={14} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -109,6 +111,7 @@ export default function Templates() {
           <TemplateCard
             key={tpl.id}
             template={tpl}
+            onView={() => navigate(`/templates/${tpl.id}`)}
             onUse={() => navigate('/new-signal')}
           />
         ))}

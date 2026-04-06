@@ -173,7 +173,7 @@ export default function MainMenu() {
               <button
                 key={tpl.id}
                 type="button"
-                onClick={() => navigate('/templates')}
+                onClick={() => navigate(`/templates/${tpl.id}`)}
                 className="card pressable text-left flex-shrink-0"
                 style={{ padding: '12px', minWidth: '150px', flex: '1 0 auto' }}
               >

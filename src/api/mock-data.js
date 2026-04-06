@@ -628,6 +628,19 @@ export function getRecentSignals(limit = 5) {
 
 /* ─── Templates — auto-generated top performers ─── */
 
+export const mockTemplateEquityCurve = generateEquityCurve(90, 28.5);
+
+export const mockTemplateSignals = [
+  { id: 'TS-101', symbol: 'BTCUSDT', direction: 'LONG', entry_price: 64200, stop_loss: 62916, take_profit: 67410, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.78, matching_trades: 22, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-28T08:00:00Z', triggered_at: '2026-03-28T14:20:00Z', resolved_at: '2026-03-29T06:10:00Z', updates: [] },
+  { id: 'TS-102', symbol: 'ETHUSDT', direction: 'LONG', entry_price: 3420, stop_loss: 3352, take_profit: 3591, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.74, matching_trades: 18, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-27T12:00:00Z', triggered_at: '2026-03-27T18:40:00Z', resolved_at: '2026-03-28T10:30:00Z', updates: [] },
+  { id: 'TS-103', symbol: 'SOLUSDT', direction: 'LONG', entry_price: 138.50, stop_loss: 135.73, take_profit: 145.43, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.71, matching_trades: 14, status: 'HIT_SL', result: 'LOSS', created_at: '2026-03-26T08:00:00Z', triggered_at: '2026-03-26T11:15:00Z', resolved_at: '2026-03-26T19:45:00Z', updates: [] },
+  { id: 'TS-104', symbol: 'BTCUSDT', direction: 'LONG', entry_price: 65800, stop_loss: 64484, take_profit: 69090, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.76, matching_trades: 20, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-25T08:00:00Z', triggered_at: '2026-03-25T10:30:00Z', resolved_at: '2026-03-26T02:15:00Z', updates: [] },
+  { id: 'TS-105', symbol: 'BNBUSDT', direction: 'SHORT', entry_price: 620.00, stop_loss: 632.40, take_profit: 589.00, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.68, matching_trades: 12, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-24T16:00:00Z', triggered_at: '2026-03-24T20:10:00Z', resolved_at: '2026-03-25T14:30:00Z', updates: [] },
+  { id: 'TS-106', symbol: 'ETHUSDT', direction: 'LONG', entry_price: 3380, stop_loss: 3312, take_profit: 3549, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.73, matching_trades: 16, status: 'HIT_SL', result: 'LOSS', created_at: '2026-03-23T12:00:00Z', triggered_at: '2026-03-23T15:50:00Z', resolved_at: '2026-03-23T22:20:00Z', updates: [] },
+  { id: 'TS-107', symbol: 'BTCUSDT', direction: 'LONG', entry_price: 63500, stop_loss: 62230, take_profit: 66675, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.77, matching_trades: 21, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-22T08:00:00Z', triggered_at: '2026-03-22T12:45:00Z', resolved_at: '2026-03-23T08:00:00Z', updates: [] },
+  { id: 'TS-108', symbol: 'SOLUSDT', direction: 'LONG', entry_price: 142.20, stop_loss: 139.36, take_profit: 149.31, risk_pct: 2.0, reward_pct: 5.0, win_rate: 0.70, matching_trades: 13, status: 'HIT_TP', result: 'WIN', created_at: '2026-03-21T08:00:00Z', triggered_at: '2026-03-21T10:20:00Z', resolved_at: '2026-03-22T04:10:00Z', updates: [] },
+];
+
 export const mockTemplates = [
   {
     id: 'tpl_001',
