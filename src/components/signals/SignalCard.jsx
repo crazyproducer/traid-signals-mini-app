@@ -169,7 +169,7 @@ export function HistorySignalCard({ signal, onClick }) {
   const isLong = signal.direction === 'LONG';
   const Icon = isLong ? TrendingUp : TrendingDown;
   const isWin = signal.result === 'WIN';
-  const grad = isWin ? 'icon-gradient-green' : 'icon-gradient-red';
+  const grad = isLong ? 'icon-gradient-green' : 'icon-gradient-red';
 
   const pnlPct = isWin ? signal.reward_pct : -signal.risk_pct;
   const duration = signal.triggered_at && signal.resolved_at
