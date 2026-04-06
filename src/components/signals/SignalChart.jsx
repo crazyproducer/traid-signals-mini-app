@@ -20,7 +20,7 @@ export default function SignalChart({ signal }) {
   // X positions: 3 key points on timeline
   const chartW = 400 - PAD_L - PAD_R - 8;
   const x0 = PAD_L;             // point 0 — start
-  const x1 = PAD_L + chartW * 0.65; // point 1 — entry at 65%
+  const x1 = PAD_L + chartW * 0.35; // point 1 — entry at 35%
   const x2 = 400 - PAD_R - 8;  // point 2 — TP/SL endpoints
   const xLabel = 400 - PAD_R + 8; // labels right of chart
 
