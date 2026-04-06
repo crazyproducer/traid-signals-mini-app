@@ -23,27 +23,25 @@ export default function SignalChart({ signal }) {
   let data;
 
   if (isPending) {
+    // current dot at x=1, entry+fork at x=2
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
       { x: 1, price: current, tp_path: null, sl_path: null },
       { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: entry, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
-      { x: 4, price: null, tp_path: tp, sl_path: sl },
+      { x: 3, price: null, tp_path: tp, sl_path: sl },
     ];
   } else if (isTriggered || isHitTP || isHitSL) {
+    // entry+fork at x=1
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
-      { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: entry, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
-      { x: 4, price: null, tp_path: tp, sl_path: sl },
+      { x: 1, price: entry, tp_path: entry, sl_path: entry },
+      { x: 2, price: null, tp_path: tp, sl_path: sl },
     ];
   } else {
     // Expired
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
-      { x: 2, price: entry, tp_path: null, sl_path: null },
+      { x: 1, price: entry, tp_path: null, sl_path: null },
     ];
   }
 
@@ -53,20 +51,20 @@ export default function SignalChart({ signal }) {
   const maxY = Math.max(...allPrices);
   const padding = (maxY - minY) * 0.1;
 
-  // Current dot position
+  // Current dot position (adjusted for new x coords)
   let dotX, dotY;
   if (isPending) {
     dotX = 1;
     dotY = current;
   } else if (isTriggered) {
     const inProfit = isLong ? current >= entry : current <= entry;
-    dotX = 3;
+    dotX = 1.5;
     dotY = inProfit ? (entry + tp) / 2 : (entry + sl) / 2;
   } else if (isHitTP) {
-    dotX = 4;
+    dotX = 2;
     dotY = tp;
   } else if (isHitSL) {
-    dotX = 4;
+    dotX = 2;
     dotY = sl;
   }
 
