@@ -61,8 +61,8 @@ export default function SignalChart({ signal }) {
   const muted = isExpired ? 0.2 : 1;
 
   return (
-    <div className="card" style={{ padding: '0', overflow: 'hidden', marginBottom: '16px' }}>
-      <svg viewBox={`0 0 400 ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
+    <div className="card" style={{ padding: '0', overflow: 'hidden', height: '100%' }}>
+      <svg viewBox={`0 0 400 ${H}`} style={{ width: '100%', height: '100%', display: 'block' }}>
 
         {/* Background zones: green between entry and TP, red between entry and SL */}
         {/* Green zone (profit) */}
