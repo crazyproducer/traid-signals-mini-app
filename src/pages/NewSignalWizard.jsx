@@ -266,7 +266,7 @@ function StepReview({ data }) {
     ? data.ema_filters.map((v) => `EMA ${v}`).join(', ')
     : 'None';
 
-  const rows = [
+  const items = [
     { label: 'Strategy', value: stratLabel },
     { label: 'Risk level', value: data.risk_level != null ? `${data.risk_level}%` : '--' },
     { label: 'Confidence', value: confLabel },
@@ -278,23 +278,21 @@ function StepReview({ data }) {
 
   return (
     <div>
-      <div className="card-elevated p-5">
-        {rows.map((row, i) => (
-          <div
-            key={row.label}
-            className={`flex items-center justify-between py-3 ${
-              i < rows.length - 1
-                ? 'border-b border-[color-mix(in_srgb,var(--tg-theme-text-color)_6%,transparent)]'
-                : ''
-            }`}
-          >
-            <span className="text-[13px] text-tg-hint">{row.label}</span>
-            <span className="text-[13px] font-semibold text-tg-text text-right max-w-[60%]">{row.value}</span>
+      {/* Grid of metric cards — 2 columns */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '16px' }}>
+        {items.map((item) => (
+          <div key={item.label} className="card flex flex-col" style={{ padding: '12px' }}>
+            <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>
+              {item.label}
+            </span>
+            <span className="text-[15px] font-semibold text-tg-text" style={{ marginTop: '4px' }}>
+              {item.value}
+            </span>
           </div>
         ))}
       </div>
 
-      <div className="flex items-center justify-center gap-2 mt-5 text-tg-hint">
+      <div className="flex items-center justify-center text-tg-hint" style={{ gap: '8px', marginTop: '8px' }}>
         <Rocket size={16} />
         <span className="text-[12px] font-medium">Ready to launch your signal</span>
       </div>
