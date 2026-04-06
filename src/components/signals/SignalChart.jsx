@@ -64,11 +64,13 @@ export default function SignalChart({ signal }) {
     <div className="card" style={{ padding: '0', overflow: 'hidden', marginBottom: '16px' }}>
       <svg viewBox={`0 0 400 ${H}`} style={{ width: '100%', height: 'auto', display: 'block' }}>
 
-        {/* Background zones */}
-        <rect x={PAD_L} y={isLong ? PAD_T : yEntry} width={x2 + 8 - PAD_L} height={yEntry - PAD_T}
-          fill={isLong ? green : red} opacity="0.04" />
-        <rect x={PAD_L} y={isLong ? yEntry : PAD_T} width={x2 + 8 - PAD_L} height={PAD_T + CHART_H - yEntry}
-          fill={isLong ? red : green} opacity="0.04" />
+        {/* Background zones: green between entry and TP, red between entry and SL */}
+        {/* Green zone (profit) */}
+        <rect x={PAD_L} y={Math.min(yEntry, yTP)} width={x2 + 8 - PAD_L} height={Math.abs(yEntry - yTP)}
+          fill={green} opacity="0.04" />
+        {/* Red zone (risk) */}
+        <rect x={PAD_L} y={Math.min(yEntry, ySL)} width={x2 + 8 - PAD_L} height={Math.abs(yEntry - ySL)}
+          fill={red} opacity="0.04" />
 
         {/* Horizontal level lines */}
         <line x1={PAD_L} y1={yTP} x2={x2 + 8} y2={yTP} stroke={green} strokeWidth="1" opacity={0.4 * muted} />
