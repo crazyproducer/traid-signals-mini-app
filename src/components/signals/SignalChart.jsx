@@ -1,28 +1,9 @@
+import { LineChart, Line, ReferenceLine, ReferenceDot, XAxis, YAxis, ResponsiveContainer } from 'recharts';
 import { formatCryptoPrice } from '../../utils/formatters';
-
-const H = 180;
-const PAD_L = 16;
-const PAD_R = 120;
-const PAD_T = 24;
-const PAD_B = 24;
-const CHART_H = H - PAD_T - PAD_B;
 
 export default function SignalChart({ signal }) {
   const isLong = signal.direction === 'LONG';
   const status = signal.status;
-
-  // Y levels: Long → TP top, Entry 70%, SL bottom. Short → SL top, Entry 30%, TP bottom.
-  const yTP = isLong ? PAD_T : PAD_T + CHART_H;
-  const yEntry = PAD_T + CHART_H * (isLong ? 0.7 : 0.3);
-  const ySL = isLong ? PAD_T + CHART_H : PAD_T;
-  const yStart = isLong ? yEntry - CHART_H * 0.15 : yEntry + CHART_H * 0.15;
-
-  // X positions: 3 key points on timeline
-  const chartW = 400 - PAD_L - PAD_R - 8;
-  const x0 = PAD_L;             // point 0 — start
-  const x1 = PAD_L + chartW * 0.35; // point 1 — entry at 35%
-  const x2 = 480 - PAD_R - 8;  // point 2 — TP/SL endpoints
-  const xLabel = 480 - PAD_R + 8; // labels right of chart
 
   const isPending = status === 'PENDING' || status === 'ACTIVE' || status === 'UPDATED';
   const isTriggered = status === 'TRIGGERED';
@@ -30,139 +11,186 @@ export default function SignalChart({ signal }) {
   const isHitSL = status === 'HIT_SL';
   const isExpired = status === 'EXPIRED';
 
-  // Current price dot position
-  let dotX, dotY;
+  const entry = signal.entry_price;
+  const tp = signal.take_profit;
+  const sl = signal.stop_loss;
+  const current = signal.current_price || entry;
+
+  // Start price: Long comes from above entry, Short from below
+  const startPrice = isLong ? entry + (entry - sl) * 0.3 : entry - (sl - entry) * 0.3;
+
+  // Build data points: x=0 start, x=1 midpoint, x=2 entry, x=3 mid-fork, x=4 endpoints
+  let data;
+
   if (isPending) {
-    // Midpoint of segment 0→1
-    dotX = (x0 + x1) / 2;
-    dotY = (yStart + yEntry) / 2;
+    // Price descends/ascends to current (mid), then dashed fork from entry
+    const mid = (startPrice + entry) / 2;
+    data = [
+      { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: current, tp_path: null, sl_path: null },
+      { x: 2, price: null, tp_path: entry, sl_path: entry },
+      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 4, price: null, tp_path: tp, sl_path: sl },
+    ];
   } else if (isTriggered) {
-    // Midpoint of segment 1→2a or 1→2b depending on current price vs entry
-    const currentPrice = signal.current_price || signal.entry_price;
-    const inProfit = isLong ? currentPrice >= signal.entry_price : currentPrice <= signal.entry_price;
-    const targetY = inProfit ? yTP : ySL;
-    dotX = (x1 + x2) / 2;
-    dotY = (yEntry + targetY) / 2;
+    data = [
+      { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
+      { x: 2, price: entry, tp_path: entry, sl_path: entry },
+      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 4, price: null, tp_path: tp, sl_path: sl },
+    ];
   } else if (isHitTP) {
-    dotX = x2;
-    dotY = yTP;
+    data = [
+      { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
+      { x: 2, price: entry, tp_path: entry, sl_path: entry },
+      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 4, price: null, tp_path: tp, sl_path: sl },
+    ];
   } else if (isHitSL) {
-    dotX = x2;
-    dotY = ySL;
+    data = [
+      { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
+      { x: 2, price: entry, tp_path: entry, sl_path: entry },
+      { x: 3, price: null, tp_path: (entry + tp) / 2, sl_path: (entry + sl) / 2 },
+      { x: 4, price: null, tp_path: tp, sl_path: sl },
+    ];
+  } else {
+    // Expired
+    data = [
+      { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: (startPrice + entry) / 2, tp_path: null, sl_path: null },
+      { x: 2, price: entry, tp_path: null, sl_path: null },
+    ];
   }
 
-  const green = '#059669';
-  const red = '#dc2626';
-  const hint = 'var(--tg-theme-hint-color, #999)';
-  const text = 'var(--tg-theme-text-color, #1a1a1a)';
+  // Y domain: include all price levels with padding
+  const allPrices = [entry, tp, sl, startPrice, current];
+  const minY = Math.min(...allPrices);
+  const maxY = Math.max(...allPrices);
+  const padding = (maxY - minY) * 0.1;
 
-  const showDot = !isExpired;
-  const dotColor = isHitSL ? red : isHitTP ? green : text;
-  const muted = isExpired ? 0.2 : 1;
+  // Current dot position
+  let dotX, dotY;
+  if (isPending) {
+    dotX = 1;
+    dotY = current;
+  } else if (isTriggered) {
+    const inProfit = isLong ? current >= entry : current <= entry;
+    dotX = 3;
+    dotY = inProfit ? (entry + tp) / 2 : (entry + sl) / 2;
+  } else if (isHitTP) {
+    dotX = 4;
+    dotY = tp;
+  } else if (isHitSL) {
+    dotX = 4;
+    dotY = sl;
+  }
+
+  // Line styles per status
+  const priceStroke = isExpired ? 'rgba(128,128,128,0.3)' : 'var(--tg-theme-text-color, #1a1a1a)';
+  const priceWidth = 2;
+  const tpStroke = '#059669';
+  const slStroke = '#dc2626';
+  const tpWidth = isHitTP ? 2.5 : 1.5;
+  const slWidth = isHitSL ? 2.5 : 1.5;
+  const tpDash = isHitTP ? '0' : '5 4';
+  const slDash = isHitSL ? '0' : '5 4';
+  const tpOpacity = isHitSL ? 0.2 : (isExpired ? 0 : 1);
+  const slOpacity = isHitTP ? 0.2 : (isExpired ? 0 : 1);
+
+  const dotColor = isHitSL ? '#dc2626' : isHitTP ? '#059669' : 'var(--tg-theme-text-color, #1a1a1a)';
 
   return (
     <div className="card" style={{ padding: '0', overflow: 'hidden', height: '100%' }}>
-      <svg viewBox={`0 0 480 ${H}`} style={{ width: '100%', height: '100%', display: 'block' }}>
+      <ResponsiveContainer width="100%" height="100%" minHeight={160}>
+        <LineChart data={data} margin={{ top: 16, right: 12, bottom: 8, left: 12 }}>
+          <XAxis dataKey="x" hide />
+          <YAxis
+            domain={[minY - padding, maxY + padding]}
+            orientation="right"
+            axisLine={false}
+            tickLine={false}
+            tick={false}
+            width={0}
+          />
 
-        {/* Background zones: green between entry and TP, red between entry and SL */}
-        {/* Green zone (profit) */}
-        <rect x={PAD_L} y={Math.min(yEntry, yTP)} width={x2 + 8 - PAD_L} height={Math.abs(yEntry - yTP)}
-          fill={green} opacity="0.04" />
-        {/* Red zone (risk) */}
-        <rect x={PAD_L} y={Math.min(yEntry, ySL)} width={x2 + 8 - PAD_L} height={Math.abs(yEntry - ySL)}
-          fill={red} opacity="0.04" />
+          {/* Reference lines for price levels */}
+          <ReferenceLine
+            y={tp}
+            stroke={tpStroke}
+            strokeWidth={0.5}
+            strokeOpacity={isExpired ? 0.15 : 0.3}
+            label={{ value: `TP  ${formatCryptoPrice(tp)}`, position: 'right', fill: tpStroke, fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.8 }}
+          />
+          <ReferenceLine
+            y={entry}
+            stroke="var(--tg-theme-hint-color, #999)"
+            strokeWidth={0.5}
+            strokeOpacity={isExpired ? 0.15 : 0.2}
+            label={{ value: `Entry  ${formatCryptoPrice(entry)}`, position: 'right', fill: 'var(--tg-theme-text-color, #1a1a1a)', fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.7 }}
+          />
+          <ReferenceLine
+            y={sl}
+            stroke={slStroke}
+            strokeWidth={0.5}
+            strokeOpacity={isExpired ? 0.15 : 0.3}
+            label={{ value: `SL  ${formatCryptoPrice(sl)}`, position: 'right', fill: slStroke, fontSize: 10, fontFamily: 'DM Mono', fontWeight: 600, opacity: isExpired ? 0.3 : 0.8 }}
+          />
 
-        {/* Horizontal level lines */}
-        <line x1={PAD_L} y1={yTP} x2={x2 + 8} y2={yTP} stroke={green} strokeWidth="1" opacity={0.4 * muted} />
-        <line x1={PAD_L} y1={yEntry} x2={x2 + 8} y2={yEntry} stroke={text} strokeWidth="1" opacity={0.2 * muted} />
-        <line x1={PAD_L} y1={ySL} x2={x2 + 8} y2={ySL} stroke={red} strokeWidth="1" opacity={0.4 * muted} />
+          {/* Main price line: start → entry */}
+          <Line
+            type="linear"
+            dataKey="price"
+            stroke={priceStroke}
+            strokeWidth={priceWidth}
+            dot={false}
+            connectNulls={false}
+            strokeDasharray={isExpired ? '5 4' : '0'}
+          />
 
-        {/* Labels — right side, larger */}
-        <text x={xLabel} y={yTP - 10} textAnchor="start" fill={green} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>TP</text>
-        <text x={xLabel} y={yTP + 4} textAnchor="start" fill={green} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
-          {formatCryptoPrice(signal.take_profit)}
-        </text>
+          {/* TP path: entry → TP */}
+          {!isExpired && (
+            <Line
+              type="linear"
+              dataKey="tp_path"
+              stroke={tpStroke}
+              strokeWidth={tpWidth}
+              strokeDasharray={tpDash}
+              strokeOpacity={tpOpacity}
+              dot={false}
+              connectNulls={false}
+            />
+          )}
 
-        <text x={xLabel} y={yEntry - 10} textAnchor="start" fill={hint} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>ENTRY</text>
-        <text x={xLabel} y={yEntry + 4} textAnchor="start" fill={text} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
-          {formatCryptoPrice(signal.entry_price)}
-        </text>
+          {/* SL path: entry → SL */}
+          {!isExpired && (
+            <Line
+              type="linear"
+              dataKey="sl_path"
+              stroke={slStroke}
+              strokeWidth={slWidth}
+              strokeDasharray={slDash}
+              strokeOpacity={slOpacity}
+              dot={false}
+              connectNulls={false}
+            />
+          )}
 
-        <text x={xLabel} y={ySL - 10} textAnchor="start" fill={red} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>SL</text>
-        <text x={xLabel} y={ySL + 4} textAnchor="start" fill={red} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
-          {formatCryptoPrice(signal.stop_loss)}
-        </text>
-
-        {/* ═══ Lines ═══ */}
-
-        {/* Segment 0→1: solid line from start to entry */}
-        {!isExpired && (
-          <>
-            {/* Solid if price has passed this segment, otherwise solid up to dot */}
-            {isPending ? (
-              <>
-                <line x1={x0} y1={yStart} x2={dotX} y2={dotY} stroke={text} strokeWidth="2" opacity={muted} />
-                <line x1={dotX} y1={dotY} x2={x1} y2={yEntry} stroke={hint} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.4" />
-              </>
-            ) : (
-              <line x1={x0} y1={yStart} x2={x1} y2={yEntry} stroke={text} strokeWidth="2" opacity={muted} />
-            )}
-          </>
-        )}
-
-        {/* Entry marker (circle at point 1) */}
-        {!isExpired && !isPending && (
-          <circle cx={x1} cy={yEntry} r="3" fill={text} opacity={muted} />
-        )}
-        {isPending && (
-          <circle cx={x1} cy={yEntry} r="3" fill="none" stroke={hint} strokeWidth="1.5" opacity="0.4" />
-        )}
-
-        {/* Segment 1→2a (TP): green */}
-        {!isExpired && (
-          isHitTP ? (
-            <line x1={x1} y1={yEntry} x2={x2} y2={yTP} stroke={green} strokeWidth="2.5" />
-          ) : (
-            <line x1={x1} y1={yEntry} x2={x2} y2={yTP} stroke={green} strokeWidth="1.5" strokeDasharray="4 3" opacity={isHitSL ? 0.15 : 0.5} />
-          )
-        )}
-
-        {/* Segment 1→2b (SL): red */}
-        {!isExpired && (
-          isHitSL ? (
-            <line x1={x1} y1={yEntry} x2={x2} y2={ySL} stroke={red} strokeWidth="2.5" />
-          ) : (
-            <line x1={x1} y1={yEntry} x2={x2} y2={ySL} stroke={red} strokeWidth="1.5" strokeDasharray="4 3" opacity={isHitTP ? 0.15 : 0.5} />
-          )
-        )}
-
-        {/* Expired: just a muted dashed line */}
-        {isExpired && (
-          <>
-            <line x1={x0} y1={yStart} x2={x2} y2={yEntry} stroke={hint} strokeWidth="1.5" strokeDasharray="4 3" opacity="0.25" />
-            <text x={(x0 + x2) / 2} y={yEntry - 14} fill={hint} fontSize="10" fontFamily="DM Sans" opacity="0.35" textAnchor="middle">
-              entry not reached
-            </text>
-          </>
-        )}
-
-        {/* Current price dot */}
-        {showDot && dotX && dotY && (
-          <>
-            <circle cx={dotX} cy={dotY} r="5" fill={dotColor} />
-            {(isPending || isTriggered) && (
-              <circle cx={dotX} cy={dotY} r="9" fill={dotColor} opacity="0.12" className="live-dot" />
-            )}
-            {/* Price label */}
-            {(isPending || isTriggered) && (
-              <text x={dotX} y={dotY - 12} fill={text} fontSize="9" fontFamily="DM Mono" fontWeight="700" opacity="0.7" textAnchor="middle">
-                {formatCryptoPrice(signal.current_price || signal.entry_price)}
-              </text>
-            )}
-          </>
-        )}
-
-      </svg>
+          {/* Current price dot */}
+          {dotX != null && dotY != null && (
+            <ReferenceDot
+              x={dotX}
+              y={dotY}
+              r={5}
+              fill={dotColor}
+              stroke="var(--tg-theme-bg-color, #fff)"
+              strokeWidth={2}
+            />
+          )}
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
