@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import {} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Target, Shield, BarChart3, Trash2, AlertTriangle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target, Shield, BarChart3 } from 'lucide-react';
 import SignalStatusBadge from '../components/signals/SignalStatusBadge';
 import UpdateRow from '../components/signals/UpdateRow';
 import StatCard from '../components/shared/StatCard';
@@ -26,8 +26,6 @@ function symbolLabel(raw) {
 export default function SignalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [showConfirm, setShowConfirm] = useState(false);
-
   const signal = mockSignals.find((s) => s.id === id);
 
   if (!signal) {
@@ -133,64 +131,17 @@ export default function SignalDetail() {
 
       {/* Update history */}
       {(signal.updates || []).length > 0 && (
-        <div className="mb-6">
-          <span className="text-[12px] uppercase font-medium text-tg-hint mb-3 block" style={{ letterSpacing: '0.06em' }}>
+        <div>
+          <span className="text-[12px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.06em', marginBottom: '10px' }}>
             Update History
           </span>
-          <div className="card px-4">
+          <div className="card" style={{ padding: '12px 16px' }}>
             {(signal.updates || []).map((update, i) => (
               <UpdateRow key={i} update={update} signal={signal} />
             ))}
           </div>
         </div>
       )}
-
-      {/* Delete button */}
-      <div className="relative">
-        {!showConfirm ? (
-          <button
-            type="button"
-            onClick={() => setShowConfirm(true)}
-            className="btn w-full text-tg-destructive bg-tg-destructive/8 pressable"
-          >
-            <span className="flex items-center justify-center gap-2">
-              <Trash2 size={16} strokeWidth={2} />
-              Delete Signal
-            </span>
-          </button>
-        ) : (
-          <div className="card p-5 animate-slide-down">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="icon-gradient-red w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-                <AlertTriangle size={20} strokeWidth={2} className="text-white" />
-              </div>
-              <div>
-                <p className="text-[14px] font-semibold text-tg-text">Delete this signal?</p>
-                <p className="text-[12px] text-tg-hint">This action cannot be undone</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowConfirm(false)}
-                className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowConfirm(false);
-                  navigate('/signals');
-                }}
-                className="btn flex-1 bg-tg-destructive text-white pressable"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
