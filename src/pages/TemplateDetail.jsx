@@ -39,7 +39,21 @@ export default function TemplateDetail() {
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader title="Template" showBack />
+      <PageHeader
+        title="Template"
+        showBack
+        rightElement={
+          <button
+            type="button"
+            onClick={() => navigate('/new-signal')}
+            className="icon-gradient-green text-white text-[12px] font-semibold pressable flex items-center"
+            style={{ padding: '6px 14px', borderRadius: '6px', gap: '5px' }}
+          >
+            Use
+            <ArrowRight size={14} />
+          </button>
+        }
+      />
 
       {/* Hero */}
       <div style={{ marginTop: '16px', marginBottom: '16px' }}>
@@ -139,18 +153,6 @@ export default function TemplateDetail() {
         </div>
       </div>
 
-      {/* CTA */}
-      <div style={{ position: 'sticky', bottom: '70px', paddingTop: '12px', paddingBottom: '12px', background: 'linear-gradient(to top, var(--tg-theme-bg-color, #fff) 60%, transparent)' }}>
-        <button
-          type="button"
-          onClick={() => navigate('/new-signal')}
-          className="icon-gradient-green text-white text-[15px] font-semibold pressable flex items-center justify-center w-full"
-          style={{ padding: '14px', borderRadius: '7px', gap: '8px' }}
-        >
-          Use this template
-          <ArrowRight size={18} />
-        </button>
-      </div>
     </div>
   );
 }
