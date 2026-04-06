@@ -31,12 +31,24 @@ export default function SignalChart({ signal }) {
       { x: 2, price: null, price_dash: entry, tp_path: entry, sl_path: entry },
       { x: 3, price: null, price_dash: null, tp_path: tp, sl_path: sl },
     ];
-  } else if (isTriggered || isHitTP || isHitSL) {
-    // entry+fork at x=1
+  } else if (isTriggered) {
+    // Current is in profit or loss — dot on the active branch
+    const inProfit = isLong ? current >= entry : current <= entry;
+    const midTP = (entry + tp) / 2;
+    const midSL = (entry + sl) / 2;
+    // tp_solid/sl_solid = solid segment from entry to dot
+    // tp_path/sl_path = dashed segment from dot to endpoint
     data = [
-      { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: entry, tp_path: entry, sl_path: entry },
-      { x: 2, price: null, tp_path: tp, sl_path: sl },
+      { x: 0, price: startPrice, tp_solid: null, sl_solid: null, tp_path: null, sl_path: null },
+      { x: 1, price: entry, tp_solid: entry, sl_solid: entry, tp_path: null, sl_path: null },
+      { x: 1.5, price: null, tp_solid: inProfit ? midTP : null, sl_solid: inProfit ? null : midSL, tp_path: inProfit ? midTP : null, sl_path: inProfit ? null : midSL },
+      { x: 2, price: null, tp_solid: null, sl_solid: null, tp_path: tp, sl_path: sl },
+    ];
+  } else if (isHitTP || isHitSL) {
+    data = [
+      { x: 0, price: startPrice, tp_solid: null, sl_solid: null, tp_path: null, sl_path: null },
+      { x: 1, price: entry, tp_solid: entry, sl_solid: entry, tp_path: null, sl_path: null },
+      { x: 2, price: null, tp_solid: isHitTP ? tp : null, sl_solid: isHitSL ? sl : null, tp_path: isHitTP ? null : tp, sl_path: isHitSL ? null : sl },
     ];
   } else {
     // Expired
@@ -153,15 +165,14 @@ export default function SignalChart({ signal }) {
             />
           )}
 
-          {/* TP path: entry → TP (starts after price line) */}
-          {!isExpired && (
+          {/* TP solid: entry → dot (triggered/hit) */}
+          {(isTriggered || isHitTP || isHitSL) && (
             <Line
               type="linear"
-              dataKey="tp_path"
+              dataKey="tp_solid"
               stroke={tpStroke}
-              strokeWidth={tpWidth}
-              strokeDasharray={tpDash}
-              strokeOpacity={tpOpacity}
+              strokeWidth={isHitTP ? 2.5 : 2}
+              strokeOpacity={isHitSL ? 0.2 : 1}
               dot={false}
               connectNulls={false}
               animationDuration={400}
@@ -170,19 +181,52 @@ export default function SignalChart({ signal }) {
             />
           )}
 
-          {/* SL path: entry → SL (starts with TP) */}
+          {/* SL solid: entry → dot (triggered/hit) */}
+          {(isTriggered || isHitTP || isHitSL) && (
+            <Line
+              type="linear"
+              dataKey="sl_solid"
+              stroke={slStroke}
+              strokeWidth={isHitSL ? 2.5 : 2}
+              strokeOpacity={isHitTP ? 0.2 : 1}
+              dot={false}
+              connectNulls={false}
+              animationDuration={400}
+              animationBegin={600}
+              animationEasing="ease-out"
+            />
+          )}
+
+          {/* TP dashed: dot → TP (pending/triggered) or faded (hit) */}
+          {!isExpired && (
+            <Line
+              type="linear"
+              dataKey="tp_path"
+              stroke={tpStroke}
+              strokeWidth={1.5}
+              strokeDasharray="5 4"
+              strokeOpacity={isHitSL ? 0.15 : (isHitTP ? 0 : 0.5)}
+              dot={false}
+              connectNulls={false}
+              animationDuration={400}
+              animationBegin={isPending ? 600 : 800}
+              animationEasing="ease-out"
+            />
+          )}
+
+          {/* SL dashed: dot → SL (pending/triggered) or faded (hit) */}
           {!isExpired && (
             <Line
               type="linear"
               dataKey="sl_path"
               stroke={slStroke}
-              strokeWidth={slWidth}
-              strokeDasharray={slDash}
-              strokeOpacity={slOpacity}
+              strokeWidth={1.5}
+              strokeDasharray="5 4"
+              strokeOpacity={isHitTP ? 0.15 : (isHitSL ? 0 : 0.5)}
               dot={false}
               connectNulls={false}
               animationDuration={400}
-              animationBegin={600}
+              animationBegin={isPending ? 600 : 800}
               animationEasing="ease-out"
             />
           )}
