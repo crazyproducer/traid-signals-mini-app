@@ -15,6 +15,7 @@ import {
 import { SYMBOLS } from '../utils/constants';
 import { mockSignals } from '../api/mock-data';
 import PageHeader from '../components/shared/PageHeader';
+import SignalChart from '../components/signals/SignalChart';
 
 function symbolLabel(raw) {
   const found = SYMBOLS.find((s) => s.value === raw);
@@ -49,19 +50,6 @@ export default function SignalDetail() {
   const gradientClass = isLong ? 'icon-gradient-green' : 'icon-gradient-red';
   const directionVariant = isLong ? 'long' : 'short';
 
-  // Price rows ordered by direction
-  const priceRows = isLong
-    ? [
-        { label: 'Take Profit', price: signal.take_profit, color: 'text-green', dotColor: 'bg-green', pct: `+${signal.reward_pct}%` },
-        { label: 'Entry', price: signal.entry_price, color: 'text-tg-text', dotColor: 'bg-tg-text', pct: null },
-        { label: 'Stop Loss', price: signal.stop_loss, color: 'text-red', dotColor: 'bg-red', pct: `-${signal.risk_pct}%` },
-      ]
-    : [
-        { label: 'Stop Loss', price: signal.stop_loss, color: 'text-red', dotColor: 'bg-red', pct: `-${signal.risk_pct}%` },
-        { label: 'Entry', price: signal.entry_price, color: 'text-tg-text', dotColor: 'bg-tg-text', pct: null },
-        { label: 'Take Profit', price: signal.take_profit, color: 'text-green', dotColor: 'bg-green', pct: `+${signal.reward_pct}%` },
-      ];
-
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader title="Signal detail" showBack />
@@ -86,35 +74,8 @@ export default function SignalDetail() {
         </div>
       </div>
 
-      {/* Price card -- vertical layout */}
-      <div className="card p-5 mb-4">
-        {priceRows.map((row, i) => (
-          <div key={row.label}>
-            <div className="flex items-center justify-between py-3">
-              <div className="flex items-center gap-2.5">
-                <div className={`w-2 h-2 rounded-full ${row.dotColor}`} />
-                <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
-                  {row.label}
-                </span>
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span
-                  className={`text-[17px] font-mono font-bold ${row.color}`}
-                  style={{ fontVariantNumeric: 'tabular-nums' }}
-                >
-                  {formatCryptoPrice(row.price)}
-                </span>
-                {row.pct && (
-                  <span className={`text-[11px] font-mono font-medium ${row.color}/70`}>
-                    {row.pct}
-                  </span>
-                )}
-              </div>
-            </div>
-            {i < priceRows.length - 1 && <div className="border-b border-tg-secondary/15" />}
-          </div>
-        ))}
-      </div>
+      {/* Signal chart — schematic price visualization */}
+      <SignalChart signal={signal} />
 
       {/* Stats row */}
       <div className="card p-4 mb-4">
