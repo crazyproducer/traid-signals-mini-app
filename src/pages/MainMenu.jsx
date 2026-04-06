@@ -27,9 +27,9 @@ export default function MainMenu() {
   const totalReturn = formatPct(stats.total_return_pct);
 
   return (
-    <div className="page-padding" style={{ paddingTop: '12px', paddingBottom: '96px' }}>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       {/* Header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 40, paddingTop: '4px', paddingBottom: '10px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: 'var(--tg-theme-bg-color, #fff)', borderBottom: '1px solid rgba(128,128,128,0.12)' }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 40, paddingTop: '12px', paddingBottom: '10px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px', backgroundColor: 'var(--tg-theme-bg-color, #fff)', borderBottom: '1px solid rgba(128,128,128,0.12)' }}>
         <h1 className="text-[22px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em' }}>
           TRAID Signals
         </h1>
