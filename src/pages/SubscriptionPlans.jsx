@@ -3,7 +3,6 @@ import PlanCard from '../components/subscription/PlanCard';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
 import BackButton from '../components/shared/BackButton';
-import PageHeader from '../components/shared/PageHeader';
 
 export default function SubscriptionPlans() {
   const navigate = useNavigate();
@@ -14,8 +13,7 @@ export default function SubscriptionPlans() {
   }
 
   return (
-    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader />
+    <div className="page-padding animate-fade-in" style={{ paddingTop: '16px', paddingBottom: '96px' }}>
       <BackButton />
       {/* Header */}
       <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>

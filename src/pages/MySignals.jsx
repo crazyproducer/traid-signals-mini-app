@@ -1,4 +1,3 @@
-import PageHeader from '../components/shared/PageHeader';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Radio, History, Clock } from 'lucide-react';
@@ -51,9 +50,11 @@ export default function MySignals() {
   };
 
   return (
-    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader />
-      <div style={{ height: '12px' }} />
+    <div className="page-padding" style={{ paddingTop: '24px', paddingBottom: '96px' }}>
+      {/* Header */}
+      <h1 className="text-[28px] font-bold text-tg-text" style={{ letterSpacing: '-0.03em', marginBottom: '20px' }}>
+        Signals
+      </h1>
 
       {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30" style={{ marginBottom: '20px', paddingTop: '4px' }}>
