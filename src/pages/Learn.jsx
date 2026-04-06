@@ -90,7 +90,7 @@ export default function Learn() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader />
-      <h2 className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em', marginTop: '12px', marginBottom: '12px' }}>Learn</h2>
+      <div style={{ height: '12px' }} />
 
       <div className="flex flex-col gap-3">
         {TOPICS.map((topic, i) => (

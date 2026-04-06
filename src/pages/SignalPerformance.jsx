@@ -17,7 +17,7 @@ export default function SignalPerformance() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader />
-      <h2 className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em', marginTop: '12px', marginBottom: '12px' }}>Performance</h2>
+      <div style={{ height: '12px' }} />
 
       {/* Hero win rate */}
       <div className="flex flex-col items-center mb-8">

@@ -53,7 +53,7 @@ export default function MySignals() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader />
-      <h2 className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em', marginTop: '12px', marginBottom: '12px' }}>Signals</h2>
+      <div style={{ height: '12px' }} />
 
       {/* 4 underline tabs */}
       <div className="flex items-center border-b border-tg-secondary/30" style={{ marginBottom: '20px', paddingTop: '4px' }}>

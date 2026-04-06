@@ -66,7 +66,6 @@ export default function SignalDetail() {
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader />
-      <h2 className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em', marginTop: '12px', marginBottom: '8px' }}>Signal detail</h2>
       <BackButton />
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">
