@@ -4,9 +4,8 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
   const isPopular = plan.value === 'basic';
   const isFree = plan.price_monthly === 0;
 
-  const price = isFree ? '$0' : annual ? `$${Math.round(plan.price_yearly / 12)}` : `$${plan.price_monthly}`;
-  const period = isFree ? '' : '/mo';
-  const savings = annual && !isFree ? `$${plan.price_yearly}/yr` : null;
+  const price = isFree ? '$0' : annual ? `$${plan.price_yearly}` : `$${plan.price_monthly}`;
+  const period = isFree ? '' : annual ? '/yr' : '/mo';
 
   return (
     <button
@@ -51,12 +50,6 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
           {isFree && <span className="text-[13px] font-medium text-tg-hint">Free forever</span>}
         </div>
       </div>
-
-      {savings && (
-        <div style={{ marginBottom: '6px', paddingLeft: '32px' }}>
-          <span className="text-[11px] text-green font-semibold">Billed {savings} (save {Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100)}%)</span>
-        </div>
-      )}
 
       {/* Features — compact, indented past radio */}
       <div style={{ paddingLeft: '32px' }}>
