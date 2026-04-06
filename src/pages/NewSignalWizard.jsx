@@ -339,7 +339,7 @@ function StepReview({ data, goToStep }) {
    ═══════════════════════════════════════════════ */
 function SuccessState({ onDone }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in page-padding">
+    <div className="flex flex-col items-center justify-center text-center page-padding" style={{ minHeight: '100dvh' }}>
       <div className="icon-gradient-green w-16 h-16 rounded-full flex items-center justify-center mb-5">
         <CheckCircle2 size={32} strokeWidth={2} className="text-white" />
       </div>
