@@ -98,7 +98,7 @@ export default function SignalDetail() {
           </div>
         </div>
         {/* Chart — 70% */}
-        <div style={{ width: '60%' }}>
+        <div style={{ flex: 1 }}>
           <SignalChart signal={signal} />
         </div>
       </div>

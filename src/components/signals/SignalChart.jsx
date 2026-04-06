@@ -77,19 +77,19 @@ export default function SignalChart({ signal }) {
         <line x1={PAD_L} y1={yEntry} x2={x2 + 8} y2={yEntry} stroke={text} strokeWidth="1" opacity={0.2 * muted} />
         <line x1={PAD_L} y1={ySL} x2={x2 + 8} y2={ySL} stroke={red} strokeWidth="1" opacity={0.4 * muted} />
 
-        {/* Labels — right side */}
-        <text x={xLabel} y={yTP - 8} textAnchor="start" fill={green} fontSize="8" fontWeight="600" fontFamily="DM Sans" opacity={0.6 * muted}>TP</text>
-        <text x={xLabel} y={yTP + 2} textAnchor="start" fill={green} fontSize="10" fontFamily="DM Mono" opacity={0.8 * muted} dominantBaseline="middle">
+        {/* Labels — right side, larger */}
+        <text x={xLabel} y={yTP - 10} textAnchor="start" fill={green} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>TP</text>
+        <text x={xLabel} y={yTP + 4} textAnchor="start" fill={green} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
           {formatCryptoPrice(signal.take_profit)}
         </text>
 
-        <text x={xLabel} y={yEntry - 8} textAnchor="start" fill={hint} fontSize="8" fontWeight="600" fontFamily="DM Sans" opacity={0.6 * muted}>ENTRY</text>
-        <text x={xLabel} y={yEntry + 2} textAnchor="start" fill={text} fontSize="10" fontFamily="DM Mono" opacity={0.8 * muted} dominantBaseline="middle">
+        <text x={xLabel} y={yEntry - 10} textAnchor="start" fill={hint} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>ENTRY</text>
+        <text x={xLabel} y={yEntry + 4} textAnchor="start" fill={text} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
           {formatCryptoPrice(signal.entry_price)}
         </text>
 
-        <text x={xLabel} y={ySL - 8} textAnchor="start" fill={red} fontSize="8" fontWeight="600" fontFamily="DM Sans" opacity={0.6 * muted}>SL</text>
-        <text x={xLabel} y={ySL + 2} textAnchor="start" fill={red} fontSize="10" fontFamily="DM Mono" opacity={0.8 * muted} dominantBaseline="middle">
+        <text x={xLabel} y={ySL - 10} textAnchor="start" fill={red} fontSize="10" fontWeight="700" fontFamily="DM Sans" opacity={0.7 * muted}>SL</text>
+        <text x={xLabel} y={ySL + 4} textAnchor="start" fill={red} fontSize="13" fontWeight="600" fontFamily="DM Mono" opacity={0.9 * muted} dominantBaseline="middle">
           {formatCryptoPrice(signal.stop_loss)}
         </text>
 
