@@ -168,14 +168,14 @@ export default function MainMenu() {
               View all
             </button>
           </div>
-          <div className="hide-scrollbar" style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '24px', paddingBottom: '4px' }}>
-            {mockTemplates.slice(0, 3).map((tpl) => (
+          <div className="hide-scrollbar" style={{ display: 'flex', gap: '10px', overflowX: 'auto', marginBottom: '24px', paddingBottom: '4px', marginLeft: '-20px', marginRight: '-20px', paddingLeft: '20px', paddingRight: '20px' }}>
+            {mockTemplates.slice(0, 5).map((tpl) => (
               <button
                 key={tpl.id}
                 type="button"
                 onClick={() => navigate('/templates')}
                 className="card pressable text-left flex-shrink-0"
-                style={{ padding: '12px', width: '160px' }}
+                style={{ padding: '12px', minWidth: '150px', flex: '1 0 auto' }}
               >
                 <span className="text-[13px] font-semibold text-tg-text block" style={{ marginBottom: '4px' }}>{tpl.name}</span>
                 <div className="flex items-center" style={{ gap: '6px' }}>
