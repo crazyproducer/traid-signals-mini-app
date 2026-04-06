@@ -23,13 +23,13 @@ export default function SignalChart({ signal }) {
   let data;
 
   if (isPending) {
-    // straight line from start to entry, with midpoint for current dot
+    // solid from start to current, dashed from current to entry
     const midPrice = (startPrice + entry) / 2;
     data = [
-      { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: midPrice, tp_path: null, sl_path: null },
-      { x: 2, price: entry, tp_path: entry, sl_path: entry },
-      { x: 3, price: null, tp_path: tp, sl_path: sl },
+      { x: 0, price: startPrice, price_dash: null, tp_path: null, sl_path: null },
+      { x: 1, price: midPrice, price_dash: midPrice, tp_path: null, sl_path: null },
+      { x: 2, price: null, price_dash: entry, tp_path: entry, sl_path: entry },
+      { x: 3, price: null, price_dash: null, tp_path: tp, sl_path: sl },
     ];
   } else if (isTriggered || isHitTP || isHitSL) {
     // entry+fork at x=1
@@ -122,7 +122,7 @@ export default function SignalChart({ signal }) {
             label={{ value: 'SL', position: 'insideBottomLeft', fill: slStroke, fontSize: 9, fontFamily: 'DM Sans', fontWeight: 700, opacity: isExpired ? 0.3 : 0.6 }}
           />
 
-          {/* Main price line: start → entry */}
+          {/* Main price line: solid segment */}
           <Line
             type="linear"
             dataKey="price"
@@ -131,10 +131,27 @@ export default function SignalChart({ signal }) {
             dot={false}
             connectNulls={false}
             strokeDasharray={isExpired ? '5 4' : '0'}
-            animationDuration={600}
+            animationDuration={isPending ? 300 : 600}
             animationBegin={0}
             animationEasing="ease-out"
           />
+
+          {/* Dashed price line: current → entry (pending only) */}
+          {isPending && (
+            <Line
+              type="linear"
+              dataKey="price_dash"
+              stroke={priceStroke}
+              strokeWidth={priceWidth}
+              dot={false}
+              connectNulls={false}
+              strokeDasharray="5 4"
+              strokeOpacity={0.5}
+              animationDuration={300}
+              animationBegin={300}
+              animationEasing="ease-out"
+            />
+          )}
 
           {/* TP path: entry → TP (starts after price line) */}
           {!isExpired && (
