@@ -40,14 +40,19 @@ export default function PlanCard({ plan, isCurrentPlan, isSelected, onSelect, an
 
         <span className="text-[17px] font-bold text-tg-text" style={{ flex: 1 }}>{plan.label}</span>
 
-        <div className="flex items-baseline" style={{ gap: '3px' }}>
-          {!isFree && (
-            <>
-              <span className="text-[20px] font-bold font-mono text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{price}</span>
-              <span className="text-[11px] text-tg-hint">{period}</span>
-            </>
+        <div className="flex flex-col items-end flex-shrink-0">
+          <div className="flex items-baseline" style={{ gap: '3px' }}>
+            {!isFree && (
+              <>
+                <span className="text-[20px] font-bold font-mono text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>{price}</span>
+                <span className="text-[11px] text-tg-hint">{period}</span>
+              </>
+            )}
+            {isFree && <span className="text-[13px] font-medium text-tg-hint">Free forever</span>}
+          </div>
+          {annual && !isFree && (
+            <span className="text-[10px] text-green font-semibold">Save {Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100)}%</span>
           )}
-          {isFree && <span className="text-[13px] font-medium text-tg-hint">Free forever</span>}
         </div>
       </div>
 

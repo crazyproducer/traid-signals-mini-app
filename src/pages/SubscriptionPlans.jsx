@@ -18,32 +18,31 @@ export default function SubscriptionPlans() {
   const isUpgrade = selectedIdx > currentIdx;
   const actionLabel = isUpgrade ? 'Upgrade' : 'Downgrade';
 
+  const toggle = (
+    <div className="flex items-center" style={{ backgroundColor: 'rgba(128,128,128,0.08)', borderRadius: '6px', padding: '2px' }}>
+      <button
+        type="button"
+        onClick={() => setAnnual(false)}
+        className={`pressable text-[11px] font-semibold ${!annual ? 'text-tg-text' : 'text-tg-hint'}`}
+        style={{ padding: '5px 10px', borderRadius: '4px', backgroundColor: !annual ? 'var(--tg-theme-section-bg-color, #fff)' : 'transparent', boxShadow: !annual ? '0 1px 2px rgba(0,0,0,0.06)' : 'none' }}
+      >
+        Monthly
+      </button>
+      <button
+        type="button"
+        onClick={() => setAnnual(true)}
+        className={`pressable text-[11px] font-semibold ${annual ? 'text-tg-text' : 'text-tg-hint'}`}
+        style={{ padding: '5px 10px', borderRadius: '4px', backgroundColor: annual ? 'var(--tg-theme-section-bg-color, #fff)' : 'transparent', boxShadow: annual ? '0 1px 2px rgba(0,0,0,0.06)' : 'none' }}
+      >
+        Annual
+      </button>
+    </div>
+  );
+
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
-      <PageHeader title="Plans" showBack />
+      <PageHeader title="Plans" showBack rightElement={toggle} />
       <div style={{ height: '12px' }} />
-
-      {/* Monthly / Annual toggle */}
-      <div className="flex items-center justify-center" style={{ marginBottom: '16px' }}>
-        <div className="flex items-center" style={{ backgroundColor: 'rgba(128,128,128,0.08)', borderRadius: '7px', padding: '3px' }}>
-          <button
-            type="button"
-            onClick={() => setAnnual(false)}
-            className={`pressable text-[13px] font-semibold ${!annual ? 'text-tg-text' : 'text-tg-hint'}`}
-            style={{ padding: '8px 20px', borderRadius: '5px', backgroundColor: !annual ? 'var(--tg-theme-section-bg-color, #fff)' : 'transparent', boxShadow: !annual ? '0 1px 3px rgba(0,0,0,0.06)' : 'none' }}
-          >
-            Monthly
-          </button>
-          <button
-            type="button"
-            onClick={() => setAnnual(true)}
-            className={`pressable text-[13px] font-semibold ${annual ? 'text-tg-text' : 'text-tg-hint'}`}
-            style={{ padding: '8px 20px', borderRadius: '5px', backgroundColor: annual ? 'var(--tg-theme-section-bg-color, #fff)' : 'transparent', boxShadow: annual ? '0 1px 3px rgba(0,0,0,0.06)' : 'none' }}
-          >
-            Annual
-          </button>
-        </div>
-      </div>
 
       {/* Plans */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
