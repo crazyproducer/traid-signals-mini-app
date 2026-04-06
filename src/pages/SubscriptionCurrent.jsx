@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import PageHeader from '../components/shared/PageHeader';
 import { Crown, Calendar, CreditCard, ArrowRight } from 'lucide-react';
 import FeatureRow from '../components/subscription/FeatureRow';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
@@ -24,11 +25,9 @@ export default function SubscriptionCurrent() {
   }
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '24px', paddingBottom: '96px' }}>
-      {/* Header */}
-      <h1 className="text-[28px] font-bold text-tg-text mb-5" style={{ letterSpacing: '-0.03em' }}>
-        My Subscription
-      </h1>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader />
+      <div style={{ height: '12px' }} />
 
       {/* Current plan card */}
       <div className="card-elevated p-5 mb-4">

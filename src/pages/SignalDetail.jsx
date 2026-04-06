@@ -15,6 +15,7 @@ import {
 import { SYMBOLS } from '../utils/constants';
 import { mockSignals } from '../api/mock-data';
 import BackButton from '../components/shared/BackButton';
+import PageHeader from '../components/shared/PageHeader';
 
 function symbolLabel(raw) {
   const found = SYMBOLS.find((s) => s.value === raw);
@@ -63,7 +64,8 @@ export default function SignalDetail() {
       ];
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '16px', paddingBottom: '96px' }}>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader />
       <BackButton />
       {/* Hero */}
       <div className="flex items-center gap-3.5 mb-6">

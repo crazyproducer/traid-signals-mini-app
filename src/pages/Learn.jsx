@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ChevronUp, BookOpen, TrendingUp, BarChart3, Shield, Target, Clock } from 'lucide-react';
+import PageHeader from '../components/shared/PageHeader';
 
 const TOPICS = [
   {
@@ -87,13 +88,9 @@ export default function Learn() {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <div className="page-padding animate-fade-in" style={{ paddingTop: '32px', paddingBottom: '96px' }}>
-      <h1 className="text-[28px] font-bold text-tg-text mb-2" style={{ letterSpacing: '-0.03em' }}>
-        Learn
-      </h1>
-      <p className="text-[14px] text-tg-hint mb-6 leading-relaxed">
-        Everything you need to know about trading signals
-      </p>
+    <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+      <PageHeader />
+      <div style={{ height: '12px' }} />
 
       <div className="flex flex-col gap-3">
         {TOPICS.map((topic, i) => (
