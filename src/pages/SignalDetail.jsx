@@ -9,7 +9,6 @@ import {
   formatCryptoPrice,
   formatWinRate,
   formatRiskReward,
-  formatDirection,
   formatSignalId,
 } from '../utils/formatters';
 import { SYMBOLS } from '../utils/constants';
@@ -48,7 +47,7 @@ export default function SignalDetail() {
   const isLong = signal.direction === 'LONG';
   const DirectionIcon = isLong ? TrendingUp : TrendingDown;
   const gradientClass = isLong ? 'icon-gradient-green' : 'icon-gradient-red';
-  const directionVariant = isLong ? 'long' : 'short';
+
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
@@ -65,7 +64,7 @@ export default function SignalDetail() {
             <span className="text-[20px] font-bold text-tg-text">
               {symbolLabel(signal.symbol)}
             </span>
-            <Badge variant={directionVariant}>{formatDirection(signal.direction)}</Badge>
+            <span className="text-[12px] text-tg-hint">Pull Back</span>
           </div>
           <div className="flex items-center gap-2 mt-0.5">
             <span className="text-[12px] font-mono text-tg-hint">{formatSignalId(signal.id)}</span>

@@ -2,8 +2,6 @@ import { ChevronRight, TrendingUp, TrendingDown } from 'lucide-react';
 import Badge from '../shared/Badge';
 import {
   formatCryptoPrice,
-  formatRelativeTime,
-  formatDirection,
   formatPct,
   formatWinRate,
   formatDuration,
