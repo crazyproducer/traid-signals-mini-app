@@ -38,7 +38,7 @@ export default function MainMenu() {
       <div style={{ height: '12px' }} />
 
       {/* Metrics row — 4 equal cards, top-aligned */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
         <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
           <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Return</span>
           <span
