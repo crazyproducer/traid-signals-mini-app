@@ -38,10 +38,12 @@ export default function SignalChart({ signal }) {
     const midSL = (entry + sl) / 2;
     // tp_solid/sl_solid = solid segment from entry to dot
     // tp_path/sl_path = dashed segment from dot to endpoint
+    // Both dashed paths start from the current dot position (x=1.5)
+    // because either outcome is still possible
     data = [
       { x: 0, price: startPrice, tp_solid: null, sl_solid: null, tp_path: null, sl_path: null },
       { x: 1, price: entry, tp_solid: entry, sl_solid: entry, tp_path: null, sl_path: null },
-      { x: 1.5, price: null, tp_solid: inProfit ? midTP : null, sl_solid: inProfit ? null : midSL, tp_path: inProfit ? midTP : null, sl_path: inProfit ? null : midSL },
+      { x: 1.5, price: null, tp_solid: inProfit ? midTP : null, sl_solid: inProfit ? null : midSL, tp_path: midTP, sl_path: midSL },
       { x: 2, price: null, tp_solid: null, sl_solid: null, tp_path: tp, sl_path: sl },
     ];
   } else if (isHitTP || isHitSL) {
