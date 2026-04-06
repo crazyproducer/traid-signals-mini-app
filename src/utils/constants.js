@@ -78,18 +78,18 @@ export const RECORD_COUNTS = {
 export const SUBSCRIPTION_PLANS = [
   {
     value: 'free', label: 'Free', price_monthly: 0, price_yearly: 0,
-    symbols_limit: 1, frequency_restriction: '24h',
-    features: ['1 symbol', 'Daily signals only (24h)', 'Basic performance stats'],
+    symbols_limit: 1, configs_limit: 1,
+    features: ['1 symbol', '1 configuration', 'All timeframes', 'All strategies & filters', 'Full notifications'],
   },
   {
     value: 'basic', label: 'Basic', price_monthly: 5, price_yearly: 50,
-    symbols_limit: 5, frequency_restriction: null,
-    features: ['Up to 5 symbols', '4h and 24h frequencies', 'Full performance dashboard', 'Signal update notifications'],
+    symbols_limit: 5, configs_limit: 3,
+    features: ['Up to 5 symbols', '3 configurations', 'All timeframes', 'Full performance dashboard', 'Signal update notifications'],
   },
   {
     value: 'premium', label: 'Premium', price_monthly: 20, price_yearly: 200,
-    symbols_limit: null, frequency_restriction: null,
-    features: ['All symbols (unlimited)', '4h and 24h frequencies', 'Full performance dashboard', 'Signal update notifications', 'Priority signal delivery', 'Advanced analytics'],
+    symbols_limit: null, configs_limit: null,
+    features: ['All symbols (unlimited)', 'Unlimited configurations', 'All timeframes', 'Full performance dashboard', 'Priority signal delivery', 'Advanced analytics'],
   },
 ];
 

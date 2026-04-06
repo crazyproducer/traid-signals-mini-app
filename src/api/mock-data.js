@@ -592,14 +592,16 @@ export const mockEquityCurve = {
 /* ─── Subscription / Billing ─── */
 
 export const mockSubscription = {
-  plan: 'basic',
+  plan: 'free',
   status: 'active',
-  price_monthly: 5,
-  price_yearly: 50,
-  next_billing: '2026-05-01',
+  price_monthly: 0,
+  price_yearly: 0,
+  next_billing: null,
   started_at: '2026-03-01',
-  signals_used: 3,
-  signals_limit: 5,
+  configs_used: 1,
+  configs_limit: 1,
+  symbols_used: 1,
+  symbols_limit: 1,
 };
 
 /* ─── Helper: get signals for a subscription ─── */

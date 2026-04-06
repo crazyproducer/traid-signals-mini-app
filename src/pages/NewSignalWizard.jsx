@@ -2,15 +2,17 @@ import { useState, useCallback, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   CheckCircle2, BarChart3, Gauge, Target,
-  TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket, Pencil,
+  TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket, Pencil, Lock,
 } from 'lucide-react';
 import useWizard from '../hooks/useWizard';
 import WizardProgress from '../components/wizard/WizardProgress';
 import OptionCard from '../components/wizard/OptionCard';
+import PaywallSheet from '../components/shared/PaywallSheet';
 import {
   STRATEGIES, RISK_LEVELS, CONFIDENCE_LEVELS, DIRECTIONS,
   SYMBOLS, FREQUENCIES, EMA_FILTERS, RECORD_COUNTS,
 } from '../utils/constants';
+import { mockSubscription } from '../api/mock-data';
 
 /* ═══════════════════════════════════════════════
    Step titles & subtitles
@@ -169,29 +171,35 @@ function StepDirection({ data, toggleArray }) {
 /* ═══════════════════════════════════════════════
    Step 4 — Symbols (multi-select)
    ═══════════════════════════════════════════════ */
-function StepSymbol({ data, toggleArray }) {
+function StepSymbol({ data, toggleArray, onPaywall }) {
   const selected = data.symbols || [];
   const total = selected.reduce((s, sym) => s + (RECORD_COUNTS.symbol[sym] || 0), 0);
+  const limit = mockSubscription.symbols_limit;
+  const atLimit = limit && selected.length >= limit;
 
   return (
     <div className="space-y-3">
       {selected.length > 0 && (
         <p className="text-[11px] font-mono text-tg-hint/50 text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
-          {selected.length} selected · {total.toLocaleString()} records
+          {selected.length}{limit ? `/${limit}` : ''} selected · {total.toLocaleString()} records
         </p>
       )}
-      {SYMBOLS.map((sym) => (
+      {SYMBOLS.map((sym) => {
+        const isSelected = selected.includes(sym.value);
+        const locked = atLimit && !isSelected;
+        return (
         <OptionCard
           key={sym.value}
-          icon={Coins}
+          icon={locked ? Lock : Coins}
           title={sym.label}
-          description={sym.name}
+          description={locked ? 'Upgrade to add more symbols' : sym.name}
           count={RECORD_COUNTS.symbol[sym.value]}
-          selected={selected.includes(sym.value)}
-          onClick={() => toggleArray('symbols', sym.value)}
-          color="blue"
+          selected={isSelected}
+          onClick={locked ? onPaywall : () => toggleArray('symbols', sym.value)}
+          color={locked ? 'neutral' : 'blue'}
         />
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -366,6 +374,7 @@ export default function NewSignalWizard() {
   const location = useLocation();
   const w = useWizard();
   const [launched, setLaunched] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
 
   // Load template data if passed via navigation state
   useEffect(() => {
@@ -401,7 +410,7 @@ export default function NewSignalWizard() {
       case 1: return <StepRisk data={w.data} setField={w.setField} />;
       case 2: return <StepConfidence data={w.data} setField={w.setField} />;
       case 3: return <StepDirection data={w.data} toggleArray={w.toggleArray} />;
-      case 4: return <StepSymbol data={w.data} toggleArray={w.toggleArray} />;
+      case 4: return <StepSymbol data={w.data} toggleArray={w.toggleArray} onPaywall={() => setShowPaywall(true)} />;
       case 5: return <StepFrequency data={w.data} setField={w.setField} />;
       case 6: return <StepFilters data={w.data} toggleArray={w.toggleArray} />;
       case 7: return <StepReview data={w.data} goToStep={w.goToStep} />;
@@ -467,6 +476,14 @@ export default function NewSignalWizard() {
           </button>
         </div>
       </div>
+
+      {/* Paywall */}
+      {showPaywall && (
+        <PaywallSheet
+          reason="Free plan allows 1 symbol. Upgrade for more."
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
     </div>
   );
 }
