@@ -23,10 +23,9 @@ export default function SignalChart({ signal }) {
   let data;
 
   if (isPending) {
-    // current dot at x=1, entry+fork at x=2
+    // straight line from start to entry, current shown as dot only
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
-      { x: 1, price: current, tp_path: null, sl_path: null },
       { x: 2, price: entry, tp_path: entry, sl_path: entry },
       { x: 3, price: null, tp_path: tp, sl_path: sl },
     ];
@@ -55,7 +54,7 @@ export default function SignalChart({ signal }) {
   let dotX, dotY;
   if (isPending) {
     dotX = 1;
-    dotY = current;
+    dotY = (startPrice + entry) / 2;
   } else if (isTriggered) {
     const inProfit = isLong ? current >= entry : current <= entry;
     dotX = 1.5;
