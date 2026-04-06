@@ -23,9 +23,11 @@ export default function SignalChart({ signal }) {
   let data;
 
   if (isPending) {
-    // straight line from start to entry, current shown as dot only
+    // straight line from start to entry, with midpoint for current dot
+    const midPrice = (startPrice + entry) / 2;
     data = [
       { x: 0, price: startPrice, tp_path: null, sl_path: null },
+      { x: 1, price: midPrice, tp_path: null, sl_path: null },
       { x: 2, price: entry, tp_path: entry, sl_path: entry },
       { x: 3, price: null, tp_path: tp, sl_path: sl },
     ];
