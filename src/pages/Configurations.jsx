@@ -16,18 +16,27 @@ function fmtSymbols(syms) {
 function ConfigCard({ config, onEdit, onToggle, onDelete }) {
   const isPaused = config.status === 'paused';
   const pnl = formatPct(config.pnl_pct || 0);
-  const emaLabel = config.ema_filter ? `EMA ${config.ema_filter}` : 'None';
+
+  const dirs = config.directions || [config.direction || 'LONG'];
+  const dirLabel = dirs.length > 1 ? dirs.join(' & ') : dirs[0];
+
+  const strats = config.strategies || [config.strategy || 'pullback'];
+  const stratLabel = strats.map((s) => s === 'pullback' ? 'Pull Back' : s).join(', ');
+
+  const emas = config.ema_filters || (config.ema_filter ? [config.ema_filter] : []);
+  const emaLabel = emas.length > 0 ? emas.map((v) => `EMA ${v}`).join(', ') : 'None';
 
   return (
     <div className="card" style={{ padding: '16px' }}>
       {/* Header: strategy + status + direction */}
-      <div className="flex items-center" style={{ marginBottom: '12px', gap: '8px' }}>
-        <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em', flex: 1 }}>
-          Pull Back
+      <div className="flex items-center" style={{ marginBottom: '12px', gap: '6px', flexWrap: 'wrap' }}>
+        <span className="text-[16px] font-semibold text-tg-text" style={{ letterSpacing: '-0.01em' }}>
+          {stratLabel}
         </span>
-        <Badge variant={config.direction === 'LONG' ? 'long' : config.direction === 'SHORT' ? 'short' : 'active'}>
-          {config.direction}
-        </Badge>
+        <span style={{ flex: 1 }} />
+        {dirs.map((d) => (
+          <Badge key={d} variant={d === 'LONG' ? 'long' : 'short'}>{d}</Badge>
+        ))}
         <Badge variant={isPaused ? 'paused' : 'active'}>
           {isPaused ? 'Paused' : 'Active'}
         </Badge>
