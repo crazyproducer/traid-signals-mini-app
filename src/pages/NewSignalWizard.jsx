@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckCircle2, BarChart3, Gauge, Target,
-  TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket,
+  TrendingUp, TrendingDown, Coins, Clock, SlidersHorizontal, Rocket, Pencil,
 } from 'lucide-react';
 import useWizard from '../hooks/useWizard';
 import WizardProgress from '../components/wizard/WizardProgress';
@@ -256,7 +256,7 @@ function StepFilters({ data, toggleArray }) {
 /* ═══════════════════════════════════════════════
    Step 7 — Review
    ═══════════════════════════════════════════════ */
-function StepReview({ data }) {
+function StepReview({ data, goToStep }) {
   const dirLabels = (data.directions || []).join(' & ') || '--';
   const symLabels = SYMBOLS.filter((s) => (data.symbols || []).includes(s.value)).map((s) => s.base).join(', ') || '--';
   const stratLabel = STRATEGIES.find((s) => s.value === data.strategy)?.label || '--';
@@ -267,30 +267,36 @@ function StepReview({ data }) {
     : 'None';
 
   const items = [
-    { label: 'Strategy', value: stratLabel },
-    { label: 'Risk level', value: data.risk_level != null ? `${data.risk_level}%` : '--' },
-    { label: 'Confidence', value: confLabel },
-    { label: 'Direction', value: dirLabels },
-    { label: 'Symbols', value: symLabels },
-    { label: 'Timeframe', value: freqLabel },
-    { label: 'Filters', value: emaLabels },
+    { label: 'Strategy', value: stratLabel, step: 0 },
+    { label: 'Risk level', value: data.risk_level != null ? `${data.risk_level}%` : '--', step: 1 },
+    { label: 'Confidence', value: confLabel, step: 2 },
+    { label: 'Direction', value: dirLabels, step: 3 },
+    { label: 'Symbols', value: symLabels, step: 4 },
+    { label: 'Timeframe', value: freqLabel, step: 5 },
+    { label: 'Filters', value: emaLabels, step: 6 },
   ];
 
   return (
-    <div>
-      {/* Grid of metric cards — 2 columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '16px' }}>
-        {items.map((item) => (
-          <div key={item.label} className="card flex flex-col" style={{ padding: '12px' }}>
-            <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      {items.map((item) => (
+        <button
+          key={item.label}
+          type="button"
+          onClick={() => goToStep(item.step)}
+          className="card pressable w-full text-left flex items-center"
+          style={{ padding: '14px 16px' }}
+        >
+          <div style={{ flex: 1 }}>
+            <span className="text-[9px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.04em' }}>
               {item.label}
             </span>
-            <span className="text-[15px] font-semibold text-tg-text" style={{ marginTop: '4px' }}>
+            <span className="text-[15px] font-semibold text-tg-text block" style={{ marginTop: '2px' }}>
               {item.value}
             </span>
           </div>
-        ))}
-      </div>
+          <Pencil size={14} className="text-tg-hint/40" style={{ flexShrink: 0 }} />
+        </button>
+      ))}
 
       <div className="flex items-center justify-center text-tg-hint" style={{ gap: '8px', marginTop: '8px' }}>
         <Rocket size={16} />
@@ -374,7 +380,7 @@ export default function NewSignalWizard() {
       case 4: return <StepSymbol data={w.data} toggleArray={w.toggleArray} />;
       case 5: return <StepFrequency data={w.data} setField={w.setField} />;
       case 6: return <StepFilters data={w.data} toggleArray={w.toggleArray} />;
-      case 7: return <StepReview data={w.data} />;
+      case 7: return <StepReview data={w.data} goToStep={w.goToStep} />;
       default: return null;
     }
   }

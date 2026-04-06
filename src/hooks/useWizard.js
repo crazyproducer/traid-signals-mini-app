@@ -44,6 +44,9 @@ function reducer(state, action) {
     case 'PREV_STEP':
       if (state.step <= 0) return state;
       return { ...state, step: state.step - 1, animDir: 'backward' };
+    case 'GO_TO_STEP':
+      if (action.step < 0 || action.step >= TOTAL_STEPS) return state;
+      return { ...state, step: action.step, animDir: action.step < state.step ? 'backward' : 'forward' };
     case 'RESET':
       return { ...initialState, data: { ...initialState.data, directions: [], symbols: [], ema_filters: [] } };
     default:
@@ -78,6 +81,7 @@ export default function useWizard() {
 
   const nextStep = useCallback(() => dispatch({ type: 'NEXT_STEP' }), []);
   const prevStep = useCallback(() => dispatch({ type: 'PREV_STEP' }), []);
+  const goToStep = useCallback((step) => dispatch({ type: 'GO_TO_STEP', step }), []);
   const reset = useCallback(() => dispatch({ type: 'RESET' }), []);
 
   const canProceed = useMemo(
@@ -94,6 +98,7 @@ export default function useWizard() {
     toggleArray,
     nextStep,
     prevStep,
+    goToStep,
     canProceed,
     isLastStep: state.step === TOTAL_STEPS - 1,
     reset,
