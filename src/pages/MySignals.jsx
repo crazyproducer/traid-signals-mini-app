@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Radio, History, Clock } from 'lucide-react';
 import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
@@ -20,7 +20,9 @@ const TABS = [
 
 export default function MySignals() {
   const navigate = useNavigate();
-  const [tab, setTab] = useState('new');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') || 'new';
+  const setTab = (t) => setSearchParams({ tab: t }, { replace: true });
 
   const signalsByTab = useMemo(() => {
     const result = {};
