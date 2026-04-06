@@ -302,11 +302,9 @@ function StepReview({ data, goToStep }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
       {items.map((item) => (
-        <button
+        <div
           key={item.label}
-          type="button"
-          onClick={() => goToStep(item.step)}
-          className="card pressable w-full text-left flex items-center"
+          className="card w-full text-left flex items-center"
           style={{ padding: '14px 16px' }}
         >
           <div style={{ flex: 1 }}>
@@ -317,8 +315,15 @@ function StepReview({ data, goToStep }) {
               {item.value}
             </span>
           </div>
-          <Pencil size={14} className="text-tg-hint/40" style={{ flexShrink: 0 }} />
-        </button>
+          <button
+            type="button"
+            onClick={() => goToStep(item.step)}
+            className="pressable flex items-center justify-center"
+            style={{ flexShrink: 0, padding: '8px', marginRight: '-8px', borderRadius: '6px' }}
+          >
+            <Pencil size={14} className="text-tg-hint/40" />
+          </button>
+        </div>
       ))}
 
       <div className="flex items-center justify-center text-tg-hint" style={{ gap: '8px', marginTop: '8px' }}>
