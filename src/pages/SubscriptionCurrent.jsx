@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Crown, Calendar, CreditCard, ArrowRight } from 'lucide-react';
+import { Crown, ArrowRight } from 'lucide-react';
 import FeatureRow from '../components/subscription/FeatureRow';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
@@ -55,37 +55,6 @@ export default function SubscriptionCurrent() {
           {plan.features.map((feature) => (
             <FeatureRow key={feature} text={feature} included={true} />
           ))}
-        </div>
-      </div>
-
-      {/* Billing info */}
-      <div className="card" style={{ padding: '16px', marginBottom: '16px' }}>
-        <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
-          Billing
-        </span>
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-tg-secondary/40 flex items-center justify-center flex-shrink-0">
-              <Calendar size={14} className="text-tg-hint" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] text-tg-hint">Next billing date</span>
-              <span className="text-[13px] font-medium text-tg-text">
-                {formatDate(mockSubscription.next_billing)}
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-tg-secondary/40 flex items-center justify-center flex-shrink-0">
-              <CreditCard size={14} className="text-tg-hint" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] text-tg-hint">Started</span>
-              <span className="text-[13px] font-medium text-tg-text">
-                {formatDate(mockSubscription.started_at)}
-              </span>
-            </div>
-          </div>
         </div>
       </div>
 
