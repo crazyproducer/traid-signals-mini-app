@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { Crown, ArrowRight } from 'lucide-react';
-import FeatureRow from '../components/subscription/FeatureRow';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
 import { mockSubscription } from '../api/mock-data';
 import PageHeader from '../components/shared/PageHeader';
@@ -19,11 +18,6 @@ export default function SubscriptionCurrent() {
 
   const priceDisplay = plan.price_monthly === 0 ? 'Free' : `$${plan.price_monthly}/mo`;
 
-  function formatDate(dateStr) {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-  }
-
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
       <PageHeader title="Account" showBack />
@@ -31,49 +25,51 @@ export default function SubscriptionCurrent() {
 
       {/* Current plan card */}
       <div className="card-elevated" style={{ padding: '20px', marginBottom: '16px' }}>
-        <div className="flex items-center gap-3.5 mb-4">
-          <div className="icon-gradient-violet w-12 h-12 rounded-[5px] flex items-center justify-center flex-shrink-0">
+        <div className="flex items-center" style={{ gap: '14px' }}>
+          <div className="icon-gradient-violet flex items-center justify-center flex-shrink-0" style={{ width: '48px', height: '48px', borderRadius: '5px' }}>
             <Crown size={24} strokeWidth={2} className="text-white" />
           </div>
-          <div>
+          <div style={{ flex: 1 }}>
             <span className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
               {plan.label}
             </span>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="flex items-center" style={{ gap: '8px', marginTop: '2px' }}>
               <span className="text-[14px] font-mono font-semibold text-tg-accent" style={{ fontVariantNumeric: 'tabular-nums' }}>
                 {priceDisplay}
               </span>
-              <span className="inline-flex items-center bg-green/8 text-green text-[10px] font-bold rounded-full px-2.5 py-0.5 uppercase tracking-wide">
+              <span className="inline-flex items-center bg-green/8 text-green text-[10px] font-bold rounded-full uppercase tracking-wide" style={{ padding: '2px 10px' }}>
                 Active
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Features */}
-        <div className="border-t border-tg-secondary/40 pt-3">
-          {plan.features.map((feature) => (
-            <FeatureRow key={feature} text={feature} included={true} />
-          ))}
+          <button
+            type="button"
+            onClick={() => navigate('/account/plans')}
+            className="pressable flex items-center" style={{ gap: '4px', padding: '8px 14px', borderRadius: '6px', background: 'var(--tg-theme-button-color)', color: 'var(--tg-theme-button-text-color)', fontSize: '13px', fontWeight: 600 }}
+          >
+            Upgrade
+            <ArrowRight size={14} />
+          </button>
         </div>
       </div>
 
       {/* Usage */}
       <div className="card" style={{ padding: '16px', marginBottom: '24px' }}>
-        <span className="text-[12px] uppercase font-medium text-tg-hint block mb-3" style={{ letterSpacing: '0.06em' }}>
+        <span className="text-[12px] uppercase font-medium text-tg-hint block" style={{ letterSpacing: '0.06em', marginBottom: '12px' }}>
           Usage
         </span>
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between" style={{ marginBottom: '8px' }}>
           <span className="text-[13px] text-tg-hint">Signal subscriptions</span>
           <span className="text-[13px] font-mono font-medium text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {mockSubscription.signals_used} / {mockSubscription.signals_limit}
           </span>
         </div>
         {/* Progress bar */}
-        <div className="h-2 bg-tg-secondary/40 rounded-full overflow-hidden">
+        <div className="bg-tg-secondary/40 rounded-full overflow-hidden" style={{ height: '8px' }}>
           <div
-            className="h-full bg-tg-button rounded-full transition-all duration-300"
+            className="bg-tg-button rounded-full transition-all duration-300"
             style={{
+              height: '100%',
               width: `${Math.min((mockSubscription.signals_used / mockSubscription.signals_limit) * 100, 100)}%`,
             }}
           />
@@ -81,15 +77,6 @@ export default function SubscriptionCurrent() {
       </div>
 
       {/* Actions */}
-      <button
-        type="button"
-        onClick={() => navigate('/account/plans')}
-        className="w-full card pressable flex items-center justify-between" style={{ padding: '16px', marginBottom: '12px' }}
-      >
-        <span className="text-[14px] font-semibold text-tg-text">Change Plan</span>
-        <ArrowRight size={18} className="text-tg-hint/40" />
-      </button>
-
       <button
         type="button"
         onClick={() => navigate('/learn')}
