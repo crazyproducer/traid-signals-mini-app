@@ -322,9 +322,16 @@ function SuccessState({ onDone }) {
 /* ═══════════════════════════════════════════════
    Hero record count (live from /api/signals/preview-count)
    Shows three states: loading "…", number, or error message.
+   Includes a debug strip while we hunt the "stuck loading" issue.
    ═══════════════════════════════════════════════ */
 function HeroCount({ count, loading, error }) {
   const display = loading ? '…' : (count != null ? count.toLocaleString() : '—');
+  // Debug — read directly from window.Telegram so we see the live value
+  // at render time, not a stale prop.
+  const initLen = (typeof window !== 'undefined'
+    && window.Telegram?.WebApp?.initData?.length) || 0;
+  const apiBase = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE)
+    || 'https://api.traid.online';
   return (
     <div className="text-center mb-6">
       <span className="text-[48px] font-mono font-bold text-tg-text leading-none" style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.04em', opacity: loading ? 0.5 : 1 }}>
@@ -336,6 +343,10 @@ function HeroCount({ count, loading, error }) {
           {error}
         </p>
       )}
+      {/* DEBUG strip — REMOVE once the count works on device. */}
+      <p className="text-[9px] text-tg-hint/40 mt-2 font-mono" style={{ wordBreak: 'break-all' }}>
+        api={apiBase.replace('https://', '')} · initData={initLen}b · loading={String(loading)} · count={count == null ? 'null' : count}
+      </p>
     </div>
   );
 }

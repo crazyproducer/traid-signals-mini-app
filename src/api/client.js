@@ -32,6 +32,13 @@ export class ApiError extends Error {
   }
 }
 
+/* Hard timeout on every fetch. Telegram WebViews / mobile networks
+ * occasionally leave requests hanging without a clear error — the page
+ * stays "loading…" forever. 10s is a generous upper bound for any
+ * gateway call; if we cross it, abort and surface a Timeout error so
+ * the caller can render something useful. */
+const REQUEST_TIMEOUT_MS = 10_000;
+
 /* Shared low-level fetch. Adds auth header, parses JSON,
  * normalizes errors. Returns parsed JSON or null for 204. */
 async function request(method, path, { body, query } = {}) {
@@ -56,12 +63,22 @@ async function request(method, path, { body, query } = {}) {
     init.body = JSON.stringify(body);
   }
 
+  // Hard timeout so hangs surface as a real error.
+  const controller = new AbortController();
+  init.signal = controller.signal;
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
   let resp;
   try {
     resp = await fetch(url.toString(), init);
   } catch (e) {
+    clearTimeout(timer);
+    if (e.name === 'AbortError') {
+      throw new ApiError(0, null, `Timeout after ${REQUEST_TIMEOUT_MS}ms`);
+    }
     throw new ApiError(0, null, `Network error: ${e.message}`);
   }
+  clearTimeout(timer);
 
   if (resp.status === 204) return null;
 
