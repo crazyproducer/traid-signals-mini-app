@@ -15,7 +15,47 @@ function fmtCount(n) {
   return String(n);
 }
 
-export default function OptionCard({ icon: Icon, title, description, count, selected, onClick, color = 'blue' }) {
+/* Selection indicator — squared checkbox for multi-select, circled
+ * radio for single-select. Visually communicates "one of many" vs
+ * "any combination" before the user reads the description. */
+function SelectionIndicator({ selected, multi }) {
+  // Multi-select: rounded square with check mark when selected.
+  if (multi) {
+    return (
+      <div
+        className={`flex items-center justify-center transition-all duration-200 ${
+          selected ? 'bg-tg-button' : 'border-2 border-tg-hint/15'
+        }`}
+        style={{ width: '22px', height: '22px', borderRadius: '5px' }}
+      >
+        {selected && <Check size={13} strokeWidth={3} className="text-tg-button-text" />}
+      </div>
+    );
+  }
+  // Single-select: outer circle outline + inner filled dot when selected
+  // (classic radio button).
+  return (
+    <div
+      className={`flex items-center justify-center transition-all duration-200 ${
+        selected ? 'border-2 border-tg-button' : 'border-2 border-tg-hint/15'
+      }`}
+      style={{ width: '22px', height: '22px', borderRadius: '11px' }}
+    >
+      {selected && (
+        <div
+          className="bg-tg-button"
+          style={{ width: '12px', height: '12px', borderRadius: '6px' }}
+        />
+      )}
+    </div>
+  );
+}
+
+export default function OptionCard({
+  icon: Icon, title, description, count, selected, onClick,
+  color = 'blue',
+  multi = false,   // false → radio (single-select), true → checkbox (multi-select)
+}) {
   const grad = GRADIENT_MAP[color] || GRADIENT_MAP.blue;
 
   return (
@@ -25,7 +65,6 @@ export default function OptionCard({ icon: Icon, title, description, count, sele
       className={`pressable w-full text-left transition-all duration-200 ${selected ? 'card-selected' : 'card'}`}
       style={{ padding: '16px', borderRadius: '7px' }}
     >
-      {/* Row: icon + content + check */}
       <div className="flex items-center" style={{ gap: '14px' }}>
         <div className={`${grad} flex items-center justify-center flex-shrink-0`} style={{ width: '40px', height: '40px', borderRadius: '4px' }}>
           <Icon size={18} strokeWidth={1.8} className="text-white" />
@@ -50,14 +89,7 @@ export default function OptionCard({ icon: Icon, title, description, count, sele
         </div>
 
         <div style={{ flexShrink: 0 }}>
-          <div
-            className={`flex items-center justify-center transition-all duration-200 ${
-              selected ? 'bg-tg-button' : 'border-2 border-tg-hint/15'
-            }`}
-            style={{ width: '22px', height: '22px', borderRadius: '11px' }}
-          >
-            {selected && <Check size={13} strokeWidth={3} className="text-tg-button-text" />}
-          </div>
+          <SelectionIndicator selected={selected} multi={multi} />
         </div>
       </div>
     </button>

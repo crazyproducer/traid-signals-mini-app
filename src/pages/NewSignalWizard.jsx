@@ -40,7 +40,18 @@ const STEP_SUBTITLES = [
    Step components
    ═══════════════════════════════════════════════ */
 
-function StepStrategy({ data, setField }) {
+/* Single-select step components accept `setSingle(key, value)`, which
+ * sets the field AND triggers auto-advance (or auto-save in edit mode)
+ * via the wizard handler bound in the parent. multi=false on OptionCard
+ * renders as a radio button.
+ *
+ * Multi-select step components keep using `toggleArray` directly and
+ * pass multi=true to OptionCard (rounded-square checkbox style). No
+ * auto-advance — user explicitly hits Continue when they've picked all
+ * the options they want.
+ */
+
+function StepStrategy({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {STRATEGIES.map((s) => (
@@ -50,7 +61,7 @@ function StepStrategy({ data, setField }) {
           title={s.label}
           description={s.description}
           selected={data.strategy === s.value}
-          onClick={() => setField('strategy', s.value)}
+          onClick={() => setSingle('strategy', s.value)}
           color="violet"
         />
       ))}
@@ -61,7 +72,7 @@ function StepStrategy({ data, setField }) {
   );
 }
 
-function StepRisk({ data, setField }) {
+function StepRisk({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {RISK_LEVELS.map((r) => (
@@ -71,7 +82,7 @@ function StepRisk({ data, setField }) {
           title={r.label}
           description={r.description}
           selected={data.risk_level === r.value}
-          onClick={() => setField('risk_level', r.value)}
+          onClick={() => setSingle('risk_level', r.value)}
           color={r.value <= 5 ? 'green' : r.value <= 10 ? 'blue' : r.value <= 20 ? 'yellow' : 'red'}
         />
       ))}
@@ -79,7 +90,7 @@ function StepRisk({ data, setField }) {
   );
 }
 
-function StepMinTrades({ data, setField }) {
+function StepMinTrades({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {MIN_TRADES.map((m) => (
@@ -89,7 +100,7 @@ function StepMinTrades({ data, setField }) {
           title={m.label}
           description={m.description}
           selected={data.min_trade_count === m.value}
-          onClick={() => setField('min_trade_count', m.value)}
+          onClick={() => setSingle('min_trade_count', m.value)}
           color="blue"
         />
       ))}
@@ -97,7 +108,7 @@ function StepMinTrades({ data, setField }) {
   );
 }
 
-function StepMinWinRate({ data, setField }) {
+function StepMinWinRate({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {MIN_WIN_RATES.map((w) => (
@@ -107,7 +118,7 @@ function StepMinWinRate({ data, setField }) {
           title={w.label}
           description={w.description}
           selected={data.min_win_rate === w.value}
-          onClick={() => setField('min_win_rate', w.value)}
+          onClick={() => setSingle('min_win_rate', w.value)}
           color="green"
         />
       ))}
@@ -115,7 +126,7 @@ function StepMinWinRate({ data, setField }) {
   );
 }
 
-function StepTimeRange({ data, setField }) {
+function StepTimeRange({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {TIME_RANGES.map((t) => (
@@ -125,7 +136,7 @@ function StepTimeRange({ data, setField }) {
           title={t.label}
           description={t.description}
           selected={data.time_range_months === t.value}
-          onClick={() => setField('time_range_months', t.value)}
+          onClick={() => setSingle('time_range_months', t.value)}
           color="violet"
         />
       ))}
@@ -146,6 +157,7 @@ function StepDirection({ data, toggleArray }) {
           selected={selected.includes(d.value === 'LONG' ? 'BUY' : 'SELL')}
           onClick={() => toggleArray('directions', d.value === 'LONG' ? 'BUY' : 'SELL')}
           color={d.value === 'LONG' ? 'green' : 'red'}
+          multi
         />
       ))}
     </div>
@@ -181,13 +193,14 @@ function StepSymbol({ data, toggleArray, subscription, onPaywall }) {
           selected={selected.includes(sym.value)}
           onClick={() => handleClick(sym.value)}
           color="blue"
+          multi
         />
       ))}
     </div>
   );
 }
 
-function StepFrequency({ data, setField }) {
+function StepFrequency({ data, setSingle }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {FREQUENCIES.map((f) => (
@@ -197,7 +210,7 @@ function StepFrequency({ data, setField }) {
           title={f.label}
           description={f.description}
           selected={data.frequency === f.value}
-          onClick={() => setField('frequency', f.value)}
+          onClick={() => setSingle('frequency', f.value)}
           color="blue"
         />
       ))}
@@ -218,6 +231,7 @@ function StepFilters({ data, toggleArray }) {
           selected={selected.includes(f.value)}
           onClick={() => toggleArray('ema_filters', f.value)}
           color="yellow"
+          multi
         />
       ))}
       <p className="text-[11px] text-tg-hint/40 text-center pt-1 uppercase tracking-widest font-medium">
@@ -227,7 +241,7 @@ function StepFilters({ data, toggleArray }) {
   );
 }
 
-function StepReview({ data, goToStep }) {
+function StepReview({ data, onEdit }) {
   const dirLabels = (data.directions || []).map((d) => d === 'BUY' ? 'Long' : 'Short').join(' & ') || '--';
   const stratLabel = STRATEGIES.find((s) => s.value === data.strategy)?.label || '--';
   const freqLabel = FREQUENCIES.find((f) => f.value === data.frequency)?.label || '--';
@@ -269,7 +283,7 @@ function StepReview({ data, goToStep }) {
               {item.value}
             </span>
           </div>
-          <button type="button" onClick={() => goToStep(item.step)} className="pressable flex items-center justify-center" style={{ flexShrink: 0, padding: '8px', marginRight: '-8px', borderRadius: '6px' }}>
+          <button type="button" onClick={() => onEdit(item.step)} className="pressable flex items-center justify-center" style={{ flexShrink: 0, padding: '8px', marginRight: '-8px', borderRadius: '6px' }}>
             <Pencil size={14} className="text-tg-hint/40" />
           </button>
         </div>
@@ -391,6 +405,21 @@ export default function NewSignalWizard() {
     return () => { cancelled = true; clearTimeout(handle); };
   }, [w.step, w.data]);
 
+  // Single-select setter — sets the field AND auto-advances. In edit mode,
+  // auto-advance means "save and return to review" (which is the right
+  // gesture: one tap = one change committed). Otherwise: walks the
+  // wizard forward to the next step.
+  const setSingle = useCallback((key, value) => {
+    w.setField(key, value);
+    setTimeout(() => {
+      if (w.isEditing) {
+        w.saveEdit();
+      } else {
+        w.nextStep();
+      }
+    }, 180);   // small delay so user sees the selection register visually
+  }, [w]);
+
   const handleLaunch = useCallback(async () => {
     setLaunchError(null);
     setLaunching(true);
@@ -422,17 +451,18 @@ export default function NewSignalWizard() {
 
   function renderStep() {
     switch (w.step) {
-      case 0: return <StepStrategy   data={w.data} setField={w.setField} />;
-      case 1: return <StepRisk       data={w.data} setField={w.setField} />;
-      case 2: return <StepMinTrades  data={w.data} setField={w.setField} />;
-      case 3: return <StepMinWinRate data={w.data} setField={w.setField} />;
-      case 4: return <StepTimeRange  data={w.data} setField={w.setField} />;
+      case 0: return <StepStrategy   data={w.data} setSingle={setSingle} />;
+      case 1: return <StepRisk       data={w.data} setSingle={setSingle} />;
+      case 2: return <StepMinTrades  data={w.data} setSingle={setSingle} />;
+      case 3: return <StepMinWinRate data={w.data} setSingle={setSingle} />;
+      case 4: return <StepTimeRange  data={w.data} setSingle={setSingle} />;
       case 5: return <StepDirection  data={w.data} toggleArray={w.toggleArray} />;
       case 6: return <StepSymbol     data={w.data} toggleArray={w.toggleArray}
                                      subscription={subscription} onPaywall={() => setShowPaywall(true)} />;
-      case 7: return <StepFrequency  data={w.data} setField={w.setField} />;
+      case 7: return <StepFrequency  data={w.data} setSingle={setSingle} />;
       case 8: return <StepFilters    data={w.data} toggleArray={w.toggleArray} />;
-      case 9: return <StepReview     data={w.data} goToStep={w.goToStep} />;
+      case 9: return <StepReview     data={w.data}
+                                     onEdit={(targetStep) => w.enterEdit(targetStep, w.step)} />;
       default: return null;
     }
   }
@@ -442,7 +472,12 @@ export default function NewSignalWizard() {
   return (
     <div className="min-h-[100dvh] flex flex-col">
       <div className="page-padding" style={{ paddingTop: '16px', paddingBottom: '12px' }}>
-        <WizardProgress step={w.step} totalSteps={w.totalSteps} subtitle={STEP_SUBTITLES[w.step]} />
+        <WizardProgress
+          step={w.step}
+          totalSteps={w.totalSteps}
+          title={STEP_TITLES[w.step]}
+          subtitle={STEP_SUBTITLES[w.step]}
+        />
       </div>
 
       <div className="flex-1 page-padding overflow-y-auto hide-scrollbar" style={{ paddingBottom: '120px' }} key={w.step}>
@@ -454,25 +489,49 @@ export default function NewSignalWizard() {
       </div>
 
       <div className="page-padding" style={{ position: 'fixed', bottom: '70px', left: 0, right: 0, paddingBottom: '16px', paddingTop: '16px', background: 'linear-gradient(to top, var(--tg-theme-bg-color, #fff) 60%, transparent)' }}>
-        <div className="flex items-center gap-3">
-          {w.step > 0 && (
-            <button type="button" onClick={w.prevStep} className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable">Back</button>
-          )}
-          <button
-            type="button"
-            onClick={w.isLastStep ? handleLaunch : w.nextStep}
-            disabled={!w.canProceed || launching}
-            className={`btn flex-1 pressable transition-all duration-200 ${
-              w.canProceed && !launching
-                ? w.isLastStep
-                  ? 'icon-gradient-green text-white'
-                  : 'bg-tg-button text-tg-button-text shadow-[0_4px_14px_-2px] shadow-tg-button/30'
-                : 'bg-tg-secondary/40 text-tg-hint/50 cursor-not-allowed'
-            }`}
-          >
-            {launching ? 'Launching…' : (w.isLastStep ? 'Launch signal' : 'Continue')}
-          </button>
-        </div>
+        {/* Edit-from-review mode: Save / Cancel commit just this field
+            and bounce back to Review; no walking through the rest of
+            the wizard. Save is disabled if the field isn't valid (so
+            the user can't accidentally save an unselected radio). */}
+        {w.isEditing ? (
+          <div className="flex items-center gap-3">
+            <button type="button" onClick={w.cancelEdit} className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={w.saveEdit}
+              disabled={!w.canProceed}
+              className={`btn flex-1 pressable transition-all duration-200 ${
+                w.canProceed
+                  ? 'bg-tg-button text-tg-button-text shadow-[0_4px_14px_-2px] shadow-tg-button/30'
+                  : 'bg-tg-secondary/40 text-tg-hint/50 cursor-not-allowed'
+              }`}
+            >
+              Save
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            {w.step > 0 && (
+              <button type="button" onClick={w.prevStep} className="btn flex-1 bg-tg-secondary/60 text-tg-text pressable">Back</button>
+            )}
+            <button
+              type="button"
+              onClick={w.isLastStep ? handleLaunch : w.nextStep}
+              disabled={!w.canProceed || launching}
+              className={`btn flex-1 pressable transition-all duration-200 ${
+                w.canProceed && !launching
+                  ? w.isLastStep
+                    ? 'icon-gradient-green text-white'
+                    : 'bg-tg-button text-tg-button-text shadow-[0_4px_14px_-2px] shadow-tg-button/30'
+                  : 'bg-tg-secondary/40 text-tg-hint/50 cursor-not-allowed'
+              }`}
+            >
+              {launching ? 'Launching…' : (w.isLastStep ? 'Launch signal' : 'Continue')}
+            </button>
+          </div>
+        )}
       </div>
 
       {showPaywall && (

@@ -1,15 +1,10 @@
-const STEP_LABELS = [
-  'Strategy',
-  'Risk',
-  'Confidence',
-  'Direction',
-  'Symbols',
-  'Frequency',
-  'Filters',
-  'Review',
-];
-
-export default function WizardProgress({ step, totalSteps, subtitle }) {
+/* Progress bar + step title / subtitle / counter.
+ *
+ * Title comes in as a prop now (was hardcoded against an 8-item list,
+ * which silently corrupted the 10-step wizard — every step from #4
+ * onwards displayed the wrong name, and #9/#10 were undefined).
+ */
+export default function WizardProgress({ step, totalSteps, title, subtitle }) {
   const pct = ((step + 1) / totalSteps) * 100;
 
   return (
@@ -25,7 +20,7 @@ export default function WizardProgress({ step, totalSteps, subtitle }) {
       {/* Step name + counter */}
       <div className="flex items-baseline justify-between" style={{ marginTop: '10px' }}>
         <span className="text-[18px] font-bold text-tg-text" style={{ letterSpacing: '-0.02em' }}>
-          {STEP_LABELS[step]}
+          {title || `Step ${step + 1}`}
         </span>
         <span className="text-[11px] font-mono text-tg-hint/35" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {step + 1} of {totalSteps}

@@ -13,9 +13,12 @@ import { useReducer, useMemo, useCallback } from 'react';
   8 — EMA filters     (multi-select, optional)
   9 — Review & Launch
 
-  Versus prior 8-step model: split 'confidence' into 'min_trades' +
-  'min_win_rate' (two explicit thresholds rather than one fuzzy knob),
-  and added 'time_range_months' as a recency filter on stats + matcher.
+  Edit-from-review mode (new):
+  - When the user taps Edit on the Review screen we set editingFromStep
+    to the review step (9) and snapshot the data so Cancel can restore.
+  - While editingFromStep != null, the button bar shows Save/Cancel
+    instead of Back/Continue, and "Save" jumps straight back to Review
+    rather than walking the user through every subsequent step.
 */
 
 const TOTAL_STEPS = 10;
@@ -28,12 +31,14 @@ const initialState = {
     risk_level: null,
     min_trade_count: null,
     min_win_rate: null,
-    time_range_months: undefined,   // distinct from null which is a valid choice ("All time")
+    time_range_months: undefined,
     directions: [],
     symbols: [],
     frequency: null,
     ema_filters: [],
   },
+  editingFromStep: null,   // set when entering edit mode from review
+  editingSnapshot: null,   // {...data} before edit; restored by cancel
 };
 
 function reducer(state, action) {
@@ -55,8 +60,51 @@ function reducer(state, action) {
     case 'GO_TO_STEP':
       if (action.step < 0 || action.step >= TOTAL_STEPS) return state;
       return { ...state, step: action.step, animDir: action.step < state.step ? 'backward' : 'forward' };
+    case 'ENTER_EDIT':
+      // Snapshot current data so Cancel can restore. fromStep is where
+      // we'll return to after Save/Cancel (typically Review = 9).
+      if (action.targetStep < 0 || action.targetStep >= TOTAL_STEPS) return state;
+      return {
+        ...state,
+        editingFromStep: action.fromStep,
+        editingSnapshot: { ...state.data },
+        step: action.targetStep,
+        animDir: action.targetStep < state.step ? 'backward' : 'forward',
+      };
+    case 'SAVE_EDIT': {
+      // Return to the step the user came from, keep current data.
+      if (state.editingFromStep === null) return state;
+      const target = state.editingFromStep;
+      return {
+        ...state,
+        editingFromStep: null,
+        editingSnapshot: null,
+        step: target,
+        animDir: target < state.step ? 'backward' : 'forward',
+      };
+    }
+    case 'CANCEL_EDIT': {
+      // Restore the snapshot, return to the step the user came from.
+      if (state.editingFromStep === null) return state;
+      const target = state.editingFromStep;
+      return {
+        ...state,
+        data: state.editingSnapshot || state.data,
+        editingFromStep: null,
+        editingSnapshot: null,
+        step: target,
+        animDir: target < state.step ? 'backward' : 'forward',
+      };
+    }
     case 'LOAD_TEMPLATE':
-      return { ...state, step: TOTAL_STEPS - 1, animDir: 'forward', data: { ...initialState.data, ...action.data } };
+      return {
+        ...state,
+        step: TOTAL_STEPS - 1,
+        animDir: 'forward',
+        data: { ...initialState.data, ...action.data },
+        editingFromStep: null,
+        editingSnapshot: null,
+      };
     case 'RESET':
       return { ...initialState };
     default:
@@ -70,12 +118,12 @@ function canProceedForStep(step, data) {
     case 1: return data.risk_level !== null;
     case 2: return data.min_trade_count !== null;
     case 3: return data.min_win_rate !== null;
-    case 4: return data.time_range_months !== undefined;  // null = "All time" is valid
+    case 4: return data.time_range_months !== undefined;
     case 5: return data.directions.length > 0;
     case 6: return data.symbols.length > 0;
     case 7: return data.frequency !== null;
-    case 8: return true;   // EMA filters optional
-    case 9: return true;   // Review
+    case 8: return true;
+    case 9: return true;
     default: return false;
   }
 }
@@ -94,6 +142,12 @@ export default function useWizard() {
   const nextStep = useCallback(() => dispatch({ type: 'NEXT_STEP' }), []);
   const prevStep = useCallback(() => dispatch({ type: 'PREV_STEP' }), []);
   const goToStep = useCallback((step) => dispatch({ type: 'GO_TO_STEP', step }), []);
+  const enterEdit = useCallback(
+    (targetStep, fromStep) => dispatch({ type: 'ENTER_EDIT', targetStep, fromStep }),
+    [],
+  );
+  const saveEdit = useCallback(() => dispatch({ type: 'SAVE_EDIT' }), []);
+  const cancelEdit = useCallback(() => dispatch({ type: 'CANCEL_EDIT' }), []);
   const loadTemplate = useCallback((data) => dispatch({ type: 'LOAD_TEMPLATE', data }), []);
   const reset = useCallback(() => dispatch({ type: 'RESET' }), []);
 
@@ -107,11 +161,16 @@ export default function useWizard() {
     totalSteps: TOTAL_STEPS,
     data: state.data,
     animDir: state.animDir,
+    editingFromStep: state.editingFromStep,
+    isEditing: state.editingFromStep !== null,
     setField,
     toggleArray,
     nextStep,
     prevStep,
     goToStep,
+    enterEdit,
+    saveEdit,
+    cancelEdit,
     loadTemplate,
     canProceed,
     isLastStep: state.step === TOTAL_STEPS - 1,
