@@ -324,7 +324,7 @@ function SuccessState({ onDone }) {
    Shows three states: loading "…", number, or error message.
    Includes a debug strip while we hunt the "stuck loading" issue.
    ═══════════════════════════════════════════════ */
-function HeroCount({ count, loading, error }) {
+function HeroCount({ count, loading, error, debugLog = [] }) {
   const display = loading ? '…' : (count != null ? count.toLocaleString() : '—');
   // Debug — read directly from window.Telegram so we see the live value
   // at render time, not a stale prop.
@@ -347,6 +347,11 @@ function HeroCount({ count, loading, error }) {
       <p className="text-[9px] text-tg-hint/40 mt-2 font-mono" style={{ wordBreak: 'break-all' }}>
         api={apiBase.replace('https://', '')} · initData={initLen}b · loading={String(loading)} · count={count == null ? 'null' : count}
       </p>
+      {debugLog.length > 0 && (
+        <div className="text-[9px] text-tg-hint/30 mt-1 font-mono text-left" style={{ padding: '0 8px' }}>
+          {debugLog.map((line, i) => <div key={i}>{line}</div>)}
+        </div>
+      )}
     </div>
   );
 }
@@ -409,29 +414,41 @@ export default function NewSignalWizard() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Live preview-count — debounced refresh on step / data change.
-  // Important: setCountLoading(true) goes inside the timeout, not at
-  // effect entry. Otherwise rapid auto-advance fires this effect ~6×
-  // in sequence; each cancellation aborts the in-flight fetch but the
-  // outer loading flag stays true → user sees "…" stuck even after
-  // all activity settles. Now loading is only set when we actually
-  // dispatch the fetch.
+  // Live preview-count. Fetches immediately at mount (no debounce on
+  // the very first call) so the user sees real data quickly, then
+  // debounces 250ms on subsequent step/data changes to avoid flooding
+  // the gateway when auto-advance ratchets through steps. Debug log
+  // captures start/end timestamps + error so we can see in-app whether
+  // the fetch ever fired.
+  const [debugLog, setDebugLog] = useState([]);
+  const isInitialFetch = useState(true);   // ref-style to avoid double-fetch in strict mode
   useEffect(() => {
     let cancelled = false;
     const payload = buildPreviewPayload(w.data, w.step);
-    const handle = setTimeout(() => {
+    const debounceMs = 250;
+    const dispatchFetch = () => {
       if (cancelled) return;
       setCountLoading(true);
       setCountError(null);
+      const t0 = Date.now();
+      setDebugLog((l) => [`fetch start t=${new Date().toLocaleTimeString()}`, ...l].slice(0, 3));
       previewCount(payload)
-        .then((r) => { if (!cancelled) { setCount(r.matching_records); setCountError(null); } })
+        .then((r) => {
+          if (!cancelled) {
+            setCount(r.matching_records);
+            setCountError(null);
+            setDebugLog((l) => [`✓ ${r.matching_records.toLocaleString()} in ${Date.now()-t0}ms`, ...l].slice(0, 3));
+          }
+        })
         .catch((e) => {
           if (cancelled) return;
           setCount(null);
           setCountError(e?.message || 'unknown error');
+          setDebugLog((l) => [`✗ ${e?.message || 'err'} after ${Date.now()-t0}ms`, ...l].slice(0, 3));
         })
         .finally(() => { if (!cancelled) setCountLoading(false); });
-    }, 250);
+    };
+    const handle = setTimeout(dispatchFetch, debounceMs);
     return () => { cancelled = true; clearTimeout(handle); };
   }, [w.step, w.data]);
 
@@ -511,7 +528,7 @@ export default function NewSignalWizard() {
       </div>
 
       <div className="flex-1 page-padding overflow-y-auto hide-scrollbar" style={{ paddingBottom: '120px' }} key={w.step}>
-        <HeroCount count={count} loading={countLoading} error={countError} />
+        <HeroCount count={count} loading={countLoading} error={countError} debugLog={debugLog} />
         <div className={animClass}>{renderStep()}</div>
         {launchError && (
           <p className="text-[12px] text-red text-center" style={{ marginTop: '12px' }}>{launchError}</p>
