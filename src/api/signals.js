@@ -22,20 +22,22 @@ import {
   getRecentSignals,
 } from './mock-data';
 
-/* ─── Defensive wrap: try the real API; fall back to mock if explicitly
-       USE_MOCK or if a 401 (e.g. running outside Telegram) breaks auth.
-       Other errors propagate so the UI can surface them. ─────────── */
+/* ─── Mock toggle: USE_MOCK flips ALL calls to fixture data. Default
+       is false in production; the fallback path used to also kick in
+       on 401 ("outside Telegram"), but that silently replaced real
+       auth errors with fake numbers — confusing in the UI. Now:
+
+         - USE_MOCK = true   → always mocks (dev convenience)
+         - USE_MOCK = false  → always real API; errors propagate to the
+                               page so it can show a proper error state
+
+       Pages handle the "no data yet" case via empty arrays / null
+       performance objects + early-return loading guards; auth or
+       network failures bubble up as ApiError and the page can render
+       an alert / retry button. ─────────────────────────────────── */
 async function tryApi(realCall, mockFn) {
   if (USE_MOCK) return mockFn();
-  try {
-    return await realCall();
-  } catch (e) {
-    if (e instanceof ApiError && e.status === 401) {
-      console.warn('[api] 401 — running outside Telegram? Using mocks.');
-      return mockFn();
-    }
-    throw e;
-  }
+  return realCall();
 }
 
 /* ─── Me / terms ────────────────────────────────────────────────────── */
