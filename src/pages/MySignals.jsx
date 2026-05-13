@@ -1,21 +1,16 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Radio, History, Clock, Settings } from 'lucide-react';
 import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
-import { mockSignals } from '../api/mock-data';
+import { getFeed } from '../api/signals';
 import PageHeader from '../components/shared/PageHeader';
 
-const NEW_STATUSES = ['PENDING', 'ACTIVE', 'UPDATED'];
-const ACTIVE_STATUSES = ['TRIGGERED'];
-const HISTORY_STATUSES = ['HIT_TP', 'HIT_SL'];
-const EXPIRED_STATUSES = ['EXPIRED'];
-
 const TABS = [
-  { key: 'new', label: 'New', statuses: NEW_STATUSES },
-  { key: 'active', label: 'Active', statuses: ACTIVE_STATUSES },
-  { key: 'history', label: 'History', statuses: HISTORY_STATUSES },
-  { key: 'expired', label: 'Expired', statuses: EXPIRED_STATUSES },
+  { key: 'new', label: 'New' },
+  { key: 'active', label: 'Active' },
+  { key: 'history', label: 'History' },
+  { key: 'expired', label: 'Expired' },
 ];
 
 export default function MySignals() {
@@ -24,12 +19,23 @@ export default function MySignals() {
   const tab = searchParams.get('tab') || 'new';
   const setTab = (t) => setSearchParams({ tab: t }, { replace: true });
 
-  const signalsByTab = useMemo(() => {
-    const result = {};
-    for (const t of TABS) {
-      result[t.key] = mockSignals.filter((s) => t.statuses.includes(s.status));
-    }
-    return result;
+  // Per-tab fetched list. We fetch the active tab eagerly + the other 3
+  // in parallel so the underline-tab counts are accurate without a per-tab
+  // round-trip when the user switches.
+  const [signalsByTab, setSignalsByTab] = useState({ new: [], active: [], history: [], expired: [] });
+
+  useEffect(() => {
+    let cancelled = false;
+    Promise.allSettled(TABS.map((t) => getFeed({ tab: t.key, limit: 100 })))
+      .then((results) => {
+        if (cancelled) return;
+        const map = {};
+        results.forEach((r, i) => {
+          map[TABS[i].key] = r.status === 'fulfilled' ? (r.value.items || []) : [];
+        });
+        setSignalsByTab(map);
+      });
+    return () => { cancelled = true; };
   }, []);
 
   const displayed = signalsByTab[tab] || [];

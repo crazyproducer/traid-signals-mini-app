@@ -1,18 +1,24 @@
 import { useReducer, useMemo, useCallback } from 'react';
 
 /*
-  Step order:
-  0 — Strategy (single select)
-  1 — Risk Level (single select)
-  2 — Confidence (single select)
-  3 — Direction (multi: LONG, SHORT, or both)
-  4 — Symbols (multi-select)
-  5 — Timeframe / Frequency (single select)
-  6 — Filters / EMA (multi-select, optional)
-  7 — Review & Launch
+  Step order (Phase 4 — 10 steps total):
+  0 — Strategy        (single select)
+  1 — Risk level      (single select; stop-loss size %)
+  2 — Min trades      (single select; statistical significance threshold)
+  3 — Min win rate    (single select; historical win-rate threshold)
+  4 — Time range      (single select; lookback for stats + matching window)
+  5 — Direction       (multi: LONG / SHORT)
+  6 — Symbols         (multi-select)
+  7 — Frequency       (single select)
+  8 — EMA filters     (multi-select, optional)
+  9 — Review & Launch
+
+  Versus prior 8-step model: split 'confidence' into 'min_trades' +
+  'min_win_rate' (two explicit thresholds rather than one fuzzy knob),
+  and added 'time_range_months' as a recency filter on stats + matcher.
 */
 
-const TOTAL_STEPS = 8;
+const TOTAL_STEPS = 10;
 
 const initialState = {
   step: 0,
@@ -20,7 +26,9 @@ const initialState = {
   data: {
     strategy: null,
     risk_level: null,
-    confidence: null,
+    min_trade_count: null,
+    min_win_rate: null,
+    time_range_months: undefined,   // distinct from null which is a valid choice ("All time")
     directions: [],
     symbols: [],
     frequency: null,
@@ -50,7 +58,7 @@ function reducer(state, action) {
     case 'LOAD_TEMPLATE':
       return { ...state, step: TOTAL_STEPS - 1, animDir: 'forward', data: { ...initialState.data, ...action.data } };
     case 'RESET':
-      return { ...initialState, data: { ...initialState.data, directions: [], symbols: [], ema_filters: [] } };
+      return { ...initialState };
     default:
       return state;
   }
@@ -60,12 +68,14 @@ function canProceedForStep(step, data) {
   switch (step) {
     case 0: return data.strategy !== null;
     case 1: return data.risk_level !== null;
-    case 2: return data.confidence !== null;
-    case 3: return data.directions.length > 0;
-    case 4: return data.symbols.length > 0;
-    case 5: return data.frequency !== null;
-    case 6: return true; // filters optional
-    case 7: return true; // review
+    case 2: return data.min_trade_count !== null;
+    case 3: return data.min_win_rate !== null;
+    case 4: return data.time_range_months !== undefined;  // null = "All time" is valid
+    case 5: return data.directions.length > 0;
+    case 6: return data.symbols.length > 0;
+    case 7: return data.frequency !== null;
+    case 8: return true;   // EMA filters optional
+    case 9: return true;   // Review
     default: return false;
   }
 }

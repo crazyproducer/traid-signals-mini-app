@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+import { acceptTerms } from '../api/signals';
 
 export default function Terms() {
   const navigate = useNavigate();
 
   function handleAccept() {
+    // Source of truth is the backend (POST /api/signals/me/accept-terms),
+    // but we also write localStorage so the App's TermsGate doesn't show
+    // this screen again on the next launch even before the next /me
+    // call resolves. Fire-and-forget on the API side; UX shouldn't
+    // wait on network.
     localStorage.setItem('terms_accepted', 'true');
+    acceptTerms().catch(() => {/* gateway will retry on next /me call */});
     navigate('/');
   }
 

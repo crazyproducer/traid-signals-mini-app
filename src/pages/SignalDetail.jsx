@@ -1,4 +1,4 @@
-import {} from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TrendingUp, TrendingDown, Target, Shield, BarChart3 } from 'lucide-react';
 import SignalStatusBadge from '../components/signals/SignalStatusBadge';
@@ -14,7 +14,7 @@ import {
   pnlColorClass,
 } from '../utils/formatters';
 import { SYMBOLS } from '../utils/constants';
-import { mockSignals } from '../api/mock-data';
+import { getSignal } from '../api/signals';
 import PageHeader from '../components/shared/PageHeader';
 import SignalChart from '../components/signals/SignalChart';
 
@@ -26,13 +26,33 @@ function symbolLabel(raw) {
 export default function SignalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const signal = mockSignals.find((s) => s.id === id);
+  const [signal, setSignal] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getSignal(id)
+      .then((s) => { if (!cancelled) { setSignal(s); setError(s ? null : 'Signal not found'); } })
+      .catch((e) => { if (!cancelled) setError(e?.message || 'Failed to load signal'); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <p className="text-[13px] text-tg-hint">Loading signal…</p>
+      </div>
+    );
+  }
 
   if (!signal) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <p className="text-[16px] font-semibold text-tg-text mb-2">Signal Not Found</p>
-        <p className="text-[13px] text-tg-hint mb-5">The signal {id} could not be found.</p>
+        <p className="text-[13px] text-tg-hint mb-5">{error || `The signal ${id} could not be found.`}</p>
         <button
           type="button"
           onClick={() => navigate('/signals')}

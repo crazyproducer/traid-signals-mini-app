@@ -1,17 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, BarChart3, Trophy, ArrowRight } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
 import PerformanceChart from '../components/signals/PerformanceChart';
-import {
-  getActiveSignalsCount,
-  getNewSignalsCount,
-  getRecentSignals,
-  mockPerformance,
-  mockEquityCurve,
-  mockSignalSubscriptions,
-  mockTemplates,
-} from '../api/mock-data';
+import { getPerformance, getFeed } from '../api/signals';
+import { mockTemplates } from '../api/mock-data';
 import { formatWinRate, formatPct, pnlColorClass } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
 
@@ -20,34 +13,51 @@ const PERIODS = ['30D', '90D', 'ALL'];
 export default function MainMenu() {
   const navigate = useNavigate();
   const [period, setPeriod] = useState('90D');
-  // 0 = full data, 1 = signals but no history/chart, 2 = empty
-  const [viewMode, setViewMode] = useState(0);
-  const MODE_LABELS = ['Full', 'New', 'Empty'];
-  const MODE_COLORS = ['rgba(128,128,128,0.1)', 'rgba(37,99,235,0.12)', 'rgba(139,92,246,0.15)'];
-  const MODE_TEXT = ['var(--tg-theme-hint-color, #999)', '#2563eb', '#7c3aed'];
+  const [performance, setPerformance] = useState(null);
+  const [newSignals, setNewSignals] = useState([]);
+  const [activeSignals, setActiveSignals] = useState([]);
+  const [recentSignals, setRecentSignals] = useState([]);
 
-  const isEmpty = viewMode === 2;
-  const noHistory = viewMode >= 1;
+  // Performance + equity curve (period-aware).
+  useEffect(() => {
+    let cancelled = false;
+    getPerformance({ period })
+      .then((p) => { if (!cancelled) setPerformance(p); })
+      .catch(() => { if (!cancelled) setPerformance(null); });
+    return () => { cancelled = true; };
+  }, [period]);
 
-  const activeCount = isEmpty ? 0 : getActiveSignalsCount();
-  const newCount = isEmpty ? 0 : getNewSignalsCount();
-  const recentSignals = isEmpty ? [] : getRecentSignals(3);
-  const stats = noHistory
-    ? { total_return_pct: 0, win_rate: 0, triggered: 0, wins: 0, losses: 0 }
-    : mockPerformance;
-  const chartData = noHistory ? [] : (mockEquityCurve[period] || []);
+  // Counts + recent — fetched once per mount. Three independent calls
+  // because the gateway returns per-tab slices.
+  useEffect(() => {
+    let cancelled = false;
+    Promise.allSettled([
+      getFeed({ tab: 'new', limit: 100 }),
+      getFeed({ tab: 'active', limit: 100 }),
+      getFeed({ tab: 'new', limit: 3 }),
+    ]).then(([n, a, r]) => {
+      if (cancelled) return;
+      setNewSignals(n.status === 'fulfilled' ? (n.value.items || []) : []);
+      setActiveSignals(a.status === 'fulfilled' ? (a.value.items || []) : []);
+      setRecentSignals(r.status === 'fulfilled' ? (r.value.items || []) : []);
+    });
+    return () => { cancelled = true; };
+  }, []);
+
+  // Derived state — replace the old viewMode toggle. Empty if no
+  // signals at all; "no history" if there's nothing CLOSED yet.
+  const newCount = newSignals.length;
+  const activeCount = activeSignals.length;
+  const isEmpty = newCount === 0 && activeCount === 0;
+  const noHistory = !performance || performance.total_signals === 0
+    || performance.equity_curve.length === 0;
+
+  const stats = performance || { total_return_pct: 0, win_rate: 0, triggered: 0, wins: 0, losses: 0 };
+  const chartData = noHistory ? [] : (performance?.equity_curve || []);
   const totalReturn = formatPct(stats.total_return_pct);
 
-  const toggleBtn = (
-    <button
-      type="button"
-      onClick={() => setViewMode((viewMode + 1) % 3)}
-      className="text-[11px] font-medium pressable"
-      style={{ padding: '4px 10px', borderRadius: '4px', backgroundColor: MODE_COLORS[viewMode], color: MODE_TEXT[viewMode] }}
-    >
-      {MODE_LABELS[viewMode]}
-    </button>
-  );
+  const toggleBtn = null;   // viewMode toggle was a dev-only affordance; real
+                            // state derives from data now.
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
@@ -257,17 +267,13 @@ export default function MainMenu() {
                 </button>
               </div>
               <div className="flex flex-col" style={{ gap: '16px' }}>
-                {recentSignals.map((signal) => {
-                  const sub = mockSignalSubscriptions.find((s) => s.id === signal.subscription_id);
-                  return (
-                    <SignalCard
-                      key={signal.id}
-                      signal={signal}
-                      subscription={sub}
-                      onClick={() => navigate(`/signals/${signal.id}`)}
-                    />
-                  );
-                })}
+                {recentSignals.map((signal) => (
+                  <SignalCard
+                    key={signal.id}
+                    signal={signal}
+                    onClick={() => navigate(`/signals/${signal.id}`)}
+                  />
+                ))}
               </div>
             </>
           )}

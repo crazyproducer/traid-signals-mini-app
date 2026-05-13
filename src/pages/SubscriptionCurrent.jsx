@@ -1,12 +1,33 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Crown, ArrowRight } from 'lucide-react';
 import { SUBSCRIPTION_PLANS } from '../utils/constants';
-import { mockSubscription } from '../api/mock-data';
+import { getSubscription } from '../api/signals';
 import PageHeader from '../components/shared/PageHeader';
 
 export default function SubscriptionCurrent() {
   const navigate = useNavigate();
-  const plan = SUBSCRIPTION_PLANS.find((p) => p.value === mockSubscription.plan);
+  const [subscription, setSubscription] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    getSubscription()
+      .then((s) => { if (!cancelled) setSubscription(s); })
+      .catch(() => { if (!cancelled) setSubscription(null); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, []);
+
+  const plan = subscription && SUBSCRIPTION_PLANS.find((p) => p.value === subscription.plan);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <p className="text-[13px] text-tg-hint">Loading…</p>
+      </div>
+    );
+  }
 
   if (!plan) {
     return (
@@ -59,18 +80,20 @@ export default function SubscriptionCurrent() {
           Usage
         </span>
         <div className="flex items-center justify-between" style={{ marginBottom: '8px' }}>
-          <span className="text-[13px] text-tg-hint">Signal subscriptions</span>
+          <span className="text-[13px] text-tg-hint">Configurations</span>
           <span className="text-[13px] font-mono font-medium text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {mockSubscription.signals_used} / {mockSubscription.signals_limit}
+            {subscription.configs_used} / {subscription.configs_limit ?? '∞'}
           </span>
         </div>
-        {/* Progress bar */}
+        {/* Progress bar — null limit = unlimited (premium), render flat */}
         <div className="bg-tg-secondary/40 rounded-full overflow-hidden" style={{ height: '8px' }}>
           <div
             className="bg-tg-button rounded-full transition-all duration-300"
             style={{
               height: '100%',
-              width: `${Math.min((mockSubscription.signals_used / mockSubscription.signals_limit) * 100, 100)}%`,
+              width: subscription.configs_limit
+                ? `${Math.min((subscription.configs_used / subscription.configs_limit) * 100, 100)}%`
+                : '0%',
             }}
           />
         </div>

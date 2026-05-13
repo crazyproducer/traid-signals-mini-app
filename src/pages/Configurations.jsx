@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Pause, Play, Trash2, Pencil } from 'lucide-react';
 import Badge from '../components/shared/Badge';
 import PageHeader from '../components/shared/PageHeader';
 import EmptyState from '../components/shared/EmptyState';
-import { mockSignalSubscriptions } from '../api/mock-data';
+import { listConfigs, pauseConfig, resumeConfig, deleteConfig } from '../api/signals';
 import { SYMBOLS } from '../utils/constants';
 import { formatWinRate, formatPct, pnlColorClass } from '../utils/formatters';
 
@@ -13,18 +14,30 @@ function fmtSymbols(syms) {
   return labels.slice(0, 3).join(', ') + ` +${labels.length - 3}`;
 }
 
+// Map the gateway's ConfigResponse shape onto whatever the card was
+// already reading. Mostly identity — the API matches the new shape, the
+// old fields (.directions / .pnl_pct / .win_rate) are derived legacy
+// labels that aren't returned (per-config performance comes from Phase 3c
+// /performance scoped by config_id, deferred until needed).
 function ConfigCard({ config, onEdit, onToggle, onDelete }) {
   const isPaused = config.status === 'paused';
-  const pnl = formatPct(config.pnl_pct || 0);
+  const pnlValue = config.pnl_pct ?? 0;
+  const pnl = formatPct(pnlValue);
 
-  const dirs = config.directions || [config.direction || 'LONG'];
+  const dirs = (config.signal_sides && config.signal_sides.length > 0)
+    ? config.signal_sides.map((s) => (s === 'BUY' ? 'Long' : 'Short'))
+    : ['Long'];
   const dirLabel = dirs.length > 1 ? dirs.join(' & ') : dirs[0];
 
-  const strats = config.strategies || [config.strategy || 'pullback'];
-  const stratLabel = strats.map((s) => s === 'pullback' ? 'Pull Back' : s).join(', ');
+  const stratLabel = (config.strategy === 'pullback') ? 'Pull Back' : (config.strategy || 'Pull Back');
 
-  const emas = config.ema_filters || (config.ema_filter ? [config.ema_filter] : []);
+  const emas = config.ema_filters || [];
   const emaLabel = emas.length > 0 ? emas.map((v) => `EMA ${v}`).join(', ') : 'None';
+
+  // Frequency display — derive from timeframe.
+  const freqLabel = config.timeframe === '1DAY' ? '24h' : '4h';
+  const riskPct = config.risk_level ?? 0;
+  const minWr = config.min_win_rate ?? 0;
 
   return (
     <div className="card" style={{ padding: '16px' }}>
@@ -44,44 +57,13 @@ function ConfigCard({ config, onEdit, onToggle, onDelete }) {
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
         <span className="text-[11px] text-tg-text font-medium">{fmtSymbols(config.symbols)}</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <span className="text-[11px] text-tg-hint">{config.frequency === '4h' ? '4h' : '24h'}</span>
+        <span className="text-[11px] text-tg-hint">{freqLabel}</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <span className="text-[11px] text-tg-hint">Risk {config.risk_level}%</span>
+        <span className="text-[11px] text-tg-hint">Risk {riskPct}%</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <span className="text-[11px] text-tg-hint">Conf {Math.round(config.confidence * 100)}%+</span>
+        <span className="text-[11px] text-tg-hint">WR ≥ {Math.round(minWr * 100)}%</span>
         <span style={{ width: '1px', height: '12px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
         <span className="text-[11px] text-tg-hint">{emaLabel}</span>
-      </div>
-
-      {/* Performance metrics */}
-      <div className="flex items-center" style={{ gap: '12px', marginBottom: '14px' }}>
-        <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase block" style={{ letterSpacing: '0.04em' }}>Signals</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {config.signals_count}
-          </span>
-        </div>
-        <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase block" style={{ letterSpacing: '0.04em' }}>Win Rate</span>
-          <span className="text-[13px] font-mono font-semibold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {formatWinRate(config.win_rate || 0)}
-          </span>
-        </div>
-        <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase block" style={{ letterSpacing: '0.04em' }}>PnL</span>
-          <span className={`text-[13px] font-mono font-semibold ${pnlColorClass(config.pnl_pct || 0)}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {pnl.text}
-          </span>
-        </div>
-        <div style={{ width: '1px', height: '24px', backgroundColor: 'rgba(128,128,128,0.15)' }} />
-        <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase block" style={{ letterSpacing: '0.04em' }}>W/L</span>
-          <span className="text-[13px] font-mono font-semibold text-tg-text" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {config.wins || 0}/{config.losses || 0}
-          </span>
-        </div>
       </div>
 
       {/* Actions */}
@@ -119,7 +101,37 @@ function ConfigCard({ config, onEdit, onToggle, onDelete }) {
 
 export default function Configurations() {
   const navigate = useNavigate();
-  const configs = mockSignalSubscriptions;
+  const [configs, setConfigs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [actionError, setActionError] = useState(null);
+
+  const refresh = () => {
+    setLoading(true);
+    listConfigs()
+      .then((r) => setConfigs(r.configs || []))
+      .catch((e) => setActionError(e?.message || 'Failed to load configs'))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(refresh, []);
+
+  // Optimistic mutation: update local state immediately, refresh from
+  // server in the background. On failure, surface message + refresh
+  // (server is source of truth).
+  const handleToggle = (config) => {
+    setActionError(null);
+    const fn = config.status === 'paused' ? resumeConfig : pauseConfig;
+    fn(config.config_id)
+      .then(refresh)
+      .catch((e) => { setActionError(e?.message || 'Toggle failed'); refresh(); });
+  };
+
+  const handleDelete = (config) => {
+    setActionError(null);
+    deleteConfig(config.config_id)
+      .then(refresh)
+      .catch((e) => { setActionError(e?.message || 'Delete failed'); refresh(); });
+  };
 
   return (
     <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
@@ -141,24 +153,31 @@ export default function Configurations() {
 
       {configs.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+          {actionError && (
+            <p className="text-[12px] text-red text-center" style={{ marginBottom: '4px' }}>{actionError}</p>
+          )}
           {configs.map((config) => (
             <ConfigCard
-              key={config.id}
+              key={config.config_id}
               config={config}
               onEdit={() => navigate('/new-signal')}
-              onToggle={() => {}}
-              onDelete={() => {}}
+              onToggle={() => handleToggle(config)}
+              onDelete={() => handleDelete(config)}
             />
           ))}
         </div>
       ) : (
         <div style={{ marginTop: '12px' }}>
-          <EmptyState
-            icon={Plus}
-            title="No configurations yet"
-            subtitle="Create your first signal configuration to start receiving signals"
-            action={{ label: 'Create configuration', onClick: () => navigate('/new-signal') }}
-          />
+          {loading ? (
+            <p className="text-[13px] text-tg-hint text-center" style={{ marginTop: '40px' }}>Loading…</p>
+          ) : (
+            <EmptyState
+              icon={Plus}
+              title="No configurations yet"
+              subtitle="Create your first signal configuration to start receiving signals"
+              action={{ label: 'Create configuration', onClick: () => navigate('/new-signal') }}
+            />
+          )}
         </div>
       )}
     </div>

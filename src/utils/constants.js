@@ -18,28 +18,51 @@ export const RISK_LEVELS = [
   { value: 30, label: '30%', description: 'Very wide' },
 ];
 
-export const CONFIDENCE_LEVELS = [
-  { value: 0.5, label: '50%+', description: 'More signals, lower threshold' },
-  { value: 0.6, label: '60%+', description: 'Balanced quality and volume' },
-  { value: 0.7, label: '70%+', description: 'Fewer signals, higher quality' },
+/* ═══════════════════════════════════════════════
+   Wizard quality dials (Phase 4: D2 design — two explicit thresholds
+   instead of one "confidence" knob).
+
+   The wizard now splits the old single "confidence" step into two:
+   MIN_TRADES (statistical significance — how many backtest trades
+   support this combo) and MIN_WIN_RATES (the actual probability
+   threshold). Plus a new TIME_RANGES dial that limits both display
+   stats and matcher predicate to a recent window.
+   ═══════════════════════════════════════════════ */
+
+export const MIN_TRADES = [
+  { value: 10,  label: '10+ trades',  description: 'Lowest bar — may catch unproven setups' },
+  { value: 30,  label: '30+ trades',  description: 'Balanced — enough data to be meaningful' },
+  { value: 100, label: '100+ trades', description: 'Strong evidence — fewer combos qualify' },
 ];
+
+export const MIN_WIN_RATES = [
+  { value: 0.66, label: '66%+', description: 'Loose — more signals, modest edge' },
+  { value: 0.75, label: '75%+', description: 'Balanced — strong historical performance' },
+  { value: 0.90, label: '90%+', description: 'Strict — fewer signals, top performers' },
+];
+
+export const TIME_RANGES = [
+  { value: 1,    label: 'Last month',   description: 'Only very recent performance' },
+  { value: 3,    label: 'Last 3 months', description: 'Recent regime' },
+  { value: 6,    label: 'Last 6 months', description: 'Medium-term — balanced' },
+  { value: 12,   label: 'Last 12 months', description: 'Full year — broad sample' },
+  { value: null, label: 'All time',     description: 'All available history (default)' },
+];
+
+/* DEPRECATED — kept for backward import compat with any not-yet-updated screens.
+   Will be removed once the rewire is complete. */
+export const CONFIDENCE_LEVELS = MIN_TRADES;
 
 export const DIRECTIONS = [
   { value: 'LONG', label: 'Long', description: 'Profit when price goes up' },
   { value: 'SHORT', label: 'Short', description: 'Profit when price goes down' },
 ];
 
+/* V1 ships with BTCUSDT only. As msrv-symbols-history's whitelist
+   expands, the gateway's GET /api/signals/symbols will return more
+   pairs and the wizard step will source from there at load time. */
 export const SYMBOLS = [
   { value: 'BTCUSDT', label: 'BTC/USDT', base: 'BTC', name: 'Bitcoin' },
-  { value: 'ETHUSDT', label: 'ETH/USDT', base: 'ETH', name: 'Ethereum' },
-  { value: 'SOLUSDT', label: 'SOL/USDT', base: 'SOL', name: 'Solana' },
-  { value: 'BNBUSDT', label: 'BNB/USDT', base: 'BNB', name: 'Binance Coin' },
-  { value: 'XRPUSDT', label: 'XRP/USDT', base: 'XRP', name: 'Ripple' },
-  { value: 'ADAUSDT', label: 'ADA/USDT', base: 'ADA', name: 'Cardano' },
-  { value: 'AVAXUSDT', label: 'AVAX/USDT', base: 'AVAX', name: 'Avalanche' },
-  { value: 'DOGEUSDT', label: 'DOGE/USDT', base: 'DOGE', name: 'Dogecoin' },
-  { value: 'DOTUSDT', label: 'DOT/USDT', base: 'DOT', name: 'Polkadot' },
-  { value: 'LINKUSDT', label: 'LINK/USDT', base: 'LINK', name: 'Chainlink' },
 ];
 
 export const FREQUENCIES = [
