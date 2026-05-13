@@ -321,8 +321,9 @@ function SuccessState({ onDone }) {
 
 /* ═══════════════════════════════════════════════
    Hero record count (live from /api/signals/preview-count)
+   Shows three states: loading "…", number, or error message.
    ═══════════════════════════════════════════════ */
-function HeroCount({ count, loading }) {
+function HeroCount({ count, loading, error }) {
   const display = loading ? '…' : (count != null ? count.toLocaleString() : '—');
   return (
     <div className="text-center mb-6">
@@ -330,6 +331,11 @@ function HeroCount({ count, loading }) {
         {display}
       </span>
       <p className="text-[12px] text-tg-hint mt-1.5 uppercase tracking-widest font-medium">matching records</p>
+      {error && !loading && (
+        <p className="text-[10px] text-red mt-1 font-mono" style={{ opacity: 0.7 }}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -365,6 +371,7 @@ export default function NewSignalWizard() {
   const [showPaywall, setShowPaywall] = useState(false);
   const [count, setCount] = useState(null);
   const [countLoading, setCountLoading] = useState(false);
+  const [countError, setCountError] = useState(null);
   const [subscription, setSubscription] = useState(null);
 
   // Load subscription once for symbol quota
@@ -392,14 +399,26 @@ export default function NewSignalWizard() {
   }, []);
 
   // Live preview-count — debounced refresh on step / data change.
+  // Important: setCountLoading(true) goes inside the timeout, not at
+  // effect entry. Otherwise rapid auto-advance fires this effect ~6×
+  // in sequence; each cancellation aborts the in-flight fetch but the
+  // outer loading flag stays true → user sees "…" stuck even after
+  // all activity settles. Now loading is only set when we actually
+  // dispatch the fetch.
   useEffect(() => {
     let cancelled = false;
-    setCountLoading(true);
     const payload = buildPreviewPayload(w.data, w.step);
     const handle = setTimeout(() => {
+      if (cancelled) return;
+      setCountLoading(true);
+      setCountError(null);
       previewCount(payload)
-        .then((r) => { if (!cancelled) setCount(r.matching_records); })
-        .catch(() => { if (!cancelled) setCount(null); })
+        .then((r) => { if (!cancelled) { setCount(r.matching_records); setCountError(null); } })
+        .catch((e) => {
+          if (cancelled) return;
+          setCount(null);
+          setCountError(e?.message || 'unknown error');
+        })
         .finally(() => { if (!cancelled) setCountLoading(false); });
     }, 250);
     return () => { cancelled = true; clearTimeout(handle); };
@@ -481,7 +500,7 @@ export default function NewSignalWizard() {
       </div>
 
       <div className="flex-1 page-padding overflow-y-auto hide-scrollbar" style={{ paddingBottom: '120px' }} key={w.step}>
-        <HeroCount count={count} loading={countLoading} />
+        <HeroCount count={count} loading={countLoading} error={countError} />
         <div className={animClass}>{renderStep()}</div>
         {launchError && (
           <p className="text-[12px] text-red text-center" style={{ marginTop: '12px' }}>{launchError}</p>
