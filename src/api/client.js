@@ -34,10 +34,10 @@ export class ApiError extends Error {
 
 /* Hard timeout on every fetch. Telegram WebViews / mobile networks
  * occasionally leave requests hanging without a clear error — the page
- * stays "loading…" forever. Dropped to 3s while we're hunting the
- * stuck-fetch bug; bump back up to ~10s once we've identified the
- * root cause and don't need fast failure for diagnostics. */
-const REQUEST_TIMEOUT_MS = 3_000;
+ * stays "loading…" forever. 10s is a generous upper bound for any
+ * gateway call; if we cross it, abort and surface a Timeout error so
+ * the caller can render something useful. */
+const REQUEST_TIMEOUT_MS = 10_000;
 
 /* Shared low-level fetch. Adds auth header, parses JSON,
  * normalizes errors. Returns parsed JSON or null for 204. */

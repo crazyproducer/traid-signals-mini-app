@@ -13,7 +13,7 @@ import {
   STRATEGIES, RISK_LEVELS, MIN_TRADES, MIN_WIN_RATES, TIME_RANGES,
   DIRECTIONS, SYMBOLS, FREQUENCIES, EMA_FILTERS,
 } from '../utils/constants';
-import { previewCount, createConfig, getSubscription } from '../api/signals';
+import { createConfig, getSubscription } from '../api/signals';
 
 /* ═══════════════════════════════════════════════
    Step titles & subtitles (Phase 4 — 10 steps)
@@ -320,62 +320,12 @@ function SuccessState({ onDone }) {
 }
 
 /* ═══════════════════════════════════════════════
-   Hero record count (live from /api/signals/preview-count)
-   Shows three states: loading "…", number, or error message.
-   Includes a debug strip while we hunt the "stuck loading" issue.
-   ═══════════════════════════════════════════════ */
-function HeroCount({ count, loading, error, debugLog = [] }) {
-  const display = loading ? '…' : (count != null ? count.toLocaleString() : '—');
-  // Debug — read directly from window.Telegram so we see the live value
-  // at render time, not a stale prop.
-  const initLen = (typeof window !== 'undefined'
-    && window.Telegram?.WebApp?.initData?.length) || 0;
-  const apiBase = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_API_BASE)
-    || 'https://api.traid.online';
-  return (
-    <div className="text-center mb-6">
-      <span className="text-[48px] font-mono font-bold text-tg-text leading-none" style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.04em', opacity: loading ? 0.5 : 1 }}>
-        {display}
-      </span>
-      <p className="text-[12px] text-tg-hint mt-1.5 uppercase tracking-widest font-medium">matching records</p>
-      {error && !loading && (
-        <p className="text-[10px] text-red mt-1 font-mono" style={{ opacity: 0.7 }}>
-          {error}
-        </p>
-      )}
-      {/* DEBUG strip — REMOVE once the count works on device. */}
-      <p className="text-[9px] text-tg-hint/40 mt-2 font-mono" style={{ wordBreak: 'break-all' }}>
-        api={apiBase.replace('https://', '')} · initData={initLen}b · loading={String(loading)} · count={count == null ? 'null' : count}
-      </p>
-      {debugLog.length > 0 && (
-        <div className="text-[9px] text-tg-hint/30 mt-1 font-mono text-left" style={{ padding: '0 8px' }}>
-          {debugLog.map((line, i) => <div key={i}>{line}</div>)}
-        </div>
-      )}
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════
-   Build the preview-count request payload from current wizard state.
-   Only includes fields the user has actually set.
-   ═══════════════════════════════════════════════ */
-function buildPreviewPayload(data, step) {
-  const out = {};
-  if (step >= 0 && data.strategy) out.strategy = data.strategy;
-  if (step >= 1 && data.risk_level != null) out.risk_level = data.risk_level;
-  if (step >= 2 && data.min_trade_count != null) out.min_trade_count = data.min_trade_count;
-  if (step >= 3 && data.min_win_rate != null) out.min_win_rate = data.min_win_rate;
-  if (step >= 4 && data.time_range_months !== undefined) out.time_range_months = data.time_range_months;
-  if (step >= 5 && data.directions.length > 0) out.signal_sides = data.directions;
-  if (step >= 6 && data.symbols.length > 0) out.symbols = data.symbols;
-  if (step >= 7 && data.frequency) out.timeframe = data.frequency === '24h' ? '1DAY' : '4HOUR';
-  if (step >= 8 && data.ema_filters.length > 0) out.ema_filters = data.ema_filters;
-  return out;
-}
-
-/* ═══════════════════════════════════════════════
    Main Wizard
+
+   Note: the "matching records" hero count (live preview-count) was
+   removed pending further design. The /api/signals/preview-count
+   endpoint is still live on the gateway and previewCount() is still
+   exported from api/signals.js — just no UI consumer right now.
    ═══════════════════════════════════════════════ */
 export default function NewSignalWizard() {
   const navigate = useNavigate();
@@ -385,9 +335,6 @@ export default function NewSignalWizard() {
   const [launching, setLaunching] = useState(false);
   const [launchError, setLaunchError] = useState(null);
   const [showPaywall, setShowPaywall] = useState(false);
-  const [count, setCount] = useState(null);
-  const [countLoading, setCountLoading] = useState(false);
-  const [countError, setCountError] = useState(null);
   const [subscription, setSubscription] = useState(null);
 
   // Load subscription once for symbol quota
@@ -413,44 +360,6 @@ export default function NewSignalWizard() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // Live preview-count. Fetches immediately at mount (no debounce on
-  // the very first call) so the user sees real data quickly, then
-  // debounces 250ms on subsequent step/data changes to avoid flooding
-  // the gateway when auto-advance ratchets through steps. Debug log
-  // captures start/end timestamps + error so we can see in-app whether
-  // the fetch ever fired.
-  const [debugLog, setDebugLog] = useState([]);
-  const isInitialFetch = useState(true);   // ref-style to avoid double-fetch in strict mode
-  useEffect(() => {
-    let cancelled = false;
-    const payload = buildPreviewPayload(w.data, w.step);
-    const debounceMs = 250;
-    const dispatchFetch = () => {
-      if (cancelled) return;
-      setCountLoading(true);
-      setCountError(null);
-      const t0 = Date.now();
-      setDebugLog((l) => [`fetch start t=${new Date().toLocaleTimeString()}`, ...l].slice(0, 3));
-      previewCount(payload)
-        .then((r) => {
-          if (!cancelled) {
-            setCount(r.matching_records);
-            setCountError(null);
-            setDebugLog((l) => [`✓ ${r.matching_records.toLocaleString()} in ${Date.now()-t0}ms`, ...l].slice(0, 3));
-          }
-        })
-        .catch((e) => {
-          if (cancelled) return;
-          setCount(null);
-          setCountError(e?.message || 'unknown error');
-          setDebugLog((l) => [`✗ ${e?.message || 'err'} after ${Date.now()-t0}ms`, ...l].slice(0, 3));
-        })
-        .finally(() => { if (!cancelled) setCountLoading(false); });
-    };
-    const handle = setTimeout(dispatchFetch, debounceMs);
-    return () => { cancelled = true; clearTimeout(handle); };
-  }, [w.step, w.data]);
 
   // Single-select setter — sets the field AND auto-advances. In edit mode,
   // auto-advance means "save and return to review" (which is the right
@@ -528,7 +437,6 @@ export default function NewSignalWizard() {
       </div>
 
       <div className="flex-1 page-padding overflow-y-auto hide-scrollbar" style={{ paddingBottom: '120px' }} key={w.step}>
-        <HeroCount count={count} loading={countLoading} error={countError} debugLog={debugLog} />
         <div className={animClass}>{renderStep()}</div>
         {launchError && (
           <p className="text-[12px] text-red text-center" style={{ marginTop: '12px' }}>{launchError}</p>
