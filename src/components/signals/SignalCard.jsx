@@ -78,9 +78,9 @@ export function NewSignalCard({ signal, onClick }) {
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
         <div>
-          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Conf</span>
+          <span className="text-[9px] text-tg-hint/60 uppercase leading-none block" style={{ letterSpacing: '0.04em' }}>Trades</span>
           <span className="text-[13px] font-mono font-semibold text-tg-text leading-tight" style={{ fontVariantNumeric: 'tabular-nums' }}>
-            {signal.confidence ? Math.round(signal.confidence * 100) + '%' : '60%'}
+            {signal.matching_trades != null ? signal.matching_trades : '—'}
           </span>
         </div>
         <div style={{ width: '1px', height: '24px', backgroundColor: 'color-mix(in srgb, var(--tg-theme-hint-color, #999) 20%, transparent)' }} />
