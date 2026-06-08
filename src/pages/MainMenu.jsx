@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, BarChart3, Trophy, ArrowRight } from 'lucide-react';
 import SignalCard from '../components/signals/SignalCard';
@@ -7,50 +7,59 @@ import { getPerformance, getFeed } from '../api/signals';
 import { mockTemplates } from '../api/mock-data';
 import { formatWinRate, formatPct, pnlColorClass } from '../utils/formatters';
 import PageHeader from '../components/shared/PageHeader';
+import SkeletonMetricCard from '../components/shared/SkeletonMetricCard';
+import SkeletonChart from '../components/shared/SkeletonChart';
+import SkeletonSignalCard from '../components/shared/SkeletonSignalCard';
+import useFetchWithCache from '../hooks/useFetchWithCache';
 
 const PERIODS = ['30D', '90D', 'ALL'];
 
 export default function MainMenu() {
   const navigate = useNavigate();
   const [period, setPeriod] = useState('90D');
-  const [performance, setPerformance] = useState(null);
-  const [newSignals, setNewSignals] = useState([]);
-  const [activeSignals, setActiveSignals] = useState([]);
-  const [recentSignals, setRecentSignals] = useState([]);
 
-  // Performance + equity curve (period-aware).
-  useEffect(() => {
-    let cancelled = false;
-    getPerformance({ period })
-      .then((p) => { if (!cancelled) setPerformance(p); })
-      .catch(() => { if (!cancelled) setPerformance(null); });
-    return () => { cancelled = true; };
-  }, [period]);
+  // Cache-first fetches — returning users see last-known data instantly,
+  // background refresh quietly replaces it. Cold-start (no cache) → the
+  // `loading` flags below drive skeleton placeholders.
+  const perfResult = useFetchWithCache(
+    `home:perf:${period}`,
+    () => getPerformance({ period }),
+  );
+  const newResult = useFetchWithCache(
+    'home:feed:new',
+    () => getFeed({ tab: 'new', limit: 100 }),
+  );
+  const activeResult = useFetchWithCache(
+    'home:feed:active',
+    () => getFeed({ tab: 'active', limit: 100 }),
+  );
+  const recentResult = useFetchWithCache(
+    'home:feed:recent',
+    () => getFeed({ tab: 'new', limit: 3 }),
+  );
 
-  // Counts + recent — fetched once per mount. Three independent calls
-  // because the gateway returns per-tab slices.
-  useEffect(() => {
-    let cancelled = false;
-    Promise.allSettled([
-      getFeed({ tab: 'new', limit: 100 }),
-      getFeed({ tab: 'active', limit: 100 }),
-      getFeed({ tab: 'new', limit: 3 }),
-    ]).then(([n, a, r]) => {
-      if (cancelled) return;
-      setNewSignals(n.status === 'fulfilled' ? (n.value.items || []) : []);
-      setActiveSignals(a.status === 'fulfilled' ? (a.value.items || []) : []);
-      setRecentSignals(r.status === 'fulfilled' ? (r.value.items || []) : []);
-    });
-    return () => { cancelled = true; };
-  }, []);
+  const performance = perfResult.data;
+  const newSignals = newResult.data?.items || [];
+  const activeSignals = activeResult.data?.items || [];
+  const recentSignals = recentResult.data?.items || [];
 
-  // Derived state — replace the old viewMode toggle. Empty if no
-  // signals at all; "no history" if there's nothing CLOSED yet.
+  // True only on cold start (no cache hit AND no fetch result yet). When
+  // any of these are true we render skeletons; when all are false we
+  // render real UI (possibly with stale cache, refreshing in background).
+  const feedsLoading = newResult.loading || activeResult.loading
+    || recentResult.loading;
+  const perfLoading = perfResult.loading;
+
+  // Derived state. We DELIBERATELY only compute isEmpty once we know
+  // the answer — if feeds are still cold-starting, treat as "loading"
+  // not "empty" to avoid flashing the empty CTA.
   const newCount = newSignals.length;
   const activeCount = activeSignals.length;
-  const isEmpty = newCount === 0 && activeCount === 0;
-  const noHistory = !performance || performance.total_signals === 0
-    || performance.equity_curve.length === 0;
+  const isEmpty = !feedsLoading && newCount === 0 && activeCount === 0;
+  const noHistory = !perfLoading && (
+    !performance || performance.total_signals === 0
+    || (performance.equity_curve || []).length === 0
+  );
 
   const stats = performance || { total_return_pct: 0, win_rate: 0, triggered: 0, wins: 0, losses: 0 };
   const chartData = noHistory ? [] : (performance?.equity_curve || []);
@@ -144,39 +153,52 @@ export default function MainMenu() {
         </div>
       ) : (
         <>
-          {/* Metrics row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
-            <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
-              <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Return</span>
-              <span
-                className={`text-[18px] font-mono font-bold leading-none ${
-                  totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'
-                }`}
-                style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}
-              >
-                {totalReturn.text}
-              </span>
+          {/* Metrics row — skeletons while ANY required data is cold-starting,
+              otherwise real cards (possibly stale from cache). */}
+          {(perfLoading || feedsLoading) ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+              <SkeletonMetricCard />
+              <SkeletonMetricCard />
+              <SkeletonMetricCard />
+              <SkeletonMetricCard />
             </div>
-            <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
-              <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Win rate</span>
-              <span className="text-[18px] font-mono font-bold text-green leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>
-                {formatWinRate(stats.win_rate)}
-              </span>
-              <span className="text-[9px] text-tg-hint/50 font-mono leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '1px' }}>({stats.triggered})</span>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+                <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Return</span>
+                <span
+                  className={`text-[18px] font-mono font-bold leading-none ${
+                    totalReturn.isPositive ? 'text-green' : totalReturn.isNegative ? 'text-red' : 'text-tg-text'
+                  }`}
+                  style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}
+                >
+                  {totalReturn.text}
+                </span>
+              </div>
+              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+                <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Win rate</span>
+                <span className="text-[18px] font-mono font-bold text-green leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>
+                  {formatWinRate(stats.win_rate)}
+                </span>
+                <span className="text-[9px] text-tg-hint/50 font-mono leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '1px' }}>({stats.triggered})</span>
+              </div>
+              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+                <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>New</span>
+                <span className="text-[18px] font-mono font-bold text-violet leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{newCount}</span>
+              </div>
+              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+                <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Active</span>
+                <span className="text-[18px] font-mono font-bold text-green leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{activeCount}</span>
+              </div>
             </div>
-            <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
-              <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>New</span>
-              <span className="text-[18px] font-mono font-bold text-violet leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{newCount}</span>
-            </div>
-            <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
-              <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Active</span>
-              <span className="text-[18px] font-mono font-bold text-green leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{activeCount}</span>
-            </div>
-          </div>
+          )}
 
-          {/* Equity curve or placeholder */}
+          {/* Equity curve — skeleton if loading, placeholder if no history,
+              real chart if data available. */}
           <div style={{ marginBottom: '24px' }}>
-            {noHistory ? (
+            {perfLoading ? (
+              <SkeletonChart height={160} />
+            ) : noHistory ? (
               /* Chart placeholder — signals exist but no completed trades */
               <div className="flex flex-col items-center justify-center text-center" style={{ padding: '24px 0' }}>
                 <div style={{ width: '100%', height: '120px', position: 'relative', marginBottom: '16px', opacity: 0.12 }}>
@@ -251,8 +273,10 @@ export default function MainMenu() {
             ))}
           </div>
 
-          {/* Recent signals */}
-          {recentSignals.length > 0 && (
+          {/* Recent signals — skeletons while feeds are cold-starting,
+              real cards once loaded (hidden if loaded-and-empty to match
+              the previous "no recent" behavior). */}
+          {(recentResult.loading || recentSignals.length > 0) && (
             <>
               <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
                 <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
@@ -267,13 +291,15 @@ export default function MainMenu() {
                 </button>
               </div>
               <div className="flex flex-col" style={{ gap: '16px' }}>
-                {recentSignals.map((signal) => (
-                  <SignalCard
-                    key={signal.id}
-                    signal={signal}
-                    onClick={() => navigate(`/signals/${signal.id}`)}
-                  />
-                ))}
+                {recentResult.loading
+                  ? [0, 1, 2].map((i) => <SkeletonSignalCard key={`sk-${i}`} />)
+                  : recentSignals.map((signal) => (
+                      <SignalCard
+                        key={signal.id}
+                        signal={signal}
+                        onClick={() => navigate(`/signals/${signal.id}`)}
+                      />
+                    ))}
               </div>
             </>
           )}

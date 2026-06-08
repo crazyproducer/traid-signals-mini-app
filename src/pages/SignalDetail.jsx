@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TrendingUp, TrendingDown, Target, Shield, BarChart3 } from 'lucide-react';
 import SignalStatusBadge from '../components/signals/SignalStatusBadge';
@@ -17,6 +16,9 @@ import { SYMBOLS } from '../utils/constants';
 import { getSignal } from '../api/signals';
 import PageHeader from '../components/shared/PageHeader';
 import SignalChart from '../components/signals/SignalChart';
+import Skeleton from '../components/shared/Skeleton';
+import SkeletonChart from '../components/shared/SkeletonChart';
+import useFetchWithCache from '../hooks/useFetchWithCache';
 
 function symbolLabel(raw) {
   const found = SYMBOLS.find((s) => s.value === raw);
@@ -26,24 +28,34 @@ function symbolLabel(raw) {
 export default function SignalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [signal, setSignal] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: signal, loading, error } = useFetchWithCache(
+    `signal:${id}`,
+    () => getSignal(id),
+  );
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    getSignal(id)
-      .then((s) => { if (!cancelled) { setSignal(s); setError(s ? null : 'Signal not found'); } })
-      .catch((e) => { if (!cancelled) setError(e?.message || 'Failed to load signal'); })
-      .finally(() => { if (!cancelled) setLoading(false); });
-    return () => { cancelled = true; };
-  }, [id]);
-
+  // Skeleton placeholder while cold-starting. Mirrors the real layout
+  // so the page doesn't jump when data arrives.
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center">
-        <p className="text-[13px] text-tg-hint">Loading signal…</p>
+      <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
+        <PageHeader title="Signal detail" showBack />
+        <div className="flex items-center" style={{ gap: '14px', marginTop: '16px', marginBottom: '16px' }}>
+          <Skeleton style={{ width: '56px', height: '56px' }} />
+          <div className="flex flex-col" style={{ flex: 1, gap: '6px' }}>
+            <Skeleton style={{ width: '50%', height: '22px' }} />
+            <Skeleton style={{ width: '35%', height: '14px' }} />
+          </div>
+          <Skeleton style={{ width: '70px', height: '28px' }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="card flex flex-col items-center" style={{ padding: '10px 4px', gap: '4px' }}>
+              <Skeleton style={{ width: '60%', height: '10px' }} />
+              <Skeleton style={{ width: '70%', height: '18px' }} />
+            </div>
+          ))}
+        </div>
+        <SkeletonChart height={200} />
       </div>
     );
   }
@@ -52,7 +64,7 @@ export default function SignalDetail() {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <p className="text-[16px] font-semibold text-tg-text mb-2">Signal Not Found</p>
-        <p className="text-[13px] text-tg-hint mb-5">{error || `The signal ${id} could not be found.`}</p>
+        <p className="text-[13px] text-tg-hint mb-5">{error?.message || `The signal ${id} could not be found.`}</p>
         <button
           type="button"
           onClick={() => navigate('/signals')}

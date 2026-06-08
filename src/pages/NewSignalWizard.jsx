@@ -14,6 +14,7 @@ import {
   DIRECTIONS, SYMBOLS, FREQUENCIES, EMA_FILTERS,
 } from '../utils/constants';
 import { createConfig, getSubscription } from '../api/signals';
+import useFetchWithCache from '../hooks/useFetchWithCache';
 
 /* ═══════════════════════════════════════════════
    Step titles & subtitles (Phase 4 — 10 steps)
@@ -335,12 +336,15 @@ export default function NewSignalWizard() {
   const [launching, setLaunching] = useState(false);
   const [launchError, setLaunchError] = useState(null);
   const [showPaywall, setShowPaywall] = useState(false);
-  const [subscription, setSubscription] = useState(null);
 
-  // Load subscription once for symbol quota
-  useEffect(() => {
-    getSubscription().then(setSubscription).catch(() => setSubscription(null));
-  }, []);
+  // Subscription cached — wizard opens instantly with last-known quota
+  // values, refresh in background. No skeleton needed here because the
+  // wizard already has its own UX (subscription is only consulted at the
+  // symbol-selection step + on launch).
+  const { data: subscription } = useFetchWithCache(
+    'wizard:subscription',
+    () => getSubscription(),
+  );
 
   // Apply template data if passed via navigation
   useEffect(() => {

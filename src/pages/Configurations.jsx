@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Pause, Play, Trash2, Pencil } from 'lucide-react';
 import Badge from '../components/shared/Badge';
 import PageHeader from '../components/shared/PageHeader';
 import EmptyState from '../components/shared/EmptyState';
+import SkeletonListRow from '../components/shared/SkeletonListRow';
 import { listConfigs, pauseConfig, resumeConfig, deleteConfig } from '../api/signals';
 import { SYMBOLS } from '../utils/constants';
 import { formatWinRate, formatPct, pnlColorClass } from '../utils/formatters';
+import useFetchWithCache from '../hooks/useFetchWithCache';
 
 function fmtSymbols(syms) {
   const labels = (syms || []).map((s) => SYMBOLS.find((x) => x.value === s)?.base || s);
@@ -101,23 +103,18 @@ function ConfigCard({ config, onEdit, onToggle, onDelete }) {
 
 export default function Configurations() {
   const navigate = useNavigate();
-  const [configs, setConfigs] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [actionError, setActionError] = useState(null);
 
-  const refresh = () => {
-    setLoading(true);
-    listConfigs()
-      .then((r) => setConfigs(r.configs || []))
-      .catch((e) => setActionError(e?.message || 'Failed to load configs'))
-      .finally(() => setLoading(false));
-  };
+  // Cache the configs list — returning users see their last-known
+  // configs instantly; first cold-start shows skeletons.
+  const { data, loading, refresh } = useFetchWithCache(
+    'configs:list',
+    () => listConfigs(),
+  );
+  const configs = data?.configs || [];
 
-  useEffect(refresh, []);
-
-  // Optimistic mutation: update local state immediately, refresh from
-  // server in the background. On failure, surface message + refresh
-  // (server is source of truth).
+  // Optimistic mutation: kick the action, then re-fetch + re-cache. On
+  // failure, surface message and still refresh (server is source of truth).
   const handleToggle = (config) => {
     setActionError(null);
     const fn = config.status === 'paused' ? resumeConfig : pauseConfig;
@@ -151,7 +148,11 @@ export default function Configurations() {
         }
       />
 
-      {configs.length > 0 ? (
+      {loading ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
+          {[0, 1, 2].map((i) => <SkeletonListRow key={`sk-${i}`} />)}
+        </div>
+      ) : configs.length > 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
           {actionError && (
             <p className="text-[12px] text-red text-center" style={{ marginBottom: '4px' }}>{actionError}</p>
@@ -168,16 +169,12 @@ export default function Configurations() {
         </div>
       ) : (
         <div style={{ marginTop: '12px' }}>
-          {loading ? (
-            <p className="text-[13px] text-tg-hint text-center" style={{ marginTop: '40px' }}>Loading…</p>
-          ) : (
-            <EmptyState
-              icon={Plus}
-              title="No configurations yet"
-              subtitle="Create your first signal configuration to start receiving signals"
-              action={{ label: 'Create configuration', onClick: () => navigate('/new-signal') }}
-            />
-          )}
+          <EmptyState
+            icon={Plus}
+            title="No configurations yet"
+            subtitle="Create your first signal configuration to start receiving signals"
+            action={{ label: 'Create configuration', onClick: () => navigate('/new-signal') }}
+          />
         </div>
       )}
     </div>

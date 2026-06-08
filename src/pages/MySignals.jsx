@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Sparkles, Radio, History, Clock, Settings } from 'lucide-react';
 import { NewSignalCard, ActiveSignalCard, HistorySignalCard, ExpiredSignalCard } from '../components/signals/SignalCard';
 import EmptyState from '../components/shared/EmptyState';
 import { getFeed } from '../api/signals';
 import PageHeader from '../components/shared/PageHeader';
+import SkeletonSignalCard from '../components/shared/SkeletonSignalCard';
+import useFetchWithCache from '../hooks/useFetchWithCache';
 
 const TABS = [
   { key: 'new', label: 'New' },
@@ -19,26 +20,41 @@ export default function MySignals() {
   const tab = searchParams.get('tab') || 'new';
   const setTab = (t) => setSearchParams({ tab: t }, { replace: true });
 
-  // Per-tab fetched list. We fetch the active tab eagerly + the other 3
-  // in parallel so the underline-tab counts are accurate without a per-tab
-  // round-trip when the user switches.
-  const [signalsByTab, setSignalsByTab] = useState({ new: [], active: [], history: [], expired: [] });
+  // Per-tab cached fetches. Each tab is independently cached so the
+  // user gets instant render of any tab they've visited before; the
+  // first cold-start sees skeletons.
+  const newResult = useFetchWithCache(
+    'signals:tab:new',
+    () => getFeed({ tab: 'new', limit: 100 }),
+  );
+  const activeResult = useFetchWithCache(
+    'signals:tab:active',
+    () => getFeed({ tab: 'active', limit: 100 }),
+  );
+  const historyResult = useFetchWithCache(
+    'signals:tab:history',
+    () => getFeed({ tab: 'history', limit: 100 }),
+  );
+  const expiredResult = useFetchWithCache(
+    'signals:tab:expired',
+    () => getFeed({ tab: 'expired', limit: 100 }),
+  );
 
-  useEffect(() => {
-    let cancelled = false;
-    Promise.allSettled(TABS.map((t) => getFeed({ tab: t.key, limit: 100 })))
-      .then((results) => {
-        if (cancelled) return;
-        const map = {};
-        results.forEach((r, i) => {
-          map[TABS[i].key] = r.status === 'fulfilled' ? (r.value.items || []) : [];
-        });
-        setSignalsByTab(map);
-      });
-    return () => { cancelled = true; };
-  }, []);
+  const resultsByTab = {
+    new: newResult,
+    active: activeResult,
+    history: historyResult,
+    expired: expiredResult,
+  };
+  const signalsByTab = {
+    new: newResult.data?.items || [],
+    active: activeResult.data?.items || [],
+    history: historyResult.data?.items || [],
+    expired: expiredResult.data?.items || [],
+  };
 
   const displayed = signalsByTab[tab] || [];
+  const currentLoading = resultsByTab[tab]?.loading || false;
 
   function renderCard(signal) {
     const go = () => navigate(`/signals/${signal.id}`);
@@ -104,8 +120,13 @@ export default function MySignals() {
         })}
       </div>
 
-      {/* List */}
-      {displayed.length > 0 ? (
+      {/* List — skeletons while THIS tab is cold-starting, real cards
+          (possibly stale) or empty state when loaded. */}
+      {currentLoading ? (
+        <div className="flex flex-col gap-3">
+          {[0, 1, 2, 3].map((i) => <SkeletonSignalCard key={`sk-${i}`} />)}
+        </div>
+      ) : displayed.length > 0 ? (
         <div className="flex flex-col gap-3 animate-fade-in-children">
           {displayed.map(renderCard)}
         </div>
