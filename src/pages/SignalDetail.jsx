@@ -28,14 +28,19 @@ function symbolLabel(raw) {
 export default function SignalDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: signal, loading, error } = useFetchWithCache(
+  const { data: signal, loading, isStale, error } = useFetchWithCache(
     `signal:${id}`,
     () => getSignal(id),
   );
 
+  // Stale cache that returned null/empty (e.g. signal got revoked, or
+  // the user clicks an item they navigated back to) — treat as loading
+  // until the fresh fetch resolves.
+  const isLoading = loading || (isStale && !signal);
+
   // Skeleton placeholder while cold-starting. Mirrors the real layout
   // so the page doesn't jump when data arrives.
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="page-padding" style={{ paddingTop: '0px', paddingBottom: '96px' }}>
         <PageHeader title="Signal detail" showBack />

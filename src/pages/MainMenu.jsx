@@ -33,26 +33,34 @@ export default function MainMenu() {
     'home:feed:active',
     () => getFeed({ tab: 'active', limit: 100 }),
   );
-  const recentResult = useFetchWithCache(
-    'home:feed:recent',
-    () => getFeed({ tab: 'new', limit: 3 }),
-  );
 
   const performance = perfResult.data;
   const newSignals = newResult.data?.items || [];
   const activeSignals = activeResult.data?.items || [];
-  const recentSignals = recentResult.data?.items || [];
 
-  // True only on cold start (no cache hit AND no fetch result yet). When
-  // any of these are true we render skeletons; when all are false we
-  // render real UI (possibly with stale cache, refreshing in background).
-  const feedsLoading = newResult.loading || activeResult.loading
-    || recentResult.loading;
-  const perfLoading = perfResult.loading;
+  // Recent = merge of new + active (most-recently created first). The
+  // previous version polled only `tab=new` for the home strip, so a user
+  // with only ACTIVE/TRIGGERED signals saw an empty "Recent signals"
+  // section. Both lists are already cached above, so this is free.
+  const recentSignals = [...newSignals, ...activeSignals]
+    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0))
+    .slice(0, 3);
 
-  // Derived state. We DELIBERATELY only compute isEmpty once we know
-  // the answer — if feeds are still cold-starting, treat as "loading"
-  // not "empty" to avoid flashing the empty CTA.
+  // Loading flags. We treat "stale cache with empty payload" as still
+  // loading: opening the app with an empty cache from yesterday would
+  // otherwise flash the empty-CTA before fresh data lands. With the
+  // isStale gate we render skeletons until the background refresh
+  // either confirms empty or surfaces real data.
+  const perfLoading = perfResult.loading
+    || (perfResult.isStale && !performance);
+  const newLoading = newResult.loading
+    || (newResult.isStale && newSignals.length === 0);
+  const activeLoading = activeResult.loading
+    || (activeResult.isStale && activeSignals.length === 0);
+  const feedsLoading = newLoading || activeLoading;
+
+  // Derived state. We only commit to "empty" once we KNOW the answer —
+  // if feeds are still cold-starting OR stale-empty, hold the skeleton.
   const newCount = newSignals.length;
   const activeCount = activeSignals.length;
   const isEmpty = !feedsLoading && newCount === 0 && activeCount === 0;
@@ -182,14 +190,24 @@ export default function MainMenu() {
                 </span>
                 <span className="text-[9px] text-tg-hint/50 font-mono leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '1px' }}>({stats.triggered})</span>
               </div>
-              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+              <button
+                type="button"
+                onClick={() => navigate('/signals?tab=new')}
+                className="card pressable flex flex-col items-center text-center"
+                style={{ padding: '10px 4px' }}
+              >
                 <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>New</span>
                 <span className="text-[18px] font-mono font-bold text-violet leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{newCount}</span>
-              </div>
-              <div className="card flex flex-col items-center text-center" style={{ padding: '10px 4px' }}>
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/signals?tab=active')}
+                className="card pressable flex flex-col items-center text-center"
+                style={{ padding: '10px 4px' }}
+              >
                 <span className="text-[9px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.04em' }}>Active</span>
                 <span className="text-[18px] font-mono font-bold text-green leading-none" style={{ fontVariantNumeric: 'tabular-nums', marginTop: '2px' }}>{activeCount}</span>
-              </div>
+              </button>
             </div>
           )}
 
@@ -273,10 +291,10 @@ export default function MainMenu() {
             ))}
           </div>
 
-          {/* Recent signals — skeletons while feeds are cold-starting,
-              real cards once loaded (hidden if loaded-and-empty to match
-              the previous "no recent" behavior). */}
-          {(recentResult.loading || recentSignals.length > 0) && (
+          {/* Recent signals — merged peek of NEW + ACTIVE. Skeletons while
+              either feed is cold-starting; real cards once loaded; hidden
+              entirely when both are loaded-and-empty. */}
+          {(feedsLoading || recentSignals.length > 0) && (
             <>
               <div className="flex items-center justify-between" style={{ marginBottom: '16px' }}>
                 <span className="text-[12px] uppercase font-medium text-tg-hint" style={{ letterSpacing: '0.06em' }}>
@@ -291,7 +309,7 @@ export default function MainMenu() {
                 </button>
               </div>
               <div className="flex flex-col" style={{ gap: '16px' }}>
-                {recentResult.loading
+                {feedsLoading
                   ? [0, 1, 2].map((i) => <SkeletonSignalCard key={`sk-${i}`} />)
                   : recentSignals.map((signal) => (
                       <SignalCard

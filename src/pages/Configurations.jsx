@@ -107,11 +107,14 @@ export default function Configurations() {
 
   // Cache the configs list — returning users see their last-known
   // configs instantly; first cold-start shows skeletons.
-  const { data, loading, refresh } = useFetchWithCache(
+  const { data, loading, isStale, refresh } = useFetchWithCache(
     'configs:list',
     () => listConfigs(),
   );
   const configs = data?.configs || [];
+  // Stale-empty = treat as loading to prevent the empty-state flash
+  // when the cache pre-dates a newly-created config.
+  const isLoading = loading || (isStale && configs.length === 0);
 
   // Optimistic mutation: kick the action, then re-fetch + re-cache. On
   // failure, surface message and still refresh (server is source of truth).
@@ -148,7 +151,7 @@ export default function Configurations() {
         }
       />
 
-      {loading ? (
+      {isLoading ? (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '12px' }}>
           {[0, 1, 2].map((i) => <SkeletonListRow key={`sk-${i}`} />)}
         </div>

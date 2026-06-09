@@ -54,7 +54,12 @@ export default function MySignals() {
   };
 
   const displayed = signalsByTab[tab] || [];
-  const currentLoading = resultsByTab[tab]?.loading || false;
+  // Treat stale cache with empty payload as loading: prevents the
+  // "empty state flash" when yesterday's cache held [] but today
+  // there are actually signals (or vice versa).
+  const tabResult = resultsByTab[tab];
+  const currentLoading = (tabResult?.loading || false)
+    || (tabResult?.isStale && displayed.length === 0);
 
   function renderCard(signal) {
     const go = () => navigate(`/signals/${signal.id}`);
