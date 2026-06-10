@@ -13,7 +13,7 @@ import {
   STRATEGIES, RISK_LEVELS, MIN_TRADES, MIN_WIN_RATES, TIME_RANGES,
   DIRECTIONS, SYMBOLS, FREQUENCIES, EMA_FILTERS,
 } from '../utils/constants';
-import { createConfig, getSubscription } from '../api/signals';
+import { createConfig, getSubscription, listSymbols } from '../api/signals';
 import useFetchWithCache from '../hooks/useFetchWithCache';
 
 /* ═══════════════════════════════════════════════
@@ -165,7 +165,7 @@ function StepDirection({ data, toggleArray }) {
   );
 }
 
-function StepSymbol({ data, toggleArray, subscription, onPaywall }) {
+function StepSymbol({ data, toggleArray, subscription, onPaywall, symbolItems }) {
   const selected = data.symbols || [];
   const limit = subscription?.symbols_limit ?? null;
   const atLimit = limit && selected.length >= limit;
@@ -178,6 +178,11 @@ function StepSymbol({ data, toggleArray, subscription, onPaywall }) {
     toggleArray('symbols', sym);
   }
 
+  // `symbolItems` comes from GET /api/signals/symbols (live roster).
+  // While the first fetch is in flight we fall back to the static
+  // SYMBOLS constant so the step is never blank.
+  const list = (symbolItems && symbolItems.length > 0) ? symbolItems : SYMBOLS;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
       {selected.length > 0 && (
@@ -185,7 +190,7 @@ function StepSymbol({ data, toggleArray, subscription, onPaywall }) {
           {selected.length}{limit ? `/${limit}` : ''} selected
         </p>
       )}
-      {SYMBOLS.map((sym) => (
+      {list.map((sym) => (
         <OptionCard
           key={sym.value}
           icon={Coins}
@@ -242,7 +247,7 @@ function StepFilters({ data, toggleArray }) {
   );
 }
 
-function StepReview({ data, onEdit }) {
+function StepReview({ data, onEdit, symbolItems }) {
   const dirLabels = (data.directions || []).map((d) => d === 'BUY' ? 'Long' : 'Short').join(' & ') || '--';
   const stratLabel = STRATEGIES.find((s) => s.value === data.strategy)?.label || '--';
   const freqLabel = FREQUENCIES.find((f) => f.value === data.frequency)?.label || '--';
@@ -250,8 +255,15 @@ function StepReview({ data, onEdit }) {
   const minWrLabel = MIN_WIN_RATES.find((w) => w.value === data.min_win_rate)?.label || '--';
   const timeRangeLabel = TIME_RANGES.find((t) => t.value === data.time_range_months)?.label || '--';
 
+  // Resolve base tickers from the live roster, falling back to the
+  // static SYMBOLS map and finally to the raw ticker (slice off the
+  // 'USDT' suffix) so review still renders something useful when the
+  // user picked a brand-new symbol not yet in the static fallback.
+  const lookup = [...(symbolItems || []), ...SYMBOLS];
+  const baseOf = (raw) => lookup.find((x) => x.value === raw)?.base
+    || (raw.endsWith('USDT') ? raw.slice(0, -4) : raw);
   const MAX_SHOW = 3;
-  const selectedSyms = SYMBOLS.filter((s) => (data.symbols || []).includes(s.value)).map((s) => s.base);
+  const selectedSyms = (data.symbols || []).map(baseOf);
   const symLabels = selectedSyms.length === 0 ? '--'
     : selectedSyms.length <= MAX_SHOW ? selectedSyms.join(', ')
     : selectedSyms.slice(0, MAX_SHOW).join(', ') + ` +${selectedSyms.length - MAX_SHOW} more`;
@@ -346,6 +358,17 @@ export default function NewSignalWizard() {
     () => getSubscription(),
   );
 
+  // Active-symbols roster pulled from the gateway (which reads it from
+  // analytics.dd_active_symbols, written from backtest_symbols.txt on
+  // signals-dd every minute). Cached so the wizard opens instantly with
+  // the last-known list — new symbols appear within ~2 minutes of
+  // editing the roster file with no redeploy.
+  const { data: symbolsResp } = useFetchWithCache(
+    'wizard:symbols',
+    () => listSymbols(),
+  );
+  const symbolItems = symbolsResp?.items || [];
+
   // Apply template data if passed via navigation
   useEffect(() => {
     if (location.state?.template) {
@@ -418,11 +441,13 @@ export default function NewSignalWizard() {
       case 4: return <StepTimeRange  data={w.data} setSingle={setSingle} />;
       case 5: return <StepDirection  data={w.data} toggleArray={w.toggleArray} />;
       case 6: return <StepSymbol     data={w.data} toggleArray={w.toggleArray}
-                                     subscription={subscription} onPaywall={() => setShowPaywall(true)} />;
+                                     subscription={subscription} onPaywall={() => setShowPaywall(true)}
+                                     symbolItems={symbolItems} />;
       case 7: return <StepFrequency  data={w.data} setSingle={setSingle} />;
       case 8: return <StepFilters    data={w.data} toggleArray={w.toggleArray} />;
       case 9: return <StepReview     data={w.data}
-                                     onEdit={(targetStep) => w.enterEdit(targetStep, w.step)} />;
+                                     onEdit={(targetStep) => w.enterEdit(targetStep, w.step)}
+                                     symbolItems={symbolItems} />;
       default: return null;
     }
   }

@@ -58,11 +58,30 @@ export const DIRECTIONS = [
   { value: 'SHORT', label: 'Short', description: 'Profit when price goes down' },
 ];
 
-/* V1 ships with BTCUSDT only. As msrv-symbols-history's whitelist
-   expands, the gateway's GET /api/signals/symbols will return more
-   pairs and the wizard step will source from there at load time. */
+/* Symbol metadata fallback — used for display lookups (SignalCard,
+   SignalDetail, Configurations cards) when we don't yet have the
+   live list from the gateway. The wizard's symbol step DOES NOT
+   use this constant; it fetches from GET /api/signals/symbols and
+   falls back to this only on load. Keeping the well-known set in
+   sync with signals-dd/distribution/roster_publisher._KNOWN_NAMES
+   keeps display nice for any roster that gets active. */
 export const SYMBOLS = [
-  { value: 'BTCUSDT', label: 'BTC/USDT', base: 'BTC', name: 'Bitcoin' },
+  { value: 'BTCUSDT',  label: 'BTC/USDT',  base: 'BTC',  name: 'Bitcoin' },
+  { value: 'ETHUSDT',  label: 'ETH/USDT',  base: 'ETH',  name: 'Ethereum' },
+  { value: 'SOLUSDT',  label: 'SOL/USDT',  base: 'SOL',  name: 'Solana' },
+  { value: 'BNBUSDT',  label: 'BNB/USDT',  base: 'BNB',  name: 'BNB' },
+  { value: 'XRPUSDT',  label: 'XRP/USDT',  base: 'XRP',  name: 'XRP' },
+  { value: 'TRXUSDT',  label: 'TRX/USDT',  base: 'TRX',  name: 'TRON' },
+  { value: 'ADAUSDT',  label: 'ADA/USDT',  base: 'ADA',  name: 'Cardano' },
+  { value: 'DOGEUSDT', label: 'DOGE/USDT', base: 'DOGE', name: 'Dogecoin' },
+  { value: 'AVAXUSDT', label: 'AVAX/USDT', base: 'AVAX', name: 'Avalanche' },
+  { value: 'DOTUSDT',  label: 'DOT/USDT',  base: 'DOT',  name: 'Polkadot' },
+  { value: 'LINKUSDT', label: 'LINK/USDT', base: 'LINK', name: 'Chainlink' },
+  { value: 'MATICUSDT', label: 'MATIC/USDT', base: 'MATIC', name: 'Polygon' },
+  { value: 'LTCUSDT',  label: 'LTC/USDT',  base: 'LTC',  name: 'Litecoin' },
+  { value: 'NEARUSDT', label: 'NEAR/USDT', base: 'NEAR', name: 'NEAR' },
+  { value: 'ATOMUSDT', label: 'ATOM/USDT', base: 'ATOM', name: 'Cosmos' },
+  { value: 'UNIUSDT',  label: 'UNI/USDT',  base: 'UNI',  name: 'Uniswap' },
 ];
 
 export const FREQUENCIES = [

@@ -63,10 +63,21 @@ export function acceptTerms() {
 
 /* ─── Symbols (wizard step) ─────────────────────────────────────────── */
 
+/* Gateway returns { symbols: [...], items: [{value,label,base,name,priority}] }.
+   Source of truth: backtest_symbols.txt on signals-dd, refreshed into
+   analytics.dd_active_symbols every ~60s. The wizard's symbol step uses
+   `items` for rendering and falls back to constants.SYMBOLS while the
+   first fetch is in flight or on transient API failure. */
 export function listSymbols() {
   return tryApi(
     () => api.get('/api/signals/symbols'),
-    () => ({ symbols: ['BTCUSDT'] }),
+    () => ({
+      symbols: ['BTCUSDT'],
+      items: [
+        { value: 'BTCUSDT', label: 'BTC/USDT', base: 'BTC',
+          name: 'Bitcoin', priority: 1000 },
+      ],
+    }),
   );
 }
 
