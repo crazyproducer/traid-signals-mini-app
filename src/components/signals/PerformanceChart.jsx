@@ -3,11 +3,19 @@ import Skeleton from '../shared/Skeleton';
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;
+  const value = payload[0].value;
+  // Color matches the sign of cumulative pnl. Zero is neutral (hint
+  // color) — happens at the anchor point on the user's first
+  // delivery date, before any close has landed.
+  const colorClass =
+    value > 0 ? 'text-green'
+    : value < 0 ? 'text-red'
+    : 'text-tg-hint';
   return (
     <div className="card px-3 py-2">
       <p className="text-[11px] text-tg-hint">{label}</p>
-      <p className="text-[14px] font-mono font-bold text-green" style={{ fontVariantNumeric: 'tabular-nums' }}>
-        {payload[0].value >= 0 ? '+' : ''}{payload[0].value.toFixed(2)}%
+      <p className={`text-[14px] font-mono font-bold ${colorClass}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {value >= 0 ? '+' : ''}{value.toFixed(2)}%
       </p>
     </div>
   );
