@@ -15,27 +15,33 @@
  * In all cases, a fresh network request is fired in the background and
  * the result replaces the cached value when it lands.
  *
+ * Cache TTL: by default cache entries older than DEFAULT_MAX_AGE_MS
+ * (60s) are treated as cold — we render the skeleton instead of stale
+ * data. This prevents the "I open the app and see day-old numbers
+ * that pop to current after 500ms" surprise. Frequent re-opens within
+ * 60s still get the instant SWR experience. Override per-call via
+ * opts.maxAgeMs (e.g. set to Infinity to mimic the old no-TTL behavior).
+ *
  * Cache layout:
  *   localStorage key = `traid-cache:<key>`
  *   value           = { data: <serializable>, ts: <ms epoch> }
- *
- * No TTL by default — cache lives until explicitly invalidated or the
- * fetcher returns a different value. Telegram WebView aggressively
- * preserves localStorage across opens, so cache is effectively durable.
  *
  * @param {string} key           Stable cache key (e.g. "feed:new", "perf:90D")
  * @param {() => Promise<T>} fetcher
  * @param {object} [opts]
  * @param {boolean} [opts.enabled=true]  Skip fetch + ignore cache when false
  * @param {(raw: unknown) => boolean} [opts.isValid]  Reject corrupt cache
+ * @param {number}  [opts.maxAgeMs=60000] Treat cache as stale (and skip
+ *                  the instant-render shortcut) when older than this.
  *
  * @returns {{ data: T | null, loading: boolean, error: Error | null,
  *             refresh: () => void, isStale: boolean }}
  *
  *   - data:    last-known data (from cache or fresh fetch); null only
  *              when no cache AND no fetch result yet.
- *   - loading: true ONLY during cold-start fetch (no cache). Returning
- *              users with a cache hit get loading=false immediately.
+ *   - loading: true ONLY during cold-start fetch (no cache OR cache
+ *              expired). Returning users with a fresh cache hit get
+ *              loading=false immediately.
  *   - isStale: true when we're showing cached data while a background
  *              fetch is in flight. Lets screens dim a "refreshing…"
  *              indicator if desired.
@@ -44,13 +50,23 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const CACHE_PREFIX = 'traid-cache:';
+const DEFAULT_MAX_AGE_MS = 60 * 1000;  // 1 minute
 
-function readCache(key, isValid) {
+function readCache(key, isValid, maxAgeMs = DEFAULT_MAX_AGE_MS) {
   try {
     const raw = localStorage.getItem(CACHE_PREFIX + key);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== 'object') return null;
+    // Reject expired entries — caller will fall through to the cold
+    // loading state and render a skeleton instead of yesterday's data.
+    if (
+      maxAgeMs !== Infinity
+      && typeof parsed.ts === 'number'
+      && Date.now() - parsed.ts > maxAgeMs
+    ) {
+      return null;
+    }
     if (isValid && !isValid(parsed.data)) return null;
     return parsed.data;
   } catch {
@@ -71,13 +87,14 @@ function writeCache(key, data) {
 }
 
 export default function useFetchWithCache(key, fetcher, opts = {}) {
-  const { enabled = true, isValid } = opts;
+  const { enabled = true, isValid, maxAgeMs = DEFAULT_MAX_AGE_MS } = opts;
 
   // Hydrate from cache SYNCHRONOUSLY on first render. This is the
   // whole point of the hook — initial render reflects last-known data
-  // instead of an empty placeholder.
+  // instead of an empty placeholder. Cache older than maxAgeMs is
+  // rejected so we fall through to a proper skeleton.
   const [data, setData] = useState(() =>
-    enabled ? readCache(key, isValid) : null,
+    enabled ? readCache(key, isValid, maxAgeMs) : null,
   );
   const [loading, setLoading] = useState(() =>
     enabled ? data === null : false,
@@ -128,7 +145,7 @@ export default function useFetchWithCache(key, fetcher, opts = {}) {
       return;
     }
     // Re-hydrate when key changes (e.g. switching tabs).
-    const cached = readCache(key, isValid);
+    const cached = readCache(key, isValid, maxAgeMs);
     if (cached !== null) {
       setData(cached);
       setLoading(false);
